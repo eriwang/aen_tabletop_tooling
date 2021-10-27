@@ -22,3 +22,7 @@ Note that this is mostly (if not all) automatable, and one day could be put into
 
 - `yarn jest`
 - You currently cannot test Google Apps Script code (there's likely a way to mock that, but it hasn't been explored)
+
+### Linting
+
+- `yarn lint`, optionally add `--fix`
