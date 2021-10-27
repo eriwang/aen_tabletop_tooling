@@ -1,2 +1,6 @@
+# Clasp Files
 .clasp.json
 appsscript.json
+
+# Node/ Yarn files
+node_modules/
