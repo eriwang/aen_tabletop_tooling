@@ -32,7 +32,7 @@ function resetValues() {
     defender = new Character(defenderAttrStats, defenderWeapon);
 }
 
-beforeAll(resetValues);
+beforeEach(resetValues);
 
 describe('doesAttackHit is correct', () => {
     test('attackerToHit > defenderEvade', () => {
@@ -99,18 +99,18 @@ describe('toHit and evade calculation is correct', () => {
     });
 
     test('defender stat changes defenderEvade', () => {
-        attacker.attributeStats.setAttribute(Attribute.Constitution, 15);
-        attacker.attributeStats.setAttribute(Attribute.Strength, 14);
+        defender.attributeStats.setAttribute(Attribute.Constitution, 15);
+        defender.attributeStats.setAttribute(Attribute.Strength, 14);
         const resultsCon15Str14 = calculateToHit(1, attacker, defender);
         expect(resultsCon15Str14.defenderEvade).toBe(22);  // ceil(0.75 * (15 + 14))
 
-        attacker.attributeStats.setAttribute(Attribute.Constitution, 20);
-        attacker.attributeStats.setAttribute(Attribute.Strength, 14);
+        defender.attributeStats.setAttribute(Attribute.Constitution, 20);
+        defender.attributeStats.setAttribute(Attribute.Strength, 14);
         const resultsCon20Str14 = calculateToHit(1, attacker, defender);
         expect(resultsCon20Str14.defenderEvade).toBe(26);  // ceil(0.75 * (20 + 14))
 
-        attacker.attributeStats.setAttribute(Attribute.Constitution, 15);
-        attacker.attributeStats.setAttribute(Attribute.Strength, 20);
+        defender.attributeStats.setAttribute(Attribute.Constitution, 15);
+        defender.attributeStats.setAttribute(Attribute.Strength, 20);
         const resultsCon15Str20 = calculateToHit(1, attacker, defender);
         expect(resultsCon15Str20.defenderEvade).toBe(27);  // ceil(0.75 * (15 + 20))
 
@@ -125,6 +125,7 @@ describe('stats used by calculation are correct', () => {
             resetValues();
             attacker.weapon.attribute = attribute;
             attacker.attributeStats.setAttribute(attribute, 20);
+
             const results = calculateToHit(1, attacker, defender);
             expect(results.attackerToHit).toBe(24);  // 20 * 1.25 - 2 + 1
             expect(results.defenderEvade).toBe(22);  // ceil(0.75 * (15 + 14))
@@ -139,10 +140,20 @@ describe('stats used by calculation are correct', () => {
     });
 
     test('weapon attack type changes defender evade', () => {
-        expect(true).toBe(false);
+        function resetAndTestForAttackTypeAndAttributes(
+            attackType: AttackType, attribute1: Attribute, attribute2: Attribute) {
+            resetValues();
+            attacker.weapon.attackType = attackType;
+            defender.attributeStats.setAttribute(attribute1, 20);
+            defender.attributeStats.setAttribute(attribute2, 20);
 
-        // strike -> fortitude
-        // projectile -> reflex
-        // curse -> willpower
+            const results = calculateToHit(1, attacker, defender);
+            expect(results.attackerToHit).toBe(14);  // 12 * 1.25 - 2 + 1
+            expect(results.defenderEvade).toBe(30);  // 0.75 * (20 + 20)
+        }
+
+        resetAndTestForAttackTypeAndAttributes(AttackType.Strike, Attribute.Constitution, Attribute.Strength);
+        resetAndTestForAttackTypeAndAttributes(AttackType.Projectile, Attribute.Dexterity, Attribute.Wisdom);
+        resetAndTestForAttackTypeAndAttributes(AttackType.Curse, Attribute.Intelligence, Attribute.Charisma);
     });
 });
