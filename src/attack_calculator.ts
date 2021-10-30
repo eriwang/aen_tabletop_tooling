@@ -32,3 +32,93 @@ What's out of scope for v1?
 - Eventually probs some passives that modify to hit in certain situations, both for attacker/defender(s)
 
  */
+
+// Note that these enums/ util classes should likely be moved elsewhere eventually
+export enum Attribute {
+    Constitution,
+    Strength,
+    Dexterity,
+    Wisdom,
+    Intelligence,
+    Charisma,
+}
+
+export enum AttackType {
+    Strike,
+    Projectile,
+    Curse,
+}
+
+export enum EvasiveStatType {
+    Fortitude,
+    Reflex,
+    Willpower,
+}
+
+export interface Weapon {
+    attribute: Attribute;
+    attackType: AttackType;
+    toHitMultiplier: number;
+    difficultyClass: number;
+}
+
+interface AttributeStatsInterface {
+    constitution: number;
+    strength: number;
+    dexterity: number;
+    wisdom: number;
+    intelligence: number;
+    charisma: number;
+}
+
+export class AttributeStats {
+    attributeStatsInterface: AttributeStatsInterface;
+
+    constructor(attrStatsInterface: AttributeStatsInterface) {
+        this.attributeStatsInterface = attrStatsInterface;
+    }
+
+    getAttribute(attribute: Attribute) : number {
+        switch (attribute) {
+            case Attribute.Constitution:
+                return this.attributeStatsInterface.constitution;
+            case Attribute.Strength:
+                return this.attributeStatsInterface.strength;
+            case Attribute.Dexterity:
+                return this.attributeStatsInterface.dexterity;
+            case Attribute.Wisdom:
+                return this.attributeStatsInterface.wisdom;
+            case Attribute.Intelligence:
+                return this.attributeStatsInterface.intelligence;
+            case Attribute.Charisma:
+                return this.attributeStatsInterface.charisma;
+
+            default:
+                throw `Unknown attribute ${attribute}`;
+        }
+    }
+}
+
+export class Character {
+    attributeStats: AttributeStats;
+    weapon: Weapon;
+
+    constructor(attrStats: AttributeStats, weap: Weapon) {
+        this.attributeStats = attrStats;
+        this.weapon = weap;
+    }
+}
+
+interface ToHitResults {
+    doesAttackHit: boolean;
+    attackerToHit: number;
+    defenderEvade: number;
+}
+
+export function calculateToHit(roll: number, attacker: Character, defender: Character) : ToHitResults {
+    return {
+        doesAttackHit: true,
+        attackerToHit: 1,
+        defenderEvade: 0
+    };
+}
