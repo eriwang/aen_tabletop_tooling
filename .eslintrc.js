@@ -17,12 +17,15 @@ module.exports = {
     'parser': '@typescript-eslint/parser',
     'plugins': ['@typescript-eslint', 'googleappsscript'],
     'rules': {
-        'indent': ['error', 4],
         'linebreak-style': ['error', 'unix'],
         'quotes': ['error', 'single'],
         'semi': ['error', 'always'],
         'max-len': ['error', 120],
         'no-var': 'error',
+
+        // vanilla indent rule is busted: https://github.com/typescript-eslint/typescript-eslint/issues/1824
+        'indent': 'off',
+        '@typescript-eslint/indent': ['error', 4],
 
         // there can be errors because functions are used by the Google Apps Script sheet
         'no-unused-vars': 'off',

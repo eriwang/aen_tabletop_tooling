@@ -1,7 +1,7 @@
-const sayHi = (person: string) => {
+function sayHi(person: string) {
     SpreadsheetApp.getUi().alert(`Hi ${person}`);
-};
+}
 
-const calculateDamage = () => {
+function calculateDamage() {
     sayHi('Elmo');
-};
+}
