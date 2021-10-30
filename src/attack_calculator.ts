@@ -100,6 +100,32 @@ export class AttributeStats {
                 throw `Unknown attribute ${attribute}`;
         }
     }
+
+    setAttribute(attribute: Attribute, value: number) {
+        switch (attribute) {
+            case Attribute.Constitution:
+                this.constitution = value;
+                break;
+            case Attribute.Strength:
+                this.strength = value;
+                break;
+            case Attribute.Dexterity:
+                this.dexterity = value;
+                break;
+            case Attribute.Wisdom:
+                this.wisdom = value;
+                break;
+            case Attribute.Intelligence:
+                this.intelligence = value;
+                break;
+            case Attribute.Charisma:
+                this.charisma = value;
+                break;
+
+            default:
+                throw `Unknown attribute ${attribute}`;
+        }
+    }
 }
 
 export class Character {
