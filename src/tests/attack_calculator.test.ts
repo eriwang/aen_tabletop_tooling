@@ -1,5 +1,32 @@
 import { AttributeStats, Character, calculateToHit, Weapon, Attribute, AttackType } from 'attack_calculator';
 
+describe('doesAttackHit is correct', () => {
+    /*
+    - when attackerToHit > defenderEvade, doesAttackHit is true
+    - when attackerToHit == defenderEvade, doesAttackHit is true
+    - when attackerToHit < defenderEvade, doesAttackHit is false
+    */
+});
+
+describe('toHit and evade calculation is correct', () => {
+    /*
+    - change roll, change attackerToHit
+    - change attacker char stat, change attackerToHit
+    - change weapToHitMultiplier, change attackerToHit
+        - ceil calculations happen here (for now, at least)
+    - change weapHitDifficultyClass, change attackerToHit
+    - change defender char stat, change defenderEvade
+        - ceil calculations happen here (probs forever...?)
+    */
+});
+
+describe('stats used by calculation are correct', () => {
+    /*
+    - When weapon attribute changes, the stat used to calc attackerToHit changes
+    - When weapon attackType changes, the stat used to calc defenderEvade changes
+    */
+});
+
 describe('Does this even build', () => {
     test('Some random numbers', () => {
         const attackerAttrStats = new AttributeStats({
