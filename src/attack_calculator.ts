@@ -62,36 +62,39 @@ export interface Weapon {
     difficultyClass: number;
 }
 
-interface AttributeStatsInterface {
+export class AttributeStats {
     constitution: number;
     strength: number;
     dexterity: number;
     wisdom: number;
     intelligence: number;
     charisma: number;
-}
 
-export class AttributeStats {
-    attributeStatsInterface: AttributeStatsInterface;
-
-    constructor(attrStatsInterface: AttributeStatsInterface) {
-        this.attributeStatsInterface = attrStatsInterface;
+    constructor({con, str, dex, wis, int, cha} : {
+        con: number, str: number, dex: number, wis: number, int: number, cha: number
+    }) {
+        this.constitution = con;
+        this.strength = str;
+        this.dexterity = dex;
+        this.wisdom = wis;
+        this.intelligence = int;
+        this.charisma = cha;
     }
 
     getAttribute(attribute: Attribute) : number {
         switch (attribute) {
             case Attribute.Constitution:
-                return this.attributeStatsInterface.constitution;
+                return this.constitution;
             case Attribute.Strength:
-                return this.attributeStatsInterface.strength;
+                return this.strength;
             case Attribute.Dexterity:
-                return this.attributeStatsInterface.dexterity;
+                return this.dexterity;
             case Attribute.Wisdom:
-                return this.attributeStatsInterface.wisdom;
+                return this.wisdom;
             case Attribute.Intelligence:
-                return this.attributeStatsInterface.intelligence;
+                return this.intelligence;
             case Attribute.Charisma:
-                return this.attributeStatsInterface.charisma;
+                return this.charisma;
 
             default:
                 throw `Unknown attribute ${attribute}`;
