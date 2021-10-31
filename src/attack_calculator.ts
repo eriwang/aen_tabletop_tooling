@@ -39,6 +39,7 @@ export interface Weapon {
     attackType: AttackType;
     toHitMultiplier: number;
     difficultyClass: number;
+    damageType: DamageType;
 }
 
 // TODO: does Record<Attribute, number> work, then get rid of this class?

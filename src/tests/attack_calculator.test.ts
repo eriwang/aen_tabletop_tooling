@@ -1,4 +1,7 @@
-import { AttributeStats, Character, calculateToHit, Weapon, Attribute, AttackType } from 'attack_calculator';
+import {
+    AttributeStats, Character, calculateToHit, calculateDamage, Weapon, Attribute, AttackType, DamageType
+} from 'attack_calculator';
+import { enumerateEnumValues } from 'utils';
 
 let attackerAttrStats: AttributeStats, attackerWeapon: Weapon, attacker: Character;
 let defenderAttrStats: AttributeStats, defenderWeapon: Weapon, defender: Character;
@@ -11,7 +14,8 @@ function resetValues() {
         attribute: Attribute.Dexterity,
         attackType: AttackType.Strike,
         toHitMultiplier: 1.25,
-        difficultyClass: 2
+        difficultyClass: 2,
+        damageType: DamageType.Piercing,
     };
     attacker = new Character(attackerAttrStats, attackerWeapon);
 
@@ -27,7 +31,8 @@ function resetValues() {
         attribute: Attribute.Dexterity,
         attackType: AttackType.Strike,
         toHitMultiplier: 1.25,
-        difficultyClass: 2
+        difficultyClass: 2,
+        damageType: DamageType.Piercing,
     };
     defender = new Character(defenderAttrStats, defenderWeapon);
 }
@@ -131,12 +136,9 @@ describe('stats used by toHit calculation are correct', () => {
             expect(results.defenderEvade).toBe(22);  // ceil(0.75 * (15 + 14))
         }
 
-        resetAndTestForAttribute(Attribute.Constitution);
-        resetAndTestForAttribute(Attribute.Strength);
-        resetAndTestForAttribute(Attribute.Dexterity);
-        resetAndTestForAttribute(Attribute.Wisdom);
-        resetAndTestForAttribute(Attribute.Intelligence);
-        resetAndTestForAttribute(Attribute.Charisma);
+        for (const attribute of enumerateEnumValues(Attribute)) {
+            resetAndTestForAttribute(attribute);
+        }
     });
 
     test('weapon attack type changes defender evade', () => {
@@ -160,18 +162,75 @@ describe('stats used by toHit calculation are correct', () => {
 
 describe('damage calculation is correct', () => {
     test('weapon attribute changes damage', () => {
+        function resetAndTestForAttribute(attribute: Attribute) {
+            resetValues();
+            attacker.weapon.attribute = attribute;
+            attacker.attributeStats.setAttribute(attribute, 15);
 
-    });
+            expect(calculateDamage(attacker, defender)).toBe(15);
+        }
 
-    test('weapon damage type changes damage', () => {
-
+        for (const attribute of enumerateEnumValues(Attribute)) {
+            resetAndTestForAttribute(attribute);
+        }
     });
 
     test('defender percentage res changes damage', () => {
+        function resetAndTestForPercentRes(damageType: DamageType) {
+            resetValues();
+            attacker.weapon.damageType = damageType;
+            attacker.weapon.attribute = Attribute.Charisma;
+            attacker.attributeStats.setAttribute(Attribute.Charisma, 15);
+            // TODO: change defender percentage res to 25%
 
+            expect(calculateDamage(attacker, defender)).toBe(12);  // ceil(15 * 0.75) = 12
+        }
+
+        for (const damageType of enumerateEnumValues(DamageType)) {
+            resetAndTestForPercentRes(damageType);
+        }
     });
 
     test('defender flat res changes damage', () => {
+        function resetAndTestForPercentRes(damageType: DamageType) {
+            resetValues();
+            attacker.weapon.damageType = damageType;
+            attacker.weapon.attribute = Attribute.Charisma;
+            attacker.attributeStats.setAttribute(Attribute.Charisma, 15);
+            // TODO: change defender flat res to 5
 
+            expect(calculateDamage(attacker, defender)).toBe(10);
+        }
+
+        for (const damageType of enumerateEnumValues(DamageType)) {
+            resetAndTestForPercentRes(damageType);
+        }
+    });
+
+    // Not sure if this is correct, but in either case there should be a test for it/ the ceil
+    test('defender percent res applied before flat res', () => {
+        function resetAndTestForPercentRes(damageType: DamageType) {
+            resetValues();
+            attacker.weapon.damageType = damageType;
+            attacker.weapon.attribute = Attribute.Charisma;
+            attacker.attributeStats.setAttribute(Attribute.Charisma, 15);
+            // TODO: change defender percent res to 25%
+            // TODO: change defender flat res to 5
+
+            expect(calculateDamage(attacker, defender)).toBe(7);  // ceil(15 * 0.75) - 5. ceil((15 - 5) * 0.75) = 8
+        }
+
+        for (const damageType of enumerateEnumValues(DamageType)) {
+            resetAndTestForPercentRes(damageType);
+        }
+    });
+
+    // Not sure if this is correct, but it should be tested
+    test('damage minimum is 1', () => {
+        attacker.weapon.attribute = Attribute.Charisma;
+        attacker.attributeStats.setAttribute(Attribute.Charisma, 15);
+        // TODO: set defender res to 100%
+
+        expect(calculateDamage(attacker, defender)).toBe(1);
     });
 });
