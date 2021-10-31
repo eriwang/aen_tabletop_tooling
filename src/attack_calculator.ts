@@ -1,10 +1,3 @@
-/*
-Not yet implemented for toHit:
-
-- Crits should add 10 to attackerToHit
-- Eventually probs some passives that modify to hit in certain situations, both for attacker/defender(s)
- */
-
 // Note that these enums/ util classes should likely be moved elsewhere eventually
 export enum Attribute {
     Constitution,
@@ -27,6 +20,20 @@ export enum EvasiveStatType {
     Willpower,
 }
 
+export enum DamageType {
+    Slashing,
+    Bludgeoning,
+    Piercing,
+    Fire,
+    Water,
+    Air,
+    Earth,
+    Poison,
+    Radiant,
+    Necrotic,
+    Psychic,
+}
+
 export interface Weapon {
     attribute: Attribute;
     attackType: AttackType;
@@ -34,6 +41,7 @@ export interface Weapon {
     difficultyClass: number;
 }
 
+// TODO: does Record<Attribute, number> work, then get rid of this class?
 export class AttributeStats {
     constitution: number;
     strength: number;
@@ -120,6 +128,9 @@ export class AttributeStats {
     }
 }
 
+export class ResistanceStats {
+}
+
 export class Character {
     attributeStats: AttributeStats;
     weapon: Weapon;
@@ -150,6 +161,13 @@ function getEvasiveStatTypeForAttackType(attackType: AttackType) : EvasiveStatTy
     }
 }
 
+/*
+Not yet implemented for toHit:
+
+- Crits should add 10 to attackerToHit
+- Eventually probs some passives that modify to hit in certain situations, both for attacker/defender(s)
+- Dual wield - toHit
+ */
 export function calculateToHit(roll: number, attacker: Character, defender: Character) : ToHitResults {
     const attackerWeaponAttributeToHit = Math.ceil(
         attacker.attributeStats.getAttribute(attacker.weapon.attribute) *
@@ -165,4 +183,14 @@ export function calculateToHit(roll: number, attacker: Character, defender: Char
         attackerToHit: attackerToHit,
         defenderEvade: defenderEvade
     };
+}
+
+/*
+Not yet implemented for damage:
+
+- Crits do extra 50% damage
+- Two handing weapon multiplier
+*/
+export function calculateDamage(attacker: Character, defender: Character) : number {
+    return 0;
 }

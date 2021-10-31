@@ -119,7 +119,7 @@ describe('toHit and evade calculation is correct', () => {
     });
 });
 
-describe('stats used by calculation are correct', () => {
+describe('stats used by toHit calculation are correct', () => {
     test('weapon attribute changes attackerToHit', () => {
         function resetAndTestForAttribute(attribute: Attribute) {
             resetValues();
@@ -155,5 +155,23 @@ describe('stats used by calculation are correct', () => {
         resetAndTestForAttackTypeAndAttributes(AttackType.Strike, Attribute.Constitution, Attribute.Strength);
         resetAndTestForAttackTypeAndAttributes(AttackType.Projectile, Attribute.Dexterity, Attribute.Wisdom);
         resetAndTestForAttackTypeAndAttributes(AttackType.Curse, Attribute.Intelligence, Attribute.Charisma);
+    });
+});
+
+describe('damage calculation is correct', () => {
+    test('weapon attribute changes damage', () => {
+
+    });
+
+    test('weapon damage type changes damage', () => {
+
+    });
+
+    test('defender percentage res changes damage', () => {
+
+    });
+
+    test('defender flat res changes damage', () => {
+
     });
 });
