@@ -1,7 +1,6 @@
-import {
-    AttributeStats, Character, calculateToHit, calculateDamage, Weapon, Attribute, AttackType
-} from 'attack_calculator';
-import { DamageType, ResistanceStats } from 'resistance_stats';
+import { AttributeStats, Character, calculateToHit, calculateDamage, Weapon } from 'attack_calculator';
+import { Attribute, AttackType, DamageType } from 'base_game_enums';
+import { ResistanceStats } from 'resistance_stats';
 import { enumerateEnumValues } from 'utils';
 
 let attackerAttrStats: AttributeStats, attackerWeapon: Weapon, attacker: Character;
@@ -69,11 +68,11 @@ describe('toHit and evade calculation is correct', () => {
     });
 
     test('attacker stat changes attackerToHit', () => {
-        attacker.attributeStats.setAttribute(Attribute.Dexterity, 12);
+        attacker.attributeStats.set(Attribute.Dexterity, 12);
         const resultsDex12 = calculateToHit(1, attacker, defender);
         expect(resultsDex12.attackerToHit).toBe(14);  // 12 * 1.25 - 2 + 1
 
-        attacker.attributeStats.setAttribute(Attribute.Dexterity, 16);
+        attacker.attributeStats.set(Attribute.Dexterity, 16);
         const resultsDex16 = calculateToHit(1, attacker, defender);
         expect(resultsDex16.attackerToHit).toBe(19);  // 16 * 1.25 - 2 + 1
 
@@ -105,18 +104,18 @@ describe('toHit and evade calculation is correct', () => {
     });
 
     test('defender stat changes defenderEvade', () => {
-        defender.attributeStats.setAttribute(Attribute.Constitution, 15);
-        defender.attributeStats.setAttribute(Attribute.Strength, 14);
+        defender.attributeStats.set(Attribute.Constitution, 15);
+        defender.attributeStats.set(Attribute.Strength, 14);
         const resultsCon15Str14 = calculateToHit(1, attacker, defender);
         expect(resultsCon15Str14.defenderEvade).toBe(22);  // ceil(0.75 * (15 + 14))
 
-        defender.attributeStats.setAttribute(Attribute.Constitution, 20);
-        defender.attributeStats.setAttribute(Attribute.Strength, 14);
+        defender.attributeStats.set(Attribute.Constitution, 20);
+        defender.attributeStats.set(Attribute.Strength, 14);
         const resultsCon20Str14 = calculateToHit(1, attacker, defender);
         expect(resultsCon20Str14.defenderEvade).toBe(26);  // ceil(0.75 * (20 + 14))
 
-        defender.attributeStats.setAttribute(Attribute.Constitution, 15);
-        defender.attributeStats.setAttribute(Attribute.Strength, 20);
+        defender.attributeStats.set(Attribute.Constitution, 15);
+        defender.attributeStats.set(Attribute.Strength, 20);
         const resultsCon15Str20 = calculateToHit(1, attacker, defender);
         expect(resultsCon15Str20.defenderEvade).toBe(27);  // ceil(0.75 * (15 + 20))
 
@@ -130,7 +129,7 @@ describe('stats used by toHit calculation are correct', () => {
         function resetAndTestForAttribute(attribute: Attribute) {
             resetValues();
             attacker.weapon.attribute = attribute;
-            attacker.attributeStats.setAttribute(attribute, 20);
+            attacker.attributeStats.set(attribute, 20);
 
             const results = calculateToHit(1, attacker, defender);
             expect(results.attackerToHit).toBe(24);  // 20 * 1.25 - 2 + 1
@@ -147,8 +146,8 @@ describe('stats used by toHit calculation are correct', () => {
             attackType: AttackType, attribute1: Attribute, attribute2: Attribute) {
             resetValues();
             attacker.weapon.attackType = attackType;
-            defender.attributeStats.setAttribute(attribute1, 20);
-            defender.attributeStats.setAttribute(attribute2, 20);
+            defender.attributeStats.set(attribute1, 20);
+            defender.attributeStats.set(attribute2, 20);
 
             const results = calculateToHit(1, attacker, defender);
             expect(results.attackerToHit).toBe(14);  // 12 * 1.25 - 2 + 1
@@ -166,7 +165,7 @@ describe('damage calculation is correct', () => {
         function resetAndTestForAttribute(attribute: Attribute) {
             resetValues();
             attacker.weapon.attribute = attribute;
-            attacker.attributeStats.setAttribute(attribute, 15);
+            attacker.attributeStats.set(attribute, 15);
 
             expect(calculateDamage(attacker, defender)).toBe(15);
         }
@@ -181,7 +180,7 @@ describe('damage calculation is correct', () => {
             resetValues();
             attacker.weapon.damageType = damageType;
             attacker.weapon.attribute = Attribute.Charisma;
-            attacker.attributeStats.setAttribute(Attribute.Charisma, 15);
+            attacker.attributeStats.set(Attribute.Charisma, 15);
 
             defender.resistanceStats.set(damageType, {percent: 0.25, flat: 0});
 
@@ -198,7 +197,7 @@ describe('damage calculation is correct', () => {
             resetValues();
             attacker.weapon.damageType = damageType;
             attacker.weapon.attribute = Attribute.Charisma;
-            attacker.attributeStats.setAttribute(Attribute.Charisma, 15);
+            attacker.attributeStats.set(Attribute.Charisma, 15);
 
             defender.resistanceStats.set(damageType, {percent: 0, flat: 5});
 
@@ -216,7 +215,7 @@ describe('damage calculation is correct', () => {
             resetValues();
             attacker.weapon.damageType = damageType;
             attacker.weapon.attribute = Attribute.Charisma;
-            attacker.attributeStats.setAttribute(Attribute.Charisma, 15);
+            attacker.attributeStats.set(Attribute.Charisma, 15);
 
             defender.resistanceStats.set(damageType, {percent: 0.25, flat: 5});
 
@@ -232,7 +231,7 @@ describe('damage calculation is correct', () => {
     test('damage minimum is 1', () => {
         attacker.weapon.damageType = DamageType.Piercing;
         attacker.weapon.attribute = Attribute.Charisma;
-        attacker.attributeStats.setAttribute(Attribute.Charisma, 15);
+        attacker.attributeStats.set(Attribute.Charisma, 15);
 
         defender.resistanceStats.set(DamageType.Piercing, {percent: 1, flat: 0});
 

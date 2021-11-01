@@ -1,4 +1,5 @@
-import { DamageType, ResistanceStats } from 'resistance_stats';
+import { DamageType } from 'base_game_enums';
+import { ResistanceStats } from 'resistance_stats';
 import { enumerateEnumValues } from 'utils';
 
 describe('ResistanceStats tests', () => {

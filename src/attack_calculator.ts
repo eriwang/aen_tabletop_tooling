@@ -1,27 +1,7 @@
-import { DamageType, ResistanceStats } from 'resistance_stats';
+import { Attribute, AttackType, EvasiveStatType, DamageType } from 'base_game_enums';
+import { ResistanceStats } from 'resistance_stats';
 
 // Note that these enums/ util classes should likely be moved elsewhere eventually
-export enum Attribute {
-    Constitution,
-    Strength,
-    Dexterity,
-    Wisdom,
-    Intelligence,
-    Charisma,
-}
-
-export enum AttackType {
-    Strike,
-    Projectile,
-    Curse,
-}
-
-export enum EvasiveStatType {
-    Fortitude,
-    Reflex,
-    Willpower,
-}
-
 export interface Weapon {
     attribute: Attribute;
     attackType: AttackType;
@@ -30,83 +10,41 @@ export interface Weapon {
     damageType: DamageType;
 }
 
-// TODO: does Record<Attribute, number> work, then get rid of this class?
 export class AttributeStats {
-    constitution: number;
-    strength: number;
-    dexterity: number;
-    wisdom: number;
-    intelligence: number;
-    charisma: number;
+    attributeToStat: Record<Attribute, number>;
 
     constructor({con, str, dex, wis, int, cha} : {
         con: number, str: number, dex: number, wis: number, int: number, cha: number
     }) {
-        this.constitution = con;
-        this.strength = str;
-        this.dexterity = dex;
-        this.wisdom = wis;
-        this.intelligence = int;
-        this.charisma = cha;
+        this.attributeToStat = {
+            [Attribute.Constitution]: con,
+            [Attribute.Strength]: str,
+            [Attribute.Dexterity]: dex,
+            [Attribute.Wisdom]: wis,
+            [Attribute.Intelligence]: int,
+            [Attribute.Charisma]: cha,
+        };
     }
 
-    getAttribute(attribute: Attribute) : number {
-        switch (attribute) {
-            case Attribute.Constitution:
-                return this.constitution;
-            case Attribute.Strength:
-                return this.strength;
-            case Attribute.Dexterity:
-                return this.dexterity;
-            case Attribute.Wisdom:
-                return this.wisdom;
-            case Attribute.Intelligence:
-                return this.intelligence;
-            case Attribute.Charisma:
-                return this.charisma;
-
-            default:
-                throw `Unknown attribute ${attribute}`;
-        }
+    get(attribute: Attribute) : number {
+        return this.attributeToStat[attribute];
     }
 
-    setAttribute(attribute: Attribute, value: number) {
-        switch (attribute) {
-            case Attribute.Constitution:
-                this.constitution = value;
-                break;
-            case Attribute.Strength:
-                this.strength = value;
-                break;
-            case Attribute.Dexterity:
-                this.dexterity = value;
-                break;
-            case Attribute.Wisdom:
-                this.wisdom = value;
-                break;
-            case Attribute.Intelligence:
-                this.intelligence = value;
-                break;
-            case Attribute.Charisma:
-                this.charisma = value;
-                break;
-
-            default:
-                throw `Unknown attribute ${attribute}`;
-        }
+    set(attribute: Attribute, value: number) {
+        this.attributeToStat[attribute] = value;
     }
 
     getEvasiveStat(evasiveStatType: EvasiveStatType) : number {
         let statSum: number;
         switch (evasiveStatType) {
             case EvasiveStatType.Fortitude:
-                statSum = this.constitution + this.strength;
+                statSum = this.get(Attribute.Constitution) + this.get(Attribute.Strength);
                 break;
             case EvasiveStatType.Reflex:
-                statSum = this.dexterity + this.wisdom;
+                statSum = this.get(Attribute.Dexterity) + this.get(Attribute.Wisdom);
                 break;
             case EvasiveStatType.Willpower:
-                statSum = this.intelligence + this.charisma;
+                statSum = this.get(Attribute.Intelligence) + this.get(Attribute.Charisma);
                 break;
 
             default:
@@ -158,7 +96,7 @@ Not yet implemented for toHit:
  */
 export function calculateToHit(roll: number, attacker: Character, defender: Character) : ToHitResults {
     const attackerWeaponAttributeToHit = Math.ceil(
-        attacker.attributeStats.getAttribute(attacker.weapon.attribute) *
+        attacker.attributeStats.get(attacker.weapon.attribute) *
         attacker.weapon.toHitMultiplier
     );
     const attackerToHit = attackerWeaponAttributeToHit - attacker.weapon.difficultyClass + roll;
@@ -180,7 +118,7 @@ Not yet implemented for damage:
 - Two handing weapon multiplier
 */
 export function calculateDamage(attacker: Character, defender: Character) : number {
-    const atkWeapStat = attacker.attributeStats.getAttribute(attacker.weapon.attribute);
+    const atkWeapStat = attacker.attributeStats.get(attacker.weapon.attribute);
     const defAttrRes = defender.resistanceStats.get(attacker.weapon.damageType);
     const calcDmg = Math.ceil(atkWeapStat * (1 - defAttrRes.percent)) - defAttrRes.flat;
     return Math.max(calcDmg, 1);

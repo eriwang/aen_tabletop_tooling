@@ -1,18 +1,5 @@
+import { DamageType } from 'base_game_enums';
 import { enumerateEnumValues } from 'utils';
-
-export enum DamageType {
-    Slashing,
-    Bludgeoning,
-    Piercing,
-    Fire,
-    Water,
-    Air,
-    Earth,
-    Poison,
-    Radiant,
-    Necrotic,
-    Psychic,
-}
 
 export interface ResistanceStat {
     percent: number;
