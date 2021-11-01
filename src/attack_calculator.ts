@@ -1,72 +1,7 @@
-import { Attribute, AttackType, EvasiveStatType, DamageType } from 'base_game_enums';
-import { ResistanceStats } from 'resistance_stats';
+import { AttackType, EvasiveStatType } from 'base_game_enums';
+import { Character } from 'character';
 
 // Note that these enums/ util classes should likely be moved elsewhere eventually
-export interface Weapon {
-    attribute: Attribute;
-    attackType: AttackType;
-    toHitMultiplier: number;
-    difficultyClass: number;
-    damageType: DamageType;
-}
-
-export class AttributeStats {
-    attributeToStat: Record<Attribute, number>;
-
-    constructor({con, str, dex, wis, int, cha} : {
-        con: number, str: number, dex: number, wis: number, int: number, cha: number
-    }) {
-        this.attributeToStat = {
-            [Attribute.Constitution]: con,
-            [Attribute.Strength]: str,
-            [Attribute.Dexterity]: dex,
-            [Attribute.Wisdom]: wis,
-            [Attribute.Intelligence]: int,
-            [Attribute.Charisma]: cha,
-        };
-    }
-
-    get(attribute: Attribute) : number {
-        return this.attributeToStat[attribute];
-    }
-
-    set(attribute: Attribute, value: number) {
-        this.attributeToStat[attribute] = value;
-    }
-
-    getEvasiveStat(evasiveStatType: EvasiveStatType) : number {
-        let statSum: number;
-        switch (evasiveStatType) {
-            case EvasiveStatType.Fortitude:
-                statSum = this.get(Attribute.Constitution) + this.get(Attribute.Strength);
-                break;
-            case EvasiveStatType.Reflex:
-                statSum = this.get(Attribute.Dexterity) + this.get(Attribute.Wisdom);
-                break;
-            case EvasiveStatType.Willpower:
-                statSum = this.get(Attribute.Intelligence) + this.get(Attribute.Charisma);
-                break;
-
-            default:
-                throw `Unknown evasiveStatType ${evasiveStatType}`;
-        }
-
-        return Math.ceil(0.75 * statSum);
-    }
-}
-
-export class Character {
-    attributeStats: AttributeStats;
-    resistanceStats: ResistanceStats;
-    weapon: Weapon;
-
-    constructor(attrStats: AttributeStats, resStats: ResistanceStats, weap: Weapon) {
-        this.attributeStats = attrStats;
-        this.resistanceStats = resStats;
-        this.weapon = weap;
-    }
-}
-
 interface ToHitResults {
     doesAttackHit: boolean;
     attackerToHit: number;

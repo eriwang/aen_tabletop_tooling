@@ -1,5 +1,7 @@
-import { AttributeStats, Character, calculateToHit, calculateDamage, Weapon } from 'attack_calculator';
+import { calculateToHit, calculateDamage } from 'attack_calculator';
+import { AttributeStats } from 'attribute_stats';
 import { Attribute, AttackType, DamageType } from 'base_game_enums';
+import { Weapon, Character } from 'character';
 import { ResistanceStats } from 'resistance_stats';
 import { enumerateEnumValues } from 'utils';
 
