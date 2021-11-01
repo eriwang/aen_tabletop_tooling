@@ -13,7 +13,7 @@ test('enumerateEnumValues', () => {
         C = 'C',
     }
 
-    const numEnumValues : NumEnum[] = enumerateEnumValues(NumEnum);
+    const numEnumValues = enumerateEnumValues(NumEnum);
     expect(numEnumValues.length).toBe(3);
     expect(numEnumValues.includes(NumEnum.One)).toBe(true);
     expect(numEnumValues.includes(NumEnum.Two)).toBe(true);

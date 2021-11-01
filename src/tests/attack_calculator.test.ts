@@ -1,5 +1,6 @@
 import {
-    AttributeStats, Character, calculateToHit, calculateDamage, Weapon, Attribute, AttackType, DamageType
+    AttributeStats, Character, calculateToHit, calculateDamage, Weapon, Attribute, AttackType, DamageType,
+    ResistanceStats
 } from 'attack_calculator';
 import { enumerateEnumValues } from 'utils';
 
@@ -136,7 +137,7 @@ describe('stats used by toHit calculation are correct', () => {
             expect(results.defenderEvade).toBe(22);  // ceil(0.75 * (15 + 14))
         }
 
-        for (const attribute of enumerateEnumValues(Attribute)) {
+        for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
             resetAndTestForAttribute(attribute);
         }
     });
@@ -170,7 +171,7 @@ describe('damage calculation is correct', () => {
             expect(calculateDamage(attacker, defender)).toBe(15);
         }
 
-        for (const attribute of enumerateEnumValues(Attribute)) {
+        for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
             resetAndTestForAttribute(attribute);
         }
     });
@@ -186,7 +187,7 @@ describe('damage calculation is correct', () => {
             expect(calculateDamage(attacker, defender)).toBe(12);  // ceil(15 * 0.75) = 12
         }
 
-        for (const damageType of enumerateEnumValues(DamageType)) {
+        for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
             resetAndTestForPercentRes(damageType);
         }
     });
@@ -202,7 +203,7 @@ describe('damage calculation is correct', () => {
             expect(calculateDamage(attacker, defender)).toBe(10);
         }
 
-        for (const damageType of enumerateEnumValues(DamageType)) {
+        for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
             resetAndTestForPercentRes(damageType);
         }
     });
@@ -220,7 +221,7 @@ describe('damage calculation is correct', () => {
             expect(calculateDamage(attacker, defender)).toBe(7);  // ceil(15 * 0.75) - 5. ceil((15 - 5) * 0.75) = 8
         }
 
-        for (const damageType of enumerateEnumValues(DamageType)) {
+        for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
             resetAndTestForPercentRes(damageType);
         }
     });
@@ -232,5 +233,36 @@ describe('damage calculation is correct', () => {
         // TODO: set defender res to 100%
 
         expect(calculateDamage(attacker, defender)).toBe(1);
+    });
+});
+
+// TODO: new file
+describe('ResistanceStats tests', () => {
+    test('All stats initialized to 0 if none passed in', () => {
+        const resistanceStats = new ResistanceStats();
+        for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
+            expect(resistanceStats.get(damageType)).toStrictEqual({percent: 0, flat: 0});
+        }
+    });
+
+    test('Stats initialized if passed in', () => {
+        const resistanceStats = new ResistanceStats({
+            [DamageType.Bludgeoning]: {percent: 10, flat: 15},
+            [DamageType.Fire]: {percent: 20, flat: 25}
+        });
+
+        for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
+            const resistanceStat = resistanceStats.get(damageType);
+            switch (damageType) {
+                case DamageType.Bludgeoning:
+                    expect(resistanceStat).toStrictEqual({percent: 10, flat: 15});
+                    continue;
+                case DamageType.Fire:
+                    expect(resistanceStat).toStrictEqual({percent: 20, flat: 25});
+                    continue;
+                default:
+                    expect(resistanceStat).toStrictEqual({percent: 0, flat: 0});
+            }
+        }
     });
 });

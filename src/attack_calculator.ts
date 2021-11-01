@@ -1,3 +1,5 @@
+import { enumerateEnumValues } from 'utils';
+
 // Note that these enums/ util classes should likely be moved elsewhere eventually
 export enum Attribute {
     Constitution,
@@ -129,7 +131,27 @@ export class AttributeStats {
     }
 }
 
+export interface ResistanceStat {
+    percent: number;
+    flat: number;
+}
+
 export class ResistanceStats {
+    damageTypeToResistance: Record<DamageType, ResistanceStat>;
+
+    constructor(damageTypeToNonZeroResistances?: Partial<Record<DamageType, ResistanceStat>>) {
+        // Forced cast is because filling the object dynamically plays poorly with Record
+        this.damageTypeToResistance = {} as Record<DamageType, ResistanceStat>;
+        for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
+            const nonZeroResistance = damageTypeToNonZeroResistances?.[damageType];
+            this.damageTypeToResistance[damageType] =
+                (nonZeroResistance === undefined) ? {percent: 0, flat: 0} : nonZeroResistance;
+        }
+    }
+
+    get(damageType: DamageType) : ResistanceStat {
+        return this.damageTypeToResistance[damageType];
+    }
 }
 
 export class Character {
