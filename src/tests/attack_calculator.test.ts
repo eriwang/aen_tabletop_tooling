@@ -18,7 +18,7 @@ function resetValues() {
         difficultyClass: 2,
         damageType: DamageType.Piercing,
     };
-    attacker = new Character(attackerAttrStats, attackerWeapon);
+    attacker = new Character(attackerAttrStats, new ResistanceStats(), attackerWeapon);
 
     defenderAttrStats = new AttributeStats({
         con: 15,
@@ -35,7 +35,7 @@ function resetValues() {
         difficultyClass: 2,
         damageType: DamageType.Piercing,
     };
-    defender = new Character(defenderAttrStats, defenderWeapon);
+    defender = new Character(defenderAttrStats, new ResistanceStats(), defenderWeapon);
 }
 
 beforeEach(resetValues);
@@ -182,7 +182,8 @@ describe('damage calculation is correct', () => {
             attacker.weapon.damageType = damageType;
             attacker.weapon.attribute = Attribute.Charisma;
             attacker.attributeStats.setAttribute(Attribute.Charisma, 15);
-            // TODO: change defender percentage res to 25%
+
+            defender.resistanceStats.set(damageType, {percent: 0.25, flat: 0});
 
             expect(calculateDamage(attacker, defender)).toBe(12);  // ceil(15 * 0.75) = 12
         }
@@ -198,7 +199,8 @@ describe('damage calculation is correct', () => {
             attacker.weapon.damageType = damageType;
             attacker.weapon.attribute = Attribute.Charisma;
             attacker.attributeStats.setAttribute(Attribute.Charisma, 15);
-            // TODO: change defender flat res to 5
+
+            defender.resistanceStats.set(damageType, {percent: 0, flat: 5});
 
             expect(calculateDamage(attacker, defender)).toBe(10);
         }
@@ -215,8 +217,8 @@ describe('damage calculation is correct', () => {
             attacker.weapon.damageType = damageType;
             attacker.weapon.attribute = Attribute.Charisma;
             attacker.attributeStats.setAttribute(Attribute.Charisma, 15);
-            // TODO: change defender percent res to 25%
-            // TODO: change defender flat res to 5
+
+            defender.resistanceStats.set(damageType, {percent: 0.25, flat: 5});
 
             expect(calculateDamage(attacker, defender)).toBe(7);  // ceil(15 * 0.75) - 5. ceil((15 - 5) * 0.75) = 8
         }
@@ -228,9 +230,11 @@ describe('damage calculation is correct', () => {
 
     // Not sure if this is correct, but it should be tested
     test('damage minimum is 1', () => {
+        attacker.weapon.damageType = DamageType.Piercing;
         attacker.weapon.attribute = Attribute.Charisma;
         attacker.attributeStats.setAttribute(Attribute.Charisma, 15);
-        // TODO: set defender res to 100%
+
+        defender.resistanceStats.set(DamageType.Piercing, {percent: 1, flat: 0});
 
         expect(calculateDamage(attacker, defender)).toBe(1);
     });
@@ -247,22 +251,30 @@ describe('ResistanceStats tests', () => {
 
     test('Stats initialized if passed in', () => {
         const resistanceStats = new ResistanceStats({
-            [DamageType.Bludgeoning]: {percent: 10, flat: 15},
-            [DamageType.Fire]: {percent: 20, flat: 25}
+            [DamageType.Bludgeoning]: {percent: 0.1, flat: 15},
+            [DamageType.Fire]: {percent: 0.2, flat: 25}
         });
 
         for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
             const resistanceStat = resistanceStats.get(damageType);
             switch (damageType) {
                 case DamageType.Bludgeoning:
-                    expect(resistanceStat).toStrictEqual({percent: 10, flat: 15});
+                    expect(resistanceStat).toStrictEqual({percent: 0.1, flat: 15});
                     continue;
                 case DamageType.Fire:
-                    expect(resistanceStat).toStrictEqual({percent: 20, flat: 25});
+                    expect(resistanceStat).toStrictEqual({percent: 0.2, flat: 25});
                     continue;
                 default:
                     expect(resistanceStat).toStrictEqual({percent: 0, flat: 0});
             }
+        }
+    });
+
+    test('set', () => {
+        for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
+            const resistanceStats = new ResistanceStats();
+            resistanceStats.set(damageType, {percent: 0.5, flat: 5});
+            expect(resistanceStats.get(damageType)).toStrictEqual({percent: 0.5, flat: 5});
         }
     });
 });

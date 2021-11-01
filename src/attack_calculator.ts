@@ -152,14 +152,20 @@ export class ResistanceStats {
     get(damageType: DamageType) : ResistanceStat {
         return this.damageTypeToResistance[damageType];
     }
+
+    set(damageType: DamageType, resistanceStat: ResistanceStat) {
+        this.damageTypeToResistance[damageType] = resistanceStat;
+    }
 }
 
 export class Character {
     attributeStats: AttributeStats;
+    resistanceStats: ResistanceStats;
     weapon: Weapon;
 
-    constructor(attrStats: AttributeStats, weap: Weapon) {
+    constructor(attrStats: AttributeStats, resStats: ResistanceStats, weap: Weapon) {
         this.attributeStats = attrStats;
+        this.resistanceStats = resStats;
         this.weapon = weap;
     }
 }
@@ -215,5 +221,8 @@ Not yet implemented for damage:
 - Two handing weapon multiplier
 */
 export function calculateDamage(attacker: Character, defender: Character) : number {
-    return 0;
+    const atkWeapStat = attacker.attributeStats.getAttribute(attacker.weapon.attribute);
+    const defAttrRes = defender.resistanceStats.get(attacker.weapon.damageType);
+    const calcDmg = Math.ceil(atkWeapStat * (1 - defAttrRes.percent)) - defAttrRes.flat;
+    return Math.max(calcDmg, 1);
 }
