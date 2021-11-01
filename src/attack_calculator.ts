@@ -1,13 +1,6 @@
 import { AttackType, EvasiveStatType } from 'base_game_enums';
 import { Character } from 'character';
 
-// Note that these enums/ util classes should likely be moved elsewhere eventually
-interface ToHitResults {
-    doesAttackHit: boolean;
-    attackerToHit: number;
-    defenderEvade: number;
-}
-
 function getEvasiveStatTypeForAttackType(attackType: AttackType) : EvasiveStatType {
     switch (attackType) {
         case AttackType.Strike:
@@ -20,6 +13,12 @@ function getEvasiveStatTypeForAttackType(attackType: AttackType) : EvasiveStatTy
         default:
             throw `Unknown attackType ${attackType}`;
     }
+}
+
+interface ToHitResults {
+    doesAttackHit: boolean;
+    attackerToHit: number;
+    defenderEvade: number;
 }
 
 /*
