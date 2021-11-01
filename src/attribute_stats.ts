@@ -1,19 +1,14 @@
 import { Attribute, EvasiveStatType } from 'base_game_enums';
+import { enumerateEnumValues } from 'utils';
 
 export class AttributeStats {
     attributeToStat: Record<Attribute, number>;
 
-    constructor({con, str, dex, wis, int, cha} : {
-        con: number, str: number, dex: number, wis: number, int: number, cha: number
-    }) {
-        this.attributeToStat = {
-            [Attribute.Constitution]: con,
-            [Attribute.Strength]: str,
-            [Attribute.Dexterity]: dex,
-            [Attribute.Wisdom]: wis,
-            [Attribute.Intelligence]: int,
-            [Attribute.Charisma]: cha,
-        };
+    constructor() {
+        this.attributeToStat = {} as Record<Attribute, number>;
+        for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
+            this.attributeToStat[attribute] = 0;
+        }
     }
 
     get(attribute: Attribute) : number {
