@@ -1,9 +1,4 @@
-/*
-Not yet implemented for toHit:
-
-- Crits should add 10 to attackerToHit
-- Eventually probs some passives that modify to hit in certain situations, both for attacker/defender(s)
- */
+import { DamageType, ResistanceStats } from 'resistance_stats';
 
 // Note that these enums/ util classes should likely be moved elsewhere eventually
 export enum Attribute {
@@ -32,8 +27,10 @@ export interface Weapon {
     attackType: AttackType;
     toHitMultiplier: number;
     difficultyClass: number;
+    damageType: DamageType;
 }
 
+// TODO: does Record<Attribute, number> work, then get rid of this class?
 export class AttributeStats {
     constitution: number;
     strength: number;
@@ -122,10 +119,12 @@ export class AttributeStats {
 
 export class Character {
     attributeStats: AttributeStats;
+    resistanceStats: ResistanceStats;
     weapon: Weapon;
 
-    constructor(attrStats: AttributeStats, weap: Weapon) {
+    constructor(attrStats: AttributeStats, resStats: ResistanceStats, weap: Weapon) {
         this.attributeStats = attrStats;
+        this.resistanceStats = resStats;
         this.weapon = weap;
     }
 }
@@ -150,6 +149,13 @@ function getEvasiveStatTypeForAttackType(attackType: AttackType) : EvasiveStatTy
     }
 }
 
+/*
+Not yet implemented for toHit:
+
+- Crits should add 10 to attackerToHit
+- Eventually probs some passives that modify to hit in certain situations, both for attacker/defender(s)
+- Dual wield - toHit
+ */
 export function calculateToHit(roll: number, attacker: Character, defender: Character) : ToHitResults {
     const attackerWeaponAttributeToHit = Math.ceil(
         attacker.attributeStats.getAttribute(attacker.weapon.attribute) *
@@ -165,4 +171,17 @@ export function calculateToHit(roll: number, attacker: Character, defender: Char
         attackerToHit: attackerToHit,
         defenderEvade: defenderEvade
     };
+}
+
+/*
+Not yet implemented for damage:
+
+- Crits do extra 50% damage
+- Two handing weapon multiplier
+*/
+export function calculateDamage(attacker: Character, defender: Character) : number {
+    const atkWeapStat = attacker.attributeStats.getAttribute(attacker.weapon.attribute);
+    const defAttrRes = defender.resistanceStats.get(attacker.weapon.damageType);
+    const calcDmg = Math.ceil(atkWeapStat * (1 - defAttrRes.percent)) - defAttrRes.flat;
+    return Math.max(calcDmg, 1);
 }

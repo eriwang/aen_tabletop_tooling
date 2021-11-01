@@ -1,4 +1,8 @@
-import { AttributeStats, Character, calculateToHit, Weapon, Attribute, AttackType } from 'attack_calculator';
+import {
+    AttributeStats, Character, calculateToHit, calculateDamage, Weapon, Attribute, AttackType
+} from 'attack_calculator';
+import { DamageType, ResistanceStats } from 'resistance_stats';
+import { enumerateEnumValues } from 'utils';
 
 let attackerAttrStats: AttributeStats, attackerWeapon: Weapon, attacker: Character;
 let defenderAttrStats: AttributeStats, defenderWeapon: Weapon, defender: Character;
@@ -11,9 +15,10 @@ function resetValues() {
         attribute: Attribute.Dexterity,
         attackType: AttackType.Strike,
         toHitMultiplier: 1.25,
-        difficultyClass: 2
+        difficultyClass: 2,
+        damageType: DamageType.Piercing,
     };
-    attacker = new Character(attackerAttrStats, attackerWeapon);
+    attacker = new Character(attackerAttrStats, new ResistanceStats(), attackerWeapon);
 
     defenderAttrStats = new AttributeStats({
         con: 15,
@@ -27,9 +32,10 @@ function resetValues() {
         attribute: Attribute.Dexterity,
         attackType: AttackType.Strike,
         toHitMultiplier: 1.25,
-        difficultyClass: 2
+        difficultyClass: 2,
+        damageType: DamageType.Piercing,
     };
-    defender = new Character(defenderAttrStats, defenderWeapon);
+    defender = new Character(defenderAttrStats, new ResistanceStats(), defenderWeapon);
 }
 
 beforeEach(resetValues);
@@ -119,7 +125,7 @@ describe('toHit and evade calculation is correct', () => {
     });
 });
 
-describe('stats used by calculation are correct', () => {
+describe('stats used by toHit calculation are correct', () => {
     test('weapon attribute changes attackerToHit', () => {
         function resetAndTestForAttribute(attribute: Attribute) {
             resetValues();
@@ -131,12 +137,9 @@ describe('stats used by calculation are correct', () => {
             expect(results.defenderEvade).toBe(22);  // ceil(0.75 * (15 + 14))
         }
 
-        resetAndTestForAttribute(Attribute.Constitution);
-        resetAndTestForAttribute(Attribute.Strength);
-        resetAndTestForAttribute(Attribute.Dexterity);
-        resetAndTestForAttribute(Attribute.Wisdom);
-        resetAndTestForAttribute(Attribute.Intelligence);
-        resetAndTestForAttribute(Attribute.Charisma);
+        for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
+            resetAndTestForAttribute(attribute);
+        }
     });
 
     test('weapon attack type changes defender evade', () => {
@@ -155,5 +158,84 @@ describe('stats used by calculation are correct', () => {
         resetAndTestForAttackTypeAndAttributes(AttackType.Strike, Attribute.Constitution, Attribute.Strength);
         resetAndTestForAttackTypeAndAttributes(AttackType.Projectile, Attribute.Dexterity, Attribute.Wisdom);
         resetAndTestForAttackTypeAndAttributes(AttackType.Curse, Attribute.Intelligence, Attribute.Charisma);
+    });
+});
+
+describe('damage calculation is correct', () => {
+    test('weapon attribute changes damage', () => {
+        function resetAndTestForAttribute(attribute: Attribute) {
+            resetValues();
+            attacker.weapon.attribute = attribute;
+            attacker.attributeStats.setAttribute(attribute, 15);
+
+            expect(calculateDamage(attacker, defender)).toBe(15);
+        }
+
+        for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
+            resetAndTestForAttribute(attribute);
+        }
+    });
+
+    test('defender percentage res changes damage', () => {
+        function resetAndTestForPercentRes(damageType: DamageType) {
+            resetValues();
+            attacker.weapon.damageType = damageType;
+            attacker.weapon.attribute = Attribute.Charisma;
+            attacker.attributeStats.setAttribute(Attribute.Charisma, 15);
+
+            defender.resistanceStats.set(damageType, {percent: 0.25, flat: 0});
+
+            expect(calculateDamage(attacker, defender)).toBe(12);  // ceil(15 * 0.75) = 12
+        }
+
+        for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
+            resetAndTestForPercentRes(damageType);
+        }
+    });
+
+    test('defender flat res changes damage', () => {
+        function resetAndTestForPercentRes(damageType: DamageType) {
+            resetValues();
+            attacker.weapon.damageType = damageType;
+            attacker.weapon.attribute = Attribute.Charisma;
+            attacker.attributeStats.setAttribute(Attribute.Charisma, 15);
+
+            defender.resistanceStats.set(damageType, {percent: 0, flat: 5});
+
+            expect(calculateDamage(attacker, defender)).toBe(10);
+        }
+
+        for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
+            resetAndTestForPercentRes(damageType);
+        }
+    });
+
+    // Not sure if this is correct, but in either case there should be a test for it/ the ceil
+    test('defender percent res applied before flat res', () => {
+        function resetAndTestForPercentRes(damageType: DamageType) {
+            resetValues();
+            attacker.weapon.damageType = damageType;
+            attacker.weapon.attribute = Attribute.Charisma;
+            attacker.attributeStats.setAttribute(Attribute.Charisma, 15);
+
+            defender.resistanceStats.set(damageType, {percent: 0.25, flat: 5});
+
+            expect(calculateDamage(attacker, defender)).toBe(7);  // ceil(15 * 0.75) - 5. ceil((15 - 5) * 0.75) = 8
+        }
+
+        for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
+            resetAndTestForPercentRes(damageType);
+        }
+    });
+
+    // Not sure if this is correct, but it should be tested
+    test('damage minimum is 1', () => {
+        attacker.weapon.damageType = DamageType.Piercing;
+        attacker.weapon.attribute = Attribute.Charisma;
+        attacker.attributeStats.setAttribute(Attribute.Charisma, 15);
+
+        defender.resistanceStats.set(DamageType.Piercing, {percent: 1, flat: 0});
+
+        expect(calculateDamage(attacker, defender)).toBe(1);
     });
 });
