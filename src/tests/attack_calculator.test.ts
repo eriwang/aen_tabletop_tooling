@@ -1,7 +1,7 @@
 import {
-    AttributeStats, Character, calculateToHit, calculateDamage, Weapon, Attribute, AttackType, DamageType,
-    ResistanceStats
+    AttributeStats, Character, calculateToHit, calculateDamage, Weapon, Attribute, AttackType
 } from 'attack_calculator';
+import { DamageType, ResistanceStats } from 'resistance_stats';
 import { enumerateEnumValues } from 'utils';
 
 let attackerAttrStats: AttributeStats, attackerWeapon: Weapon, attacker: Character;
@@ -237,44 +237,5 @@ describe('damage calculation is correct', () => {
         defender.resistanceStats.set(DamageType.Piercing, {percent: 1, flat: 0});
 
         expect(calculateDamage(attacker, defender)).toBe(1);
-    });
-});
-
-// TODO: new file
-describe('ResistanceStats tests', () => {
-    test('All stats initialized to 0 if none passed in', () => {
-        const resistanceStats = new ResistanceStats();
-        for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
-            expect(resistanceStats.get(damageType)).toStrictEqual({percent: 0, flat: 0});
-        }
-    });
-
-    test('Stats initialized if passed in', () => {
-        const resistanceStats = new ResistanceStats({
-            [DamageType.Bludgeoning]: {percent: 0.1, flat: 15},
-            [DamageType.Fire]: {percent: 0.2, flat: 25}
-        });
-
-        for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
-            const resistanceStat = resistanceStats.get(damageType);
-            switch (damageType) {
-                case DamageType.Bludgeoning:
-                    expect(resistanceStat).toStrictEqual({percent: 0.1, flat: 15});
-                    continue;
-                case DamageType.Fire:
-                    expect(resistanceStat).toStrictEqual({percent: 0.2, flat: 25});
-                    continue;
-                default:
-                    expect(resistanceStat).toStrictEqual({percent: 0, flat: 0});
-            }
-        }
-    });
-
-    test('set', () => {
-        for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
-            const resistanceStats = new ResistanceStats();
-            resistanceStats.set(damageType, {percent: 0.5, flat: 5});
-            expect(resistanceStats.get(damageType)).toStrictEqual({percent: 0.5, flat: 5});
-        }
     });
 });
