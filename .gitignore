@@ -3,6 +3,7 @@
 appsscript.json
 
 # Node/ Yarn files
+dist/
 node_modules/
 
 # Other

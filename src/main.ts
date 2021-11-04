@@ -5,6 +5,9 @@ function sayHi(person: string) {
     let character:AttributeStats = new AttributeStats(person);
 }
 
-function calculateDamage() {
-    sayHi('Elmo Elless');
-}
+// @ts-ignore
+global.calculateDamage = () => {
+    //const attrStats = new AttributeStats();
+
+    sayHi('Elmo');
+};
