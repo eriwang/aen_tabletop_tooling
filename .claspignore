@@ -1,4 +1,5 @@
 jest.config.js
 node_modules/**
-src/tests/**
+src/**
 *.js
+!dist/out.js
