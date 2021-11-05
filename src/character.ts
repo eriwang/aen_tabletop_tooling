@@ -2,6 +2,7 @@ import { AttributeStats } from 'attribute_stats';
 import { Attribute, AttackType, DamageType, Skills, Stats, EvasiveStatType } from 'base_game_enums';
 import { Profile } from 'profile';
 import { ResistanceStats } from 'resistance_stats';
+import { Weapon } from 'weapon';
 
 
 
@@ -13,20 +14,14 @@ export class Character {
     weapon: Weapon;
     profile: Profile;
 
-    /**constructor(attrStats: AttributeStats, resStats: ResistanceStats, weap: Weapon, bonuses: SkillBonuses) {
-        this.attributeStats = attrStats;
-        this.resistanceStats = resStats;
-        this.weapon = weap;
-        this.skillBonus = bonuses;
-        this.health = this.attributeStats.get(Attribute.Constitution) * 
-    }*/
-
     constructor(unitName: string, profileName: string){
         this.attributeStats = new AttributeStats(unitName);
         this.profile = new Profile(profileName);
         this.resistanceStats = new ResistanceStats(this.profile.armor);
 
         this.stats = {} as Record <Stats, number>;
+
+        this.weapon = new Weapon('Dagger');
 
         this.stats[Stats.HP] = this.attributeStats.get(Attribute.Constitution) * this.profile.hpPerCon;
         this.stats[Stats.FP] = this.attributeStats.get(Attribute.Intelligence) * this.profile.fpPerInt;

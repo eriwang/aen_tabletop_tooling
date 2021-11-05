@@ -7,6 +7,7 @@ export class Profile{
     hpPerCon: number = 0;
     fpPerInt: number = 0;
     level: number = 0;
+    armor: string = "";
 
     constructor(profileName: string){
 
@@ -40,6 +41,7 @@ export class Profile{
                 let hpConCol: number = 0;
                 let fpIntCol: number = 0;
                 let levelCol: number = 0;
+                let armorCol: number = 0;
 
                 for( var i = 0; i<data[0].length; i++){
                     if(data[0][i] === "HP/Con"){
@@ -51,6 +53,9 @@ export class Profile{
                     else if (data[0][i] === "Level"){
                         levelCol = i;
                     }
+                    else if (data[0][i] === "Armor"){
+                        armorCol = i;
+                    }
                 }
 
                 if (hpConCol == 0 || fpIntCol == 0 || levelCol == 0){
@@ -61,8 +66,13 @@ export class Profile{
                 this.hpPerCon = data[row][hpConCol];
                 this.fpPerInt = data[row][fpIntCol];
                 this.level = data[row][levelCol];
+                this.armor = data[row][armorCol];
 
             }
-
     }
+
+    getSkillBonus(skill: Skills): number{
+        return this.skills[skill];
+    }
+
 }
