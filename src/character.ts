@@ -1,25 +1,17 @@
 import { AttributeStats } from 'attribute_stats';
-import { Attribute, AttackType, DamageType, Skills } from 'base_game_enums';
+import { Attribute, AttackType, DamageType, Skills, Stats, EvasiveStatType } from 'base_game_enums';
 import { Profile } from 'profile';
 import { ResistanceStats } from 'resistance_stats';
 
 
-// This is here for now since there's not much special about weapons (yet)
-export interface Weapon {
-    attribute: Attribute;
-    attackType: AttackType;
-    toHitMultiplier: number;
-    difficultyClass: number;
-    damageType: DamageType;
-}
+
 
 export class Character {
     attributeStats: AttributeStats;
     resistanceStats: ResistanceStats;
+    stats: Record<Stats, number>;
     weapon: Weapon;
     profile: Profile;
-    health: number;
-    focus: number;
 
     /**constructor(attrStats: AttributeStats, resStats: ResistanceStats, weap: Weapon, bonuses: SkillBonuses) {
         this.attributeStats = attrStats;
@@ -32,8 +24,19 @@ export class Character {
     constructor(unitName: string, profileName: string){
         this.attributeStats = new AttributeStats(unitName);
         this.profile = new Profile(profileName);
-        this.health = this.attributeStats.get(Attribute.Constitution) * 13 //replace with profile HP/Con
-        this.focus = this.attributeStats.get(Attribute.Intelligence) * 7 //replace with profile FP/Int
+        this.resistanceStats = new ResistanceStats(this.profile.armor);
+
+        this.stats = {} as Record <Stats, number>;
+
+        this.stats[Stats.HP] = this.attributeStats.get(Attribute.Constitution) * this.profile.hpPerCon;
+        this.stats[Stats.FP] = this.attributeStats.get(Attribute.Intelligence) * this.profile.fpPerInt;
+        this.stats[Stats.FOR] = this.attributeStats.getEvasiveStat(EvasiveStatType.Fortitude);
+        this.stats[Stats.REF] = this.attributeStats.getEvasiveStat(EvasiveStatType.Reflex);
+        this.stats[Stats.WILL] = this.attributeStats.getEvasiveStat(EvasiveStatType.Willpower);
+        
+        //this.stats[Stats.Movement] = ??? where should come from unit stats or profile?
+
+    
     }
 
     getSkillTotal(skill: Skills): number{
@@ -74,6 +77,13 @@ export class Character {
                 return this.attributeStats.get(Attribute.Charisma) + bonus;
         }
 
+    }
+
+    getScalingFactor() : number {
+        return Math.ceil(
+            this.attributeStats.get(this.weapon.attribute) *
+            this.weapon.attributeMultiplier
+        );
     }
 
 }

@@ -14,9 +14,10 @@ function resetValues() {
     const attackerWeapon = {
         attribute: Attribute.Dexterity,
         attackType: AttackType.Strike,
-        toHitMultiplier: 1,
-        difficultyClass: 0,
         damageType: DamageType.Piercing,
+        baseDamage: 0,
+        attributeMultiplier: 1,
+        difficultyClass: 0,
     };
     attacker = new Character(attackerAttrStats, new ResistanceStats(), attackerWeapon);
 
@@ -24,9 +25,10 @@ function resetValues() {
     const defenderWeapon = {
         attribute: Attribute.Dexterity,
         attackType: AttackType.Strike,
-        toHitMultiplier: 1,
-        difficultyClass: 0,
         damageType: DamageType.Piercing,
+        baseDamage: 0,
+        attributeMultiplier: 1,
+        difficultyClass: 0,
     };
     defender = new Character(defenderAttrStats, new ResistanceStats(), defenderWeapon);
 }
@@ -70,7 +72,7 @@ describe('toHit and evade calculation is correct', () => {
 
     test('weapToHitMultiplier changes attackerToHit', () => {
         attacker.attributeStats.set(attacker.weapon.attribute, 12);
-        attacker.weapon.toHitMultiplier = 1.4;
+        attacker.weapon.attributeMultiplier = 1.4;
         expect(calculateToHit(1, attacker, defender).attackerToHit).toBe(18);  // ceil(12 * 1.4) + 1
     });
 
@@ -129,6 +131,34 @@ describe('damage calculation is correct', () => {
 
             expect(calculateDamage(attacker, defender)).toBe(15);
         }
+    });
+
+    test('weapon baseDamage changes damage', () => {
+        attacker.weapon.damageType = DamageType.Piercing;
+        attacker.weapon.attribute = Attribute.Charisma;
+        attacker.weapon.baseDamage = 5;
+        attacker.attributeStats.set(Attribute.Charisma, 15);
+
+        expect(calculateDamage(attacker, defender)).toBe(20);  // 5 + 15 = 12
+    });
+
+    test('weapon attributeMultiplier changes damage', () => {
+        attacker.weapon.damageType = DamageType.Piercing;
+        attacker.weapon.attribute = Attribute.Charisma;
+        attacker.weapon.attributeMultiplier = 1.25;
+        attacker.attributeStats.set(Attribute.Charisma, 15);
+
+        expect(calculateDamage(attacker, defender)).toBe(19);  // ceil(1.25 * 15) = 19
+    });
+
+    test('weapon attributeMultiplier applied before baseDamage', () => {
+        attacker.weapon.damageType = DamageType.Piercing;
+        attacker.weapon.attribute = Attribute.Charisma;
+        attacker.weapon.attributeMultiplier = 1.25;
+        attacker.weapon.baseDamage = 5;
+        attacker.attributeStats.set(Attribute.Charisma, 15);
+
+        expect(calculateDamage(attacker, defender)).toBe(24);  // ceil(1.25 * 15) + 5 = 24. ceil(1.25 * (15 + 5)) = 25
     });
 
     test('defender percentage res changes damage', () => {
