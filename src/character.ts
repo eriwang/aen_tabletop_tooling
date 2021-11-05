@@ -9,7 +9,8 @@ export interface Weapon {
     attackType: AttackType;
     damageType: DamageType;
     baseDamage: number;
-    attributeMultiplier: number;
+    toHitMultiplier: number;
+    damageMultiplier: number;
     difficultyClass: number;
 }
 
@@ -22,12 +23,5 @@ export class Character {
         this.attributeStats = attrStats;
         this.resistanceStats = resStats;
         this.weapon = weap;
-    }
-
-    getScalingFactor() : number {
-        return Math.ceil(
-            this.attributeStats.get(this.weapon.attribute) *
-            this.weapon.attributeMultiplier
-        );
     }
 }
