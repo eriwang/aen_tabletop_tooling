@@ -9,16 +9,6 @@ export interface ResistanceStat {
 export class ResistanceStats {
     damageTypeToResistance: Record<DamageType, ResistanceStat>;
 
-    /**constructor(damageTypeToNonZeroResistances?: Partial<Record<DamageType, ResistanceStat>>) {
-        // Forced cast is because filling the object dynamically plays poorly with Record
-        this.damageTypeToResistance = {} as Record<DamageType, ResistanceStat>;
-        for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
-            const nonZeroResistance = damageTypeToNonZeroResistances?.[damageType];
-            this.damageTypeToResistance[damageType] =
-                (nonZeroResistance === undefined) ? {percent: 0, flat: 0} : nonZeroResistance;
-        }
-    }*/
-
     constructor(armor:string){
         this.damageTypeToResistance = {} as Record<DamageType, ResistanceStat>;
 
