@@ -33,3 +33,33 @@ export enum DamageType {
     Necrotic,
     Psychic,
 }
+
+export enum Skills{
+    Endurance,
+    Athletics,
+    Acrobatics,
+    SleightOfHand,
+    Nature,
+    Religion,
+    Medicine,
+    Stealth,
+    Survival,
+    Arcana,
+    History,
+    Investigation,
+    Culture,
+    Deception,
+    Intimidation,
+    Performance,
+    Persuasion,
+    Insight,
+}
+
+export enum Stats{
+    HP,
+    FP,
+    FOR,
+    REF,
+    WILL,
+    Movement
+}

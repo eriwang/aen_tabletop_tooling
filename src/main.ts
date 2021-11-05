@@ -9,5 +9,5 @@ function sayHi(person: string) {
 global.calculateDamage = () => {
     //const attrStats = new AttributeStats();
 
-    sayHi('Elmo');
+    sayHi('Elmo Elless');
 };
