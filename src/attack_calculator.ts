@@ -29,12 +29,9 @@ Not yet implemented for toHit:
 - Dual wield - toHit
  */
 export function calculateToHit(roll: number, attacker: Character, defender: Character) : ToHitResults {
-    const attackerWeaponAttributeToHit = Math.ceil(
-        attacker.attributeStats.get(attacker.weapon.attribute) *
-        attacker.weapon.toHitMultiplier
-    );
-    const attackerToHit = attackerWeaponAttributeToHit - attacker.weapon.difficultyClass + roll;
-
+    // Note that some of these (and in calculateDamage) could probably go on the Character class instead, and might
+    // make the testing story a tad cleaner
+    const attackerToHit = attacker.getScalingFactor() - attacker.weapon.difficultyClass + roll;
     const defenderEvasiveStatType = getEvasiveStatTypeForAttackType(attacker.weapon.attackType);
     const defenderEvade = defender.attributeStats.getEvasiveStat(defenderEvasiveStatType);
 
@@ -52,8 +49,8 @@ Not yet implemented for damage:
 - Two handing weapon multiplier
 */
 export function calculateDamage(attacker: Character, defender: Character) : number {
-    const atkWeapStat = attacker.attributeStats.get(attacker.weapon.attribute);
-    const defAttrRes = defender.resistanceStats.get(attacker.weapon.damageType);
-    const calcDmg = Math.ceil(atkWeapStat * (1 - defAttrRes.percent)) - defAttrRes.flat;
+    const attackerDamage = attacker.getScalingFactor() + attacker.weapon.baseDamage;
+    const defenderRes = defender.resistanceStats.get(attacker.weapon.damageType);
+    const calcDmg = Math.ceil(attackerDamage * (1 - defenderRes.percent)) - defenderRes.flat;
     return Math.max(calcDmg, 1);
 }
