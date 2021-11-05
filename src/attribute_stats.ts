@@ -4,12 +4,49 @@ import { enumerateEnumValues } from 'utils';
 export class AttributeStats {
     attributeToStat: Record<Attribute, number>;
 
-    constructor() {
-        this.attributeToStat = {} as Record<Attribute, number>;
-        for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
-            this.attributeToStat[attribute] = 0;
+    constructor(name: string) {
+        if(name === undefined){
+            this.attributeToStat = {} as Record<Attribute, number>;
+            for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
+                this.attributeToStat[attribute] = 0;
+            }
         }
+        else{
+            this.attributeToStat = {} as Record<Attribute, number>;
+
+            var sheet = SpreadsheetApp.getActive().getSheetByName('Units');
+            if(sheet != null){
+                var data = sheet.getDataRange().getValues();
+                let row: number = -1;
+
+                //find the row that matches the name
+                for( var i = 0; i<data.length; i++){
+                    if(data[i][0] === name){
+                        row = i;
+                        break;
+                    }
+                }
+
+                if(row === -1){
+                    //Name not found
+                    return;
+                }
+
+
+                for (const attribute of enumerateEnumValues<Attribute>(Attribute)){
+                    
+                    console.log(Attribute[attribute] + ": " + data[row][attribute+1]);
+                    this.attributeToStat[attribute] = data[row][attribute+1];
+
+                }
+
+            }
+
+        }
+
     }
+
+    
 
     get(attribute: Attribute) : number {
         return this.attributeToStat[attribute];

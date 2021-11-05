@@ -9,14 +9,36 @@ export interface ResistanceStat {
 export class ResistanceStats {
     damageTypeToResistance: Record<DamageType, ResistanceStat>;
 
-    constructor(damageTypeToNonZeroResistances?: Partial<Record<DamageType, ResistanceStat>>) {
-        // Forced cast is because filling the object dynamically plays poorly with Record
+    constructor(armor:string){
         this.damageTypeToResistance = {} as Record<DamageType, ResistanceStat>;
-        for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
-            const nonZeroResistance = damageTypeToNonZeroResistances?.[damageType];
-            this.damageTypeToResistance[damageType] =
-                (nonZeroResistance === undefined) ? {percent: 0, flat: 0} : nonZeroResistance;
-        }
+
+        var sheet = SpreadsheetApp.getActive().getSheetByName('Armors');
+            if(sheet != null){
+                var data = sheet.getDataRange().getValues();
+                let row: number = -1;
+
+                //find the row that matches the name
+                for( var i = 0; i<data.length; i++){
+                    if(data[i][0] === armor){
+                        row = i;
+                        break;
+                    }
+                }
+
+                if(row === -1){
+                    //Name not found
+                    return;
+                }
+
+                for (const damageType of enumerateEnumValues<DamageType>(DamageType)){
+                    //Currently there are 11 damageTypes, so I hardcoded a offset of 11
+                    //If there is a way to get the number of elements in an enum, let me know -Austin
+                    this.damageTypeToResistance[damageType] = {percent: data[row][damageType+1], flat: data[row][damageType+12]};
+
+                }
+
+            }
+
     }
 
     get(damageType: DamageType) : ResistanceStat {
