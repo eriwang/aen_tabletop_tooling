@@ -1,7 +1,7 @@
 import { calculateToHit, calculateDamage } from 'attack_calculator';
 import { AttributeStats } from 'attribute_stats';
 import { Attribute, AttackType, DamageType } from 'base_game_enums';
-import { Character } from 'character';
+import { Character, Weapon } from 'character';
 import { ResistanceStats } from 'resistance_stats';
 import { enumerateEnumValues } from 'utils';
 
@@ -11,23 +11,25 @@ let defender: Character;
 function resetValues() {
     // These are set to "identity" values (i.e. 0 for adding, 1 for multiplying) for ease of reasoning in tests
     const attackerAttrStats = new AttributeStats();
-    const attackerWeapon = {
+    const attackerWeapon: Weapon = {
         attribute: Attribute.Dexterity,
         attackType: AttackType.Strike,
         damageType: DamageType.Piercing,
         baseDamage: 0,
-        attributeMultiplier: 1,
+        toHitMultiplier: 1,
+        damageMultiplier: 1,
         difficultyClass: 0,
     };
     attacker = new Character(attackerAttrStats, new ResistanceStats(), attackerWeapon);
 
     const defenderAttrStats = new AttributeStats();
-    const defenderWeapon = {
+    const defenderWeapon: Weapon = {
         attribute: Attribute.Dexterity,
         attackType: AttackType.Strike,
         damageType: DamageType.Piercing,
         baseDamage: 0,
-        attributeMultiplier: 1,
+        toHitMultiplier: 1,
+        damageMultiplier: 1,
         difficultyClass: 0,
     };
     defender = new Character(defenderAttrStats, new ResistanceStats(), defenderWeapon);
@@ -72,7 +74,7 @@ describe('toHit and evade calculation is correct', () => {
 
     test('weapToHitMultiplier changes attackerToHit', () => {
         attacker.attributeStats.set(attacker.weapon.attribute, 12);
-        attacker.weapon.attributeMultiplier = 1.4;
+        attacker.weapon.toHitMultiplier = 1.4;
         expect(calculateToHit(1, attacker, defender).attackerToHit).toBe(18);  // ceil(12 * 1.4) + 1
     });
 
@@ -142,19 +144,19 @@ describe('damage calculation is correct', () => {
         expect(calculateDamage(attacker, defender)).toBe(20);  // 5 + 15 = 12
     });
 
-    test('weapon attributeMultiplier changes damage', () => {
+    test('weapon damageMultiplier changes damage', () => {
         attacker.weapon.damageType = DamageType.Piercing;
         attacker.weapon.attribute = Attribute.Charisma;
-        attacker.weapon.attributeMultiplier = 1.25;
+        attacker.weapon.damageMultiplier = 1.25;
         attacker.attributeStats.set(Attribute.Charisma, 15);
 
         expect(calculateDamage(attacker, defender)).toBe(19);  // ceil(1.25 * 15) = 19
     });
 
-    test('weapon attributeMultiplier applied before baseDamage', () => {
+    test('weapon damageMultiplier applied before baseDamage', () => {
         attacker.weapon.damageType = DamageType.Piercing;
         attacker.weapon.attribute = Attribute.Charisma;
-        attacker.weapon.attributeMultiplier = 1.25;
+        attacker.weapon.damageMultiplier = 1.25;
         attacker.weapon.baseDamage = 5;
         attacker.attributeStats.set(Attribute.Charisma, 15);
 
