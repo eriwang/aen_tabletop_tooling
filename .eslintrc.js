@@ -23,6 +23,11 @@ module.exports = {
         'max-len': ['error', 120],
         'no-var': 'error',
 
+        'space-infix-ops': 'error',
+        'spaced-comment': 'error',
+        'keyword-spacing': 'error',
+        'space-in-parens': 'error',
+
         // vanilla indent rule is busted: https://github.com/typescript-eslint/typescript-eslint/issues/1824
         'indent': 'off',
         '@typescript-eslint/indent': ['error', 4],
@@ -30,4 +35,5 @@ module.exports = {
         // there can be errors because functions are used by the Google Apps Script sheet
         'no-unused-vars': 'off',
     },
+    'ignorePatterns': ['dist/**'],
 };

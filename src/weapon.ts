@@ -14,7 +14,7 @@ export class Weapon {
 
     constructor(weapon: string){
 
-        //Hardcode dagger
+        // Hardcode dagger
         this.attribute = Attribute.Dexterity;
         this.attackType = AttackType.Strike;
         this.damageType = DamageType.Piercing;
@@ -22,7 +22,7 @@ export class Weapon {
         this.attributeMultiplier = .75;
         this.difficultyClass = 2;       
 
-        /*var sheet = SpreadsheetApp.getActive().getSheetByName('Weapons');
+        /* var sheet = SpreadsheetApp.getActive().getSheetByName('Weapons');
 
         if(sheet != null){
             var data = sheet.getDataRange().getValues();
