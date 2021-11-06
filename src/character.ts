@@ -15,9 +15,11 @@ export class Character {
     profile: Profile;
 
     constructor(unitName: string, profileName: string){
-        this.attributeStats = new AttributeStats(unitName);
+        this.attributeStats = new AttributeStats();
+        this.attributeStats.buildAttributesUnit(unitName);
         this.profile = new Profile(profileName);
-        this.resistanceStats = new ResistanceStats(this.profile.armor);
+        this.resistanceStats = new ResistanceStats();
+        this.resistanceStats.buildResistancesArmor(this.profile.armor);
 
         this.stats = {} as Record <Stats, number>;
 
