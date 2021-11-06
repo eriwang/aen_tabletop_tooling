@@ -3,16 +3,14 @@ import { ResistanceStats } from 'resistance_stats';
 import { enumerateEnumValues } from 'utils';
 
 test('All stats initialized to 0 if none passed in', () => {
-    const resistanceStats = new ResistanceStats();
-    resistanceStats.buildResistanceDefault();
+    const resistanceStats = ResistanceStats.buildResistanceDefault();
     for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
         expect(resistanceStats.get(damageType)).toStrictEqual({percent: 0, flat: 0});
     }
 });
 
 test('Stats initialized if armor is passed in', () => {
-    const resistanceStats = new ResistanceStats();
-    resistanceStats.buildResistancesArmor('test');
+    const resistanceStats = ResistanceStats.buildResistancesArmor('test');
 
     for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
         const resistanceStat = resistanceStats.get(damageType);

@@ -9,18 +9,23 @@ export interface ResistanceStat {
 export class ResistanceStats {
     damageTypeToResistance: Record<DamageType, ResistanceStat>;
 
-    constructor(){
-        this.damageTypeToResistance = {} as Record<DamageType, ResistanceStat>;     
+    constructor(damageTypeToResistance: Record<DamageType, ResistanceStat>){
+        this.damageTypeToResistance = damageTypeToResistance;     
     }
 
-    buildResistanceDefault(){
+    static buildResistanceDefault() : ResistanceStats{
+
+        const damageTypeToResistance = {} as Record<DamageType, ResistanceStat>;  
+
         for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
-            this.damageTypeToResistance[damageType] = {percent: 0, flat: 0};
+            damageTypeToResistance[damageType] = {percent: 0, flat: 0};
         }
+
+        return new ResistanceStats(damageTypeToResistance);
     }
 
-    buildResistancesArmor(armor: string){
-
+    static buildResistancesArmor(armor: string) : ResistanceStats{
+        const damageTypeToResistance = {} as Record<DamageType, ResistanceStat>; 
         var sheet = SpreadsheetApp.getActive().getSheetByName('Armors');
         if(sheet != null){
             var data = sheet.getDataRange().getValues();
@@ -36,7 +41,7 @@ export class ResistanceStats {
 
             if(row === -1){
                 //Name not found
-                return;
+                throw('Name not found');
             }
 
             const damageTypes = enumerateEnumValues<DamageType>(DamageType);
@@ -44,11 +49,13 @@ export class ResistanceStats {
             for (const damageType of damageTypes){
                 //Currently there are 11 damageTypes, so I hardcoded a offset of 11
                 //If there is a way to get the number of elements in an enum, let me know -Austin
-                this.damageTypeToResistance[damageType] = {percent: data[row][damageType+1], flat: data[row][damageType+damageTypes.length+1]};
+                damageTypeToResistance[damageType] = {percent: data[row][damageType+1], flat: data[row][damageType+damageTypes.length+1]};
 
             }
 
         }
+
+        return new ResistanceStats(damageTypeToResistance);
 
     }
 
