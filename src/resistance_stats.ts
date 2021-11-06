@@ -56,7 +56,6 @@ export class ResistanceStats {
         }
 
         return new ResistanceStats(damageTypeToResistance);
-
     }
 
     get(damageType: DamageType) : ResistanceStat {

@@ -5,8 +5,6 @@ import { ResistanceStats } from 'resistance_stats';
 import { Weapon } from 'weapon';
 
 
-
-
 export class Character {
     attributeStats: AttributeStats;
     resistanceStats: ResistanceStats;
@@ -72,13 +70,6 @@ export class Character {
                 return this.attributeStats.get(Attribute.Charisma) + bonus;
         }
 
-    }
-
-    getScalingFactor() : number {
-        return Math.ceil(
-            this.attributeStats.get(this.weapon.attribute) *
-            this.weapon.attributeMultiplier
-        );
     }
 
 }
