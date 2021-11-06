@@ -20,29 +20,29 @@ export class AttributeStats {
 
     static buildAttributesUnit(name:string) : AttributeStats{
         const attributeToStat = {} as Record<Attribute, number>;
-        var sheet = SpreadsheetApp.getActive().getSheetByName('Units');
-        if(sheet != null){
-            var data = sheet.getDataRange().getValues();
+        let sheet = SpreadsheetApp.getActive().getSheetByName('Units');
+        if (sheet != null){
+            let data = sheet.getDataRange().getValues();
             let row: number = -1;
 
-            //find the row that matches the name
-            for( var i = 0; i<data.length; i++){
-                if(data[i][0] === name){
+            // find the row that matches the name
+            for (let i = 0; i < data.length; i++){
+                if (data[i][0] === name){
                     row = i;
                     break;
                 }
             }
 
-            if(row === -1){
-                //Name not found
-                throw('Name not found');
+            if (row === -1){
+                // Name not found
+                throw ('Name not found');
             }
 
 
             for (const attribute of enumerateEnumValues<Attribute>(Attribute)){
                 
-                console.log(Attribute[attribute] + ": " + data[row][attribute+1]);
-                attributeToStat[attribute] = data[row][attribute+1];
+                console.log(Attribute[attribute] + ': ' + data[row][attribute + 1]);
+                attributeToStat[attribute] = data[row][attribute + 1];
 
             }
 

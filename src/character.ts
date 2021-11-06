@@ -27,7 +27,7 @@ export class Character {
         this.stats[Stats.REF] = this.attributeStats.getEvasiveStat(EvasiveStatType.Reflex);
         this.stats[Stats.WILL] = this.attributeStats.getEvasiveStat(EvasiveStatType.Willpower);
         
-        //this.stats[Stats.Movement] = ??? where should come from unit stats or profile?
+        // this.stats[Stats.Movement] = ??? where should come from unit stats or profile?
 
     
     }
@@ -38,7 +38,7 @@ export class Character {
         let bonus: number = this.profile.getSkillBonus(skill) * multiplier;
 
 
-        switch(skill){
+        switch (skill){
             case Skills.Endurance:
                 return this.attributeStats.get(Attribute.Constitution) + bonus;
 
@@ -52,7 +52,7 @@ export class Character {
             case Skills.Nature:
             case Skills.Religion:
             case Skills.Medicine:
-            case Skills.Stealth: //Should this be wisdom?
+            case Skills.Stealth: // Should this be wisdom?
             case Skills.Survival:
                 return this.attributeStats.get(Attribute.Wisdom) + bonus;
             
