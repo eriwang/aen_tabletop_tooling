@@ -15,24 +15,7 @@ export class Character {
         this.attributeStats = attrStats;
         this.resistanceStats = resStats;
         this.weapon = weap;
-        this.profile = prof;
-    }
-
-    static buildUsingSheet(unitName: string, profileName: string) : Character {
-        const attributeStats = AttributeStats.buildUsingSheet(unitName);
-        const profile = Profile.buildFromSheet(profileName);
-        const resistanceStats = ResistanceStats.buildUsingSheet(profile.armor);
-        const dagger : Weapon = {  // placeholder
-            attribute: Attribute.Dexterity,
-            attackType: AttackType.Strike,
-            damageType: DamageType.Piercing,
-            toHitMultiplier: 1,
-            damageMultiplier: 0.75,
-            difficultyClass: 2,
-            baseDamage: 2,
-        };
-
-        return new Character(attributeStats, resistanceStats, dagger, profile);
+        this.profile = prof;  // as of time of writing, unused in real code
     }
 
     // as of writing, unused and untested

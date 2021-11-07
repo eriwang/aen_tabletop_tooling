@@ -1,5 +1,5 @@
-import { Attribute, EvasiveStatType } from 'base_game_enums';
-import { enumerateEnumValues } from 'utils';
+import { Attribute, EvasiveStatType, getAbbrevFromAttr } from 'base_game_enums';
+import { enumerateEnumValues, getNonNull } from 'utils';
 
 export class AttributeStats {
     attributeToStat: Record<Attribute, number>;
@@ -8,39 +8,10 @@ export class AttributeStats {
         this.attributeToStat = attributeToStat;
     }
 
-    static buildEmpty() : AttributeStats {
+    static buildFromMap(map: Map<string, any>) : AttributeStats {
         const attributeToStat = {} as Record<Attribute, number>;
         for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
-            attributeToStat[attribute] = 0;
-        }
-
-        return new AttributeStats(attributeToStat);
-    }
-
-    static buildUsingSheet(name:string) : AttributeStats {
-        const attributeToStat = {} as Record<Attribute, number>;
-        let sheet = SpreadsheetApp.getActive().getSheetByName('Units');
-        if (sheet != null) {
-            let data = sheet.getDataRange().getValues();
-            let row: number = -1;
-
-            // find the row that matches the name
-            for (let i = 0; i < data.length; i++) {
-                if (data[i][0] === name) {
-                    row = i;
-                    break;
-                }
-            }
-
-            if (row === -1) {
-                // Name not found
-                throw ('Name not found');
-            }
-
-            for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
-                console.log(Attribute[attribute] + ': ' + data[row][attribute + 1]);
-                attributeToStat[attribute] = data[row][attribute + 1];
-            }
+            attributeToStat[attribute] = getNonNull(map.get(getAbbrevFromAttr(attribute)));
         }
 
         return new AttributeStats(attributeToStat);
