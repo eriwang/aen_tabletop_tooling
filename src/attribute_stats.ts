@@ -8,9 +8,8 @@ export class AttributeStats {
         this.attributeToStat = attributeToStat;
     }
 
-    static buildAttributesDefault() : AttributeStats{
+    static buildEmpty() : AttributeStats {
         const attributeToStat = {} as Record<Attribute, number>;
-
         for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
             attributeToStat[attribute] = 0;
         }
@@ -18,40 +17,34 @@ export class AttributeStats {
         return new AttributeStats(attributeToStat);
     }
 
-    static buildAttributesUnit(name:string) : AttributeStats{
+    static buildUsingSheet(name:string) : AttributeStats {
         const attributeToStat = {} as Record<Attribute, number>;
         let sheet = SpreadsheetApp.getActive().getSheetByName('Units');
-        if (sheet != null){
+        if (sheet != null) {
             let data = sheet.getDataRange().getValues();
             let row: number = -1;
 
             // find the row that matches the name
-            for (let i = 0; i < data.length; i++){
-                if (data[i][0] === name){
+            for (let i = 0; i < data.length; i++) {
+                if (data[i][0] === name) {
                     row = i;
                     break;
                 }
             }
 
-            if (row === -1){
+            if (row === -1) {
                 // Name not found
                 throw ('Name not found');
             }
 
-
-            for (const attribute of enumerateEnumValues<Attribute>(Attribute)){
-                
+            for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
                 console.log(Attribute[attribute] + ': ' + data[row][attribute + 1]);
                 attributeToStat[attribute] = data[row][attribute + 1];
-
             }
-
         }
 
         return new AttributeStats(attributeToStat);
     }
-
-    
 
     get(attribute: Attribute) : number {
         return this.attributeToStat[attribute];

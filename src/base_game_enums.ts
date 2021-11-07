@@ -34,7 +34,7 @@ export enum DamageType {
     Psychic,
 }
 
-export enum Skills{
+export enum Skills {
     Endurance,
     Athletics,
     Acrobatics,
@@ -55,7 +55,7 @@ export enum Skills{
     Insight,
 }
 
-export enum Stats{
+export enum Stats {
     HP,
     FP,
     FOR,

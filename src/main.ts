@@ -2,7 +2,7 @@ import { AttributeStats } from 'attribute_stats';
 
 function sayHi(person: string) {
     // SpreadsheetApp.getUi().alert(`Hi ${person}`);
-    let character = AttributeStats.buildAttributesUnit(person);
+    let character = AttributeStats.buildUsingSheet(person);
 }
 
 // @ts-ignore
