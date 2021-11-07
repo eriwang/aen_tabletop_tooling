@@ -1,13 +1,36 @@
-import { AttributeStats } from 'attribute_stats';
-
-function sayHi(person: string) {
-    // SpreadsheetApp.getUi().alert(`Hi ${person}`);
-    let character = AttributeStats.buildUsingSheet(person);
-}
+import { calculateToHit, calculateDamage } from 'attack_calculator';
+import { Character } from 'character';
+import { getNonNull, arrayToMap } from 'utils';
 
 // @ts-ignore
-global.calculateDamage = () => {
-    // const attrStats = new AttributeStats();
+global.calculateAttack = () => {
+    const SHEET_NAME = 'TestAttackCalc';
+    const sheet = getNonNull(SpreadsheetApp.getActive().getSheetByName(SHEET_NAME));
+    const nameToRange = arrayToMap(sheet.getNamedRanges(), nr => nr.getName(), nr => nr.getRange());
 
-    sayHi('Elmo Elless');
+    const roll = parseInt(getNonNull(nameToRange.get('roll')).getDisplayValue());
+    const attackerName = getNonNull(nameToRange.get('attacker')).getDisplayValue();
+    const defenderName = getNonNull(nameToRange.get('defender')).getDisplayValue();
+
+    // load the attacker char
+
+    // load the defender char
+
+    // const attacker = getNonNull(nameToChar.get(attackerName));
+    // const defender = getNonNull(nameToChar.get(defenderName));
+
+    // const toHitResult = calculateToHit(roll, attacker, defender);
+    // const damage = calculateDamage(attacker, defender);
+
+    const toHitResult = {
+        doesAttackHit: false,
+        attackerToHit: 4,
+        defenderEvade: 20,
+    };
+    const damage = 69;
+
+    getNonNull(nameToRange.get('attackerToHit')).setValue(toHitResult.attackerToHit);
+    getNonNull(nameToRange.get('defenderEvade')).setValue(toHitResult.defenderEvade);
+    getNonNull(nameToRange.get('didHit')).setValue(toHitResult.doesAttackHit);
+    getNonNull(nameToRange.get('damage')).setValue(damage);
 };
