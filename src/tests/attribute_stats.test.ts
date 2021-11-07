@@ -22,9 +22,7 @@ describe('buildFromMap', () => {
     });
 
     test('throws when attr not found', () => {
-        expect(() => {
-            AttributeStats.buildFromMap(new Map<string, number>([['CON', 1], ['STR', 2]]));
-        }).toThrowError();
+        expect(() => AttributeStats.buildFromMap(new Map<string, number>([['CON', 1], ['STR', 2]]))).toThrowError();
     });
 });
 

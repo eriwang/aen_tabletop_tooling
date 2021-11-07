@@ -1,5 +1,5 @@
 import { DamageType } from 'base_game_enums';
-import { enumerateEnumValues } from 'utils';
+import { enumerateEnumValues, getNonNull } from 'utils';
 
 export interface ResistanceStat {
     percent: number;
@@ -13,10 +13,14 @@ export class ResistanceStats {
         this.damageTypeToResistance = damageTypeToResistance;
     }
 
-    static buildEmpty() : ResistanceStats {
+    static buildFromMap(map: Map<string, any>) : ResistanceStats {
         const damageTypeToResistance = {} as Record<DamageType, ResistanceStat>;
         for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
-            damageTypeToResistance[damageType] = {percent: 0, flat: 0};
+            const damageTypeStr = DamageType[damageType];
+            damageTypeToResistance[damageType] = {
+                percent: parseInt(getNonNull(map.get(`${damageTypeStr}%`))) / 100,
+                flat: parseInt(getNonNull(map.get(`${damageTypeStr} Flat`))),
+            };
         }
 
         return new ResistanceStats(damageTypeToResistance);

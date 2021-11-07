@@ -4,7 +4,7 @@ import { Attribute, AttackType, DamageType, Skills } from 'base_game_enums';
 import { Character } from 'character';
 import { Profile } from 'profile';
 import { ResistanceStats } from 'resistance_stats';
-import { enumerateEnumValues } from 'utils';
+import { arrayToMap, enumerateEnumValues } from 'utils';
 import { Weapon } from 'weapon';
 
 let attacker: Character;
@@ -13,16 +13,16 @@ let defender: Character;
 function resetValues() {
     // As of time of writing, profile does not impact damage calculations. This will change in the future
     const dummyProfile = new Profile({} as Record<Skills, number>, 0, 0, 0, '');
-    const zeroAttrStatsMap = new Map<string, number>([
-        ['CON', 0],
-        ['STR', 0],
-        ['DEX', 0],
-        ['WIS', 0],
-        ['INT', 0],
-        ['CHAR', 0],
-    ]);
 
     // These are set to "identity" values (i.e. 0 for adding, 1 for multiplying) for ease of reasoning in tests
+    const zeroAttrStatsMap = new Map<string, number>([
+        ['CON', 0], ['STR', 0], ['DEX', 0], ['WIS', 0], ['INT', 0], ['CHAR', 0],
+    ]);
+
+    const resStatsMapKeys = enumerateEnumValues<DamageType>(DamageType)
+        .flatMap(dt => [`${DamageType[dt]}%`, `${DamageType[dt]} Flat`]);
+    const zeroResStatsMap = arrayToMap(resStatsMapKeys, k => k, () => 0);
+
     const attackerWeapon: Weapon = {
         attribute: Attribute.Dexterity,
         attackType: AttackType.Strike,
@@ -33,7 +33,11 @@ function resetValues() {
         difficultyClass: 0,
     };
     attacker = new Character(
-        AttributeStats.buildFromMap(zeroAttrStatsMap), ResistanceStats.buildEmpty(), attackerWeapon, dummyProfile);
+        AttributeStats.buildFromMap(zeroAttrStatsMap),
+        ResistanceStats.buildFromMap(zeroResStatsMap),
+        attackerWeapon,
+        dummyProfile
+    );
 
     const defenderWeapon: Weapon = {
         attribute: Attribute.Dexterity,
@@ -45,7 +49,11 @@ function resetValues() {
         difficultyClass: 0,
     };
     defender = new Character(
-        AttributeStats.buildFromMap(zeroAttrStatsMap), ResistanceStats.buildEmpty(), defenderWeapon, dummyProfile);
+        AttributeStats.buildFromMap(zeroAttrStatsMap),
+        ResistanceStats.buildFromMap(zeroResStatsMap),
+        defenderWeapon,
+        dummyProfile
+    );
 }
 
 beforeEach(resetValues);
