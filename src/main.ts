@@ -6,6 +6,7 @@ import { loadItem } from 'gsheets/loader';
 import { Profile } from 'profile';
 import { ResistanceStats } from 'resistance_stats';
 import { getNonNull, arrayToMap } from 'utils';
+import { Weapon } from 'weapon';
 
 function loadCharacter(characterName: string) : Character {
     // As of time of writing, profile does not impact damage calculations. This will change in the future
@@ -15,11 +16,11 @@ function loadCharacter(characterName: string) : Character {
     const armorMap = loadItem('Armors', unitMap.get('Armor'), false);
     const weaponMap = loadItem('Weapons', unitMap.get('Weapons'), true);
 
-    const attrStats = AttributeStats.buildFromMap(unitMap);
-    const resStats = ResistanceStats.buildFromMap(armorMap);
-    // TODO: weapon
-
-    return new Character(attrStats, resStats, {} as Weapon, dummyProfile);
+    return new Character(
+        AttributeStats.buildFromMap(unitMap),
+        ResistanceStats.buildFromMap(armorMap),
+        Weapon.buildFromMap(weaponMap),
+        dummyProfile);
 }
 
 // @ts-ignore
@@ -32,41 +33,14 @@ global.calculateAttack = () => {
     const attackerName = getNonNull(nameToRange.get('attacker')).getDisplayValue();
     const defenderName = getNonNull(nameToRange.get('defender')).getDisplayValue();
 
+    const attacker = loadCharacter(attackerName);
+    const defender = loadCharacter(defenderName);
 
-
-    // load the attacker char
-    Character.buildUsingSheet(attackerName,);
-
-    // load the defender char
-
-    // const attacker = getNonNull(nameToChar.get(attackerName));
-    // const defender = getNonNull(nameToChar.get(defenderName));
-
-    // const toHitResult = calculateToHit(roll, attacker, defender);
-    // const damage = calculateDamage(attacker, defender);
-
-    const toHitResult = {
-        doesAttackHit: false,
-        attackerToHit: 4,
-        defenderEvade: 20,
-    };
-    const damage = 69;
+    const toHitResult = calculateToHit(roll, attacker, defender);
+    const damage = calculateDamage(attacker, defender);
 
     getNonNull(nameToRange.get('attackerToHit')).setValue(toHitResult.attackerToHit);
     getNonNull(nameToRange.get('defenderEvade')).setValue(toHitResult.defenderEvade);
     getNonNull(nameToRange.get('didHit')).setValue(toHitResult.doesAttackHit);
     getNonNull(nameToRange.get('damage')).setValue(damage);
-};
-
-// @ts-ignore
-global.logLoading = () => {
-    loadItem('Units', 'Ixar', true).forEach((v, k) => {
-        console.log(`${k}: ${v}`);
-    });
-
-    console.log('');
-
-    loadItem('Armors', 'Iron', false).forEach((v, k) => {
-        console.log(`${k}: ${v}`);
-    });
 };
