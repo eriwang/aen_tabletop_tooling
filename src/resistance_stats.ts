@@ -14,9 +14,7 @@ export class ResistanceStats {
     }
 
     static buildEmpty() : ResistanceStats {
-
         const damageTypeToResistance = {} as Record<DamageType, ResistanceStat>;
-
         for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
             damageTypeToResistance[damageType] = {percent: 0, flat: 0};
         }

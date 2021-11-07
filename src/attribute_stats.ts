@@ -10,7 +10,6 @@ export class AttributeStats {
 
     static buildEmpty() : AttributeStats {
         const attributeToStat = {} as Record<Attribute, number>;
-
         for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
             attributeToStat[attribute] = 0;
         }

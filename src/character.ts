@@ -1,5 +1,5 @@
 import { AttributeStats } from 'attribute_stats';
-import { Attribute, Skills, Stats, EvasiveStatType } from 'base_game_enums';
+import { Attribute, Skills, AttackType, DamageType } from 'base_game_enums';
 import { Profile } from 'profile';
 import { ResistanceStats } from 'resistance_stats';
 import { Weapon } from 'weapon';
@@ -8,27 +8,34 @@ import { Weapon } from 'weapon';
 export class Character {
     attributeStats: AttributeStats;
     resistanceStats: ResistanceStats;
-    stats: Record<Stats, number>;
     weapon: Weapon;
     profile: Profile;
 
-    constructor(unitName: string, profileName: string) {
-        this.attributeStats = AttributeStats.buildUsingSheet(unitName);
-        this.profile = new Profile(profileName);
-        this.resistanceStats = ResistanceStats.buildUsingSheet(this.profile.armor);
-
-        this.stats = {} as Record <Stats, number>;
-
-        this.weapon = new Weapon('Dagger');
-
-        this.stats[Stats.HP] = this.attributeStats.get(Attribute.Constitution) * this.profile.hpPerCon;
-        this.stats[Stats.FP] = this.attributeStats.get(Attribute.Intelligence) * this.profile.fpPerInt;
-        this.stats[Stats.FOR] = this.attributeStats.getEvasiveStat(EvasiveStatType.Fortitude);
-        this.stats[Stats.REF] = this.attributeStats.getEvasiveStat(EvasiveStatType.Reflex);
-        this.stats[Stats.WILL] = this.attributeStats.getEvasiveStat(EvasiveStatType.Willpower);
-        // this.stats[Stats.Movement] = ??? where should come from unit stats or profile?
+    constructor(attrStats: AttributeStats, resStats: ResistanceStats, weap: Weapon, prof: Profile) {
+        this.attributeStats = attrStats;
+        this.resistanceStats = resStats;
+        this.weapon = weap;
+        this.profile = prof;
     }
 
+    static buildUsingSheet(unitName: string, profileName: string) : Character {
+        const attributeStats = AttributeStats.buildUsingSheet(unitName);
+        const profile = Profile.buildFromSheet(profileName);
+        const resistanceStats = ResistanceStats.buildUsingSheet(profile.armor);
+        const dagger : Weapon = {  // placeholder
+            attribute: Attribute.Dexterity,
+            attackType: AttackType.Strike,
+            damageType: DamageType.Piercing,
+            toHitMultiplier: 1,
+            damageMultiplier: 0.75,
+            difficultyClass: 2,
+            baseDamage: 2,
+        };
+
+        return new Character(attributeStats, resistanceStats, dagger, profile);
+    }
+
+    // as of writing, unused and untested
     getSkillTotal(skill: Skills): number {
         let multiplier: number = 4;
         let bonus: number = this.profile.getSkillBonus(skill) * multiplier;
@@ -64,7 +71,5 @@ export class Character {
             case Skills.Insight:
                 return this.attributeStats.get(Attribute.Charisma) + bonus;
         }
-
     }
-
 }

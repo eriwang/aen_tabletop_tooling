@@ -4,14 +4,21 @@ import { enumerateEnumValues } from 'utils';
 
 export class Profile {
     skills: Record<Skills, number>;
-    hpPerCon: number = 0;
-    fpPerInt: number = 0;
-    level: number = 0;
-    armor: string = '';
+    hpPerCon: number;
+    fpPerInt: number;
+    level: number;
+    armor: string;
 
-    constructor(profileName: string) {
+    constructor(skills: Record<Skills, number>, hpPerCon: number, fpPerInt: number, level: number, armor: string) {
+        this.skills = skills;
+        this.hpPerCon = hpPerCon;
+        this.fpPerInt = fpPerInt;
+        this.level = level;
+        this.armor = armor;
+    }
 
-        this.skills = {} as Record<Skills, number>;
+    static buildFromSheet(profileName: string) : Profile {
+        const skills = {} as Record<Skills, number>;
 
         let sheet = SpreadsheetApp.getActive().getSheetByName('Profiles');
         if (sheet != null) {
@@ -28,14 +35,12 @@ export class Profile {
 
             if (row === -1) {
                 // Name not found
-                return;
+                throw `Profile name ${profileName} not found`;
             }
 
             for (const skill of enumerateEnumValues<Skills>(Skills)) {
-
                 console.log(Skills[skill] + ' bonus: ' + data[row][skill + 1]);
-                this.skills[skill] = data[row][skill + 1];
-
+                skills[skill] = data[row][skill + 1];
             }
 
             let hpConCol: number = 0;
@@ -59,16 +64,18 @@ export class Profile {
             }
 
             if (hpConCol == 0 || fpIntCol == 0 || levelCol == 0) {
-                console.log('Profile Columns could not be found');
-                return;
+                throw 'Profile Columns could not be found';
             }
 
-            this.hpPerCon = data[row][hpConCol];
-            this.fpPerInt = data[row][fpIntCol];
-            this.level = data[row][levelCol];
-            this.armor = data[row][armorCol];
+            const hpPerCon = data[row][hpConCol];
+            const fpPerInt = data[row][fpIntCol];
+            const level = data[row][levelCol];
+            const armor = data[row][armorCol];
 
+            return new Profile(skills, hpPerCon, fpPerInt, level, armor);
         }
+
+        throw 'Sheet not found, cannot build profile';
     }
 
     getSkillBonus(skill: Skills): number {

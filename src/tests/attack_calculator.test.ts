@@ -1,16 +1,20 @@
 import { calculateToHit, calculateDamage } from 'attack_calculator';
 import { AttributeStats } from 'attribute_stats';
-import { Attribute, AttackType, DamageType } from 'base_game_enums';
-import { Character, Weapon } from 'character';
+import { Attribute, AttackType, DamageType, Skills } from 'base_game_enums';
+import { Character } from 'character';
+import { Profile } from 'profile';
 import { ResistanceStats } from 'resistance_stats';
 import { enumerateEnumValues } from 'utils';
+import { Weapon } from 'weapon';
 
 let attacker: Character;
 let defender: Character;
 
 function resetValues() {
+    // As of time of writing, profile does not impact damage calculations. This will change in the future
+    const dummyProfile = new Profile({} as Record<Skills, number>, 0, 0, 0, '');
+
     // These are set to "identity" values (i.e. 0 for adding, 1 for multiplying) for ease of reasoning in tests
-    const attackerAttrStats = new AttributeStats();
     const attackerWeapon: Weapon = {
         attribute: Attribute.Dexterity,
         attackType: AttackType.Strike,
@@ -20,9 +24,8 @@ function resetValues() {
         damageMultiplier: 1,
         difficultyClass: 0,
     };
-    attacker = new Character(attackerAttrStats, new ResistanceStats(), attackerWeapon);
+    attacker = new Character(AttributeStats.buildEmpty(), ResistanceStats.buildEmpty(), attackerWeapon, dummyProfile);
 
-    const defenderAttrStats = new AttributeStats();
     const defenderWeapon: Weapon = {
         attribute: Attribute.Dexterity,
         attackType: AttackType.Strike,
@@ -32,7 +35,7 @@ function resetValues() {
         damageMultiplier: 1,
         difficultyClass: 0,
     };
-    defender = new Character(defenderAttrStats, new ResistanceStats(), defenderWeapon);
+    defender = new Character(AttributeStats.buildEmpty(), ResistanceStats.buildEmpty(), defenderWeapon, dummyProfile);
 }
 
 beforeEach(resetValues);
