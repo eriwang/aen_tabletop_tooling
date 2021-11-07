@@ -8,7 +8,7 @@ export enum Attribute {
     Charisma,
 }
 
-export function getAttrAbbreviation(attr: Attribute) : string {
+export function getAbbrevFromAttr(attr: Attribute) : string {
     switch (attr) {
         case Attribute.Constitution:
             return 'CON';
@@ -22,6 +22,29 @@ export function getAttrAbbreviation(attr: Attribute) : string {
             return 'INT';
         case Attribute.Charisma:
             return 'CHAR';
+
+        default:
+            throw `Unknown attribute ${attr}`;
+    }
+}
+
+export function getAttrFromAbbrev(abbrev: string) : Attribute {
+    switch (abbrev) {
+        case 'CON':
+            return Attribute.Constitution;
+        case 'STR':
+            return Attribute.Strength;
+        case 'DEX':
+            return Attribute.Dexterity;
+        case 'WIS':
+            return Attribute.Wisdom;
+        case 'INT':
+            return Attribute.Intelligence;
+        case 'CHAR':
+            return Attribute.Charisma;
+
+        default:
+            throw `Unknown abbrev ${abbrev}`;
     }
 }
 

@@ -1,7 +1,26 @@
 import { calculateToHit, calculateDamage } from 'attack_calculator';
+import { AttributeStats } from 'attribute_stats';
+import { Skills } from 'base_game_enums';
 import { Character } from 'character';
 import { loadItem } from 'gsheets/loader';
+import { Profile } from 'profile';
+import { ResistanceStats } from 'resistance_stats';
 import { getNonNull, arrayToMap } from 'utils';
+
+function loadCharacter(characterName: string) : Character {
+    // As of time of writing, profile does not impact damage calculations. This will change in the future
+    const dummyProfile = new Profile({} as Record<Skills, number>, 0, 0, 0, '');
+
+    const unitMap = loadItem('Units', characterName, true);
+    const armorMap = loadItem('Armors', unitMap.get('Armor'), false);
+    const weaponMap = loadItem('Weapons', unitMap.get('Weapons'), true);
+
+    const attrStats = AttributeStats.buildFromMap(unitMap);
+    const resStats = ResistanceStats.buildFromMap(armorMap);
+    // TODO: weapon
+
+    return new Character(attrStats, resStats, {} as Weapon, dummyProfile);
+}
 
 // @ts-ignore
 global.calculateAttack = () => {
@@ -13,10 +32,7 @@ global.calculateAttack = () => {
     const attackerName = getNonNull(nameToRange.get('attacker')).getDisplayValue();
     const defenderName = getNonNull(nameToRange.get('defender')).getDisplayValue();
 
-    // AttrStats come from the Units tab
-    // Armor name comes from the Units tab. ResStats comes from the Armors tab (and is column-indexed)
-    // Weapon name comes from the Units tab. Weapon comes from the Weapons tab
-    // Profile is unused
+
 
     // load the attacker char
     Character.buildUsingSheet(attackerName,);

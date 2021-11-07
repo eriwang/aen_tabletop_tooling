@@ -12,6 +12,8 @@ let defender: Character;
 
 function resetValues() {
     // As of time of writing, profile does not impact damage calculations. This will change in the future
+    // Note that when it does, this should likely be refactored so attack_calculator doesn't need to know as much about
+    // the individual classes, just the character (and maybe weapons/abilities)
     const dummyProfile = new Profile({} as Record<Skills, number>, 0, 0, 0, '');
 
     // These are set to "identity" values (i.e. 0 for adding, 1 for multiplying) for ease of reasoning in tests
