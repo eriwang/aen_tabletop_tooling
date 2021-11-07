@@ -13,6 +13,14 @@ let defender: Character;
 function resetValues() {
     // As of time of writing, profile does not impact damage calculations. This will change in the future
     const dummyProfile = new Profile({} as Record<Skills, number>, 0, 0, 0, '');
+    const zeroAttrStatsMap = new Map<string, number>([
+        ['CON', 0],
+        ['STR', 0],
+        ['DEX', 0],
+        ['WIS', 0],
+        ['INT', 0],
+        ['CHAR', 0],
+    ]);
 
     // These are set to "identity" values (i.e. 0 for adding, 1 for multiplying) for ease of reasoning in tests
     const attackerWeapon: Weapon = {
@@ -24,7 +32,8 @@ function resetValues() {
         damageMultiplier: 1,
         difficultyClass: 0,
     };
-    attacker = new Character(AttributeStats.buildEmpty(), ResistanceStats.buildEmpty(), attackerWeapon, dummyProfile);
+    attacker = new Character(
+        AttributeStats.buildFromMap(zeroAttrStatsMap), ResistanceStats.buildEmpty(), attackerWeapon, dummyProfile);
 
     const defenderWeapon: Weapon = {
         attribute: Attribute.Dexterity,
@@ -35,7 +44,8 @@ function resetValues() {
         damageMultiplier: 1,
         difficultyClass: 0,
     };
-    defender = new Character(AttributeStats.buildEmpty(), ResistanceStats.buildEmpty(), defenderWeapon, dummyProfile);
+    defender = new Character(
+        AttributeStats.buildFromMap(zeroAttrStatsMap), ResistanceStats.buildEmpty(), defenderWeapon, dummyProfile);
 }
 
 beforeEach(resetValues);

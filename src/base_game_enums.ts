@@ -8,6 +8,23 @@ export enum Attribute {
     Charisma,
 }
 
+export function getAttrAbbreviation(attr: Attribute) : string {
+    switch (attr) {
+        case Attribute.Constitution:
+            return 'CON';
+        case Attribute.Strength:
+            return 'STR';
+        case Attribute.Dexterity:
+            return 'DEX';
+        case Attribute.Wisdom:
+            return 'WIS';
+        case Attribute.Intelligence:
+            return 'INT';
+        case Attribute.Charisma:
+            return 'CHAR';
+    }
+}
+
 export enum AttackType {
     Strike,
     Projectile,

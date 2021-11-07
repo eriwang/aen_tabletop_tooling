@@ -1,6 +1,6 @@
 import { getNonNull } from 'utils';
 
-export function loadItem(sheetName: string, itemName: string, isRowIndexed: boolean) : Map<string, string> {
+export function loadItem(sheetName: string, itemName: string, isRowIndexed: boolean) : Map<string, any> {
     const sheet = getNonNull(SpreadsheetApp.getActive().getSheetByName(sheetName));
 
     let data = sheet.getDataRange().getValues();

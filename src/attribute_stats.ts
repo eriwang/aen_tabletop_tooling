@@ -1,5 +1,5 @@
-import { Attribute, EvasiveStatType } from 'base_game_enums';
-import { enumerateEnumValues } from 'utils';
+import { Attribute, EvasiveStatType, getAttrAbbreviation } from 'base_game_enums';
+import { enumerateEnumValues, getNonNull } from 'utils';
 
 export class AttributeStats {
     attributeToStat: Record<Attribute, number>;
@@ -8,10 +8,10 @@ export class AttributeStats {
         this.attributeToStat = attributeToStat;
     }
 
-    static buildEmpty() : AttributeStats {
+    static buildFromMap(map: Map<string, any>) : AttributeStats {
         const attributeToStat = {} as Record<Attribute, number>;
         for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
-            attributeToStat[attribute] = 0;
+            attributeToStat[attribute] = getNonNull(map.get(getAttrAbbreviation(attribute)));
         }
 
         return new AttributeStats(attributeToStat);

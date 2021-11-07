@@ -22,7 +22,7 @@ export class Character {
     static buildUsingSheet(unitName: string) : Character {
         const attributeStats = AttributeStats.buildUsingSheet(unitName);
         // armor
-        const profile = Profile.buildFromSheet(profileName);
+        const profile = Profile.buildFromSheet('');
         const resistanceStats = ResistanceStats.buildUsingSheet(profile.armor);
         const dagger : Weapon = {  // placeholder
             attribute: Attribute.Dexterity,
