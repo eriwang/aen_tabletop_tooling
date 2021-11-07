@@ -13,7 +13,7 @@ export class Character {
     profile: Profile;
 
     constructor(unitName: string, profileName: string){
-        this.attributeStats = AttributeStats.buildAttributesUnit(unitName);
+        this.attributeStats = AttributeStats.buildUsingSheet(unitName);
         this.profile = new Profile(profileName);
         this.resistanceStats = ResistanceStats.buildResistancesArmor(this.profile.armor);
 
@@ -26,10 +26,7 @@ export class Character {
         this.stats[Stats.FOR] = this.attributeStats.getEvasiveStat(EvasiveStatType.Fortitude);
         this.stats[Stats.REF] = this.attributeStats.getEvasiveStat(EvasiveStatType.Reflex);
         this.stats[Stats.WILL] = this.attributeStats.getEvasiveStat(EvasiveStatType.Willpower);
-        
         // this.stats[Stats.Movement] = ??? where should come from unit stats or profile?
-
-    
     }
 
     getSkillTotal(skill: Skills): number{
@@ -55,7 +52,7 @@ export class Character {
             case Skills.Stealth: // Should this be wisdom?
             case Skills.Survival:
                 return this.attributeStats.get(Attribute.Wisdom) + bonus;
-            
+
             case Skills.Arcana:
             case Skills.History:
             case Skills.Investigation:
