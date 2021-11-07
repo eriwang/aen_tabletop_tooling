@@ -13,7 +13,7 @@ export class ResistanceStats {
         this.damageTypeToResistance = damageTypeToResistance;
     }
 
-    static buildResistanceDefault() : ResistanceStats{
+    static buildEmpty() : ResistanceStats{
 
         const damageTypeToResistance = {} as Record<DamageType, ResistanceStat>;
 
@@ -24,7 +24,7 @@ export class ResistanceStats {
         return new ResistanceStats(damageTypeToResistance);
     }
 
-    static buildResistancesArmor(armor: string) : ResistanceStats{
+    static buildUsingSheet(armor: string) : ResistanceStats{
         const damageTypeToResistance = {} as Record<DamageType, ResistanceStat>;
         let sheet = SpreadsheetApp.getActive().getSheetByName('Armors');
         if (sheet != null){

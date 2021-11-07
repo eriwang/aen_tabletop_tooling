@@ -1,5 +1,5 @@
 import { AttributeStats } from 'attribute_stats';
-import { Attribute, AttackType, DamageType, Skills, Stats, EvasiveStatType } from 'base_game_enums';
+import { Attribute, Skills, Stats, EvasiveStatType } from 'base_game_enums';
 import { Profile } from 'profile';
 import { ResistanceStats } from 'resistance_stats';
 import { Weapon } from 'weapon';
@@ -15,7 +15,7 @@ export class Character {
     constructor(unitName: string, profileName: string){
         this.attributeStats = AttributeStats.buildUsingSheet(unitName);
         this.profile = new Profile(profileName);
-        this.resistanceStats = ResistanceStats.buildResistancesArmor(this.profile.armor);
+        this.resistanceStats = ResistanceStats.buildUsingSheet(this.profile.armor);
 
         this.stats = {} as Record <Stats, number>;
 
@@ -30,10 +30,8 @@ export class Character {
     }
 
     getSkillTotal(skill: Skills): number{
-
         let multiplier: number = 4;
         let bonus: number = this.profile.getSkillBonus(skill) * multiplier;
-
 
         switch (skill){
             case Skills.Endurance:
