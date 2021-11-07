@@ -43,7 +43,7 @@ beforeEach(resetValues);
 describe('doesAttackHit is correct', () => {
     test('attackerToHit > defenderEvade', () => {
         const results = calculateToHit(15, attacker, defender);
-        expect(results.doesAttackHit).toBe(false);
+        expect(results.doesAttackHit).toBe(true);
         expect(results.attackerToHit).toBeGreaterThan(results.defenderEvade);
     });
 
