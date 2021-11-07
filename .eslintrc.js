@@ -27,6 +27,7 @@ module.exports = {
         'spaced-comment': 'error',
         'keyword-spacing': 'error',
         'space-in-parens': 'error',
+        'space-before-blocks': 'error',
 
         // vanilla indent rule is busted: https://github.com/typescript-eslint/typescript-eslint/issues/1824
         'indent': 'off',

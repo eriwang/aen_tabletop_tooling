@@ -12,7 +12,7 @@ export class Weapon {
     
     
 
-    constructor(weapon: string){
+    constructor(weapon: string) {
 
         // Hardcode dagger
         this.attribute = Attribute.Dexterity;

@@ -12,7 +12,7 @@ export class Character {
     weapon: Weapon;
     profile: Profile;
 
-    constructor(unitName: string, profileName: string){
+    constructor(unitName: string, profileName: string) {
         this.attributeStats = AttributeStats.buildUsingSheet(unitName);
         this.profile = new Profile(profileName);
         this.resistanceStats = ResistanceStats.buildUsingSheet(this.profile.armor);
@@ -29,11 +29,11 @@ export class Character {
         // this.stats[Stats.Movement] = ??? where should come from unit stats or profile?
     }
 
-    getSkillTotal(skill: Skills): number{
+    getSkillTotal(skill: Skills): number {
         let multiplier: number = 4;
         let bonus: number = this.profile.getSkillBonus(skill) * multiplier;
 
-        switch (skill){
+        switch (skill) {
             case Skills.Endurance:
                 return this.attributeStats.get(Attribute.Constitution) + bonus;
 
