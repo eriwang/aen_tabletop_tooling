@@ -13,6 +13,11 @@ global.calculateAttack = () => {
     const attackerName = getNonNull(nameToRange.get('attacker')).getDisplayValue();
     const defenderName = getNonNull(nameToRange.get('defender')).getDisplayValue();
 
+    // AttrStats come from the Units tab
+    // Armor name comes from the Units tab. ResStats comes from the Armors tab (and is column-indexed)
+    // Weapon name comes from the Units tab. Weapon comes from the Weapons tab
+    // Profile is unused
+
     // load the attacker char
     Character.buildUsingSheet(attackerName,);
 
