@@ -1,0 +1,19 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  continuous-integration:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: yarn install
+    - name: Lint
+      run: yarn lint
+    - name: Run tests
+      run: yarn jest
