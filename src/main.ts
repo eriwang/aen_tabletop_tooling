@@ -1,5 +1,6 @@
 import { calculateToHit, calculateDamage } from 'attack_calculator';
 import { Character } from 'character';
+import { loadItem } from 'gsheets/loader';
 import { getNonNull, arrayToMap } from 'utils';
 
 // @ts-ignore
@@ -13,6 +14,7 @@ global.calculateAttack = () => {
     const defenderName = getNonNull(nameToRange.get('defender')).getDisplayValue();
 
     // load the attacker char
+    Character.buildUsingSheet(attackerName,);
 
     // load the defender char
 
@@ -33,4 +35,17 @@ global.calculateAttack = () => {
     getNonNull(nameToRange.get('defenderEvade')).setValue(toHitResult.defenderEvade);
     getNonNull(nameToRange.get('didHit')).setValue(toHitResult.doesAttackHit);
     getNonNull(nameToRange.get('damage')).setValue(damage);
+};
+
+// @ts-ignore
+global.logLoading = () => {
+    loadItem('Units', 'Ixar', true).forEach((v, k) => {
+        console.log(`${k}: ${v}`);
+    });
+
+    console.log('');
+
+    loadItem('Armors', 'Iron', false).forEach((v, k) => {
+        console.log(`${k}: ${v}`);
+    });
 };

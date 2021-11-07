@@ -18,8 +18,10 @@ export class Character {
         this.profile = prof;
     }
 
-    static buildUsingSheet(unitName: string, profileName: string) : Character {
+    // In the future we will be loading a profile as well, for simplicity in sheets the profile info lives on the unit
+    static buildUsingSheet(unitName: string) : Character {
         const attributeStats = AttributeStats.buildUsingSheet(unitName);
+        // armor
         const profile = Profile.buildFromSheet(profileName);
         const resistanceStats = ResistanceStats.buildUsingSheet(profile.armor);
         const dagger : Weapon = {  // placeholder
