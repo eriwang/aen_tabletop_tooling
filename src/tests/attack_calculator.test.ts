@@ -1,9 +1,10 @@
 import { calculateToHit, calculateDamage } from 'attack_calculator';
 import { Attribute, AttackType, DamageType } from 'base_game_enums';
 import { Character } from 'character';
-import { when } from 'jest-when';
 import { enumerateEnumValues } from 'utils';
 import { Weapon } from 'weapon';
+
+import { when } from 'jest-when';
 
 let weapon: Weapon;
 let attacker: Character;
