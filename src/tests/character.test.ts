@@ -7,18 +7,12 @@ import { Weapon } from 'weapon';
 
 import { when } from 'jest-when';
 
-let mockAttrStats: any = { get: jest.fn() };
-let mockResStats: any = { get: jest.fn() };
-let mockWeapon: Weapon;
-let mockProfile: Profile;
+const mockAttrStats = { get: jest.fn() } as any as AttributeStats;
+const mockResStats = { get: jest.fn() } as any as ResistanceStats;
+const mockWeapon = {} as any as Weapon;  // unused
+const mockProfile = {} as any as Profile;  // unused for now
 
-let character: Character;
-
-beforeEach(() => {
-    character = new Character(
-        mockAttrStats as AttributeStats,
-        mockResStats as ResistanceStats, mockWeapon, mockProfile);
-});
+const character = new Character(mockAttrStats, mockResStats, mockWeapon, mockProfile);
 
 test('getAttributeStat', () => {
     when(mockAttrStats.get).expectCalledWith(Attribute.Dexterity).mockReturnValueOnce(50);

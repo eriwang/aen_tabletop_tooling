@@ -1,61 +1,47 @@
 import { calculateToHit, calculateDamage } from 'attack_calculator';
-import { AttributeStats } from 'attribute_stats';
-import { Attribute, AttackType, DamageType, Skills } from 'base_game_enums';
+import { Attribute, AttackType, DamageType } from 'base_game_enums';
 import { Character } from 'character';
-import { Profile } from 'profile';
-import { ResistanceStats } from 'resistance_stats';
-import { arrayToMap, enumerateEnumValues } from 'utils';
+import { when } from 'jest-when';
+import { enumerateEnumValues } from 'utils';
 import { Weapon } from 'weapon';
 
+let weapon: Weapon;
 let attacker: Character;
 let defender: Character;
 
 function resetValues() {
-    // As of time of writing, profile does not impact damage calculations. This will change in the future
-    // Note that when it does, this should likely be refactored so attack_calculator doesn't need to know as much about
-    // the individual classes, just the character (and maybe weapons/abilities)
-    const dummyProfile = new Profile({} as Record<Skills, number>, 0, 0, 0, '');
+    weapon = {
+        attribute: Attribute.Dexterity,
+        attackType: AttackType.Strike,
+        damageType: DamageType.Piercing,
+        baseDamage: 0,
+        toHitMultiplier: 1,
+        damageMultiplier: 1,
+        difficultyClass: 0,
+    };
+
+    attacker = {
+        getAttributeStat: jest.fn(),
+        weapon: weapon
+    } as any as Character;
+
+    defender = {
+        getResistanceStat: jest.fn(),
+        getEvasiveStatForAttackType: jest.fn(),
+    } as any as Character;
 
     // These are set to "identity" values (i.e. 0 for adding, 1 for multiplying) for ease of reasoning in tests
-    const zeroAttrStatsMap = new Map<string, number>([
-        ['CON', 0], ['STR', 0], ['DEX', 0], ['WIS', 0], ['INT', 0], ['CHAR', 0],
-    ]);
+    enumerateEnumValues<Attribute>(Attribute).map((attr) => {
+        when(attacker.getAttributeStat).calledWith(attr).mockReturnValue(0);
+    });
 
-    const resStatsMapKeys = enumerateEnumValues<DamageType>(DamageType)
-        .flatMap(dt => [`${DamageType[dt]}%`, `${DamageType[dt]} Flat`]);
-    const zeroResStatsMap = arrayToMap(resStatsMapKeys, k => k, () => 0);
+    enumerateEnumValues<DamageType>(DamageType).map((dmgType) => {
+        when(defender.getResistanceStat).calledWith(dmgType).mockReturnValue({flat: 0, percent: 0});
+    });
 
-    const attackerWeapon: Weapon = {
-        attribute: Attribute.Dexterity,
-        attackType: AttackType.Strike,
-        damageType: DamageType.Piercing,
-        baseDamage: 0,
-        toHitMultiplier: 1,
-        damageMultiplier: 1,
-        difficultyClass: 0,
-    };
-    attacker = new Character(
-        AttributeStats.buildFromMap(zeroAttrStatsMap),
-        ResistanceStats.buildFromMap(zeroResStatsMap),
-        attackerWeapon,
-        dummyProfile
-    );
-
-    const defenderWeapon: Weapon = {
-        attribute: Attribute.Dexterity,
-        attackType: AttackType.Strike,
-        damageType: DamageType.Piercing,
-        baseDamage: 0,
-        toHitMultiplier: 1,
-        damageMultiplier: 1,
-        difficultyClass: 0,
-    };
-    defender = new Character(
-        AttributeStats.buildFromMap(zeroAttrStatsMap),
-        ResistanceStats.buildFromMap(zeroResStatsMap),
-        defenderWeapon,
-        dummyProfile
-    );
+    enumerateEnumValues<AttackType>(AttackType).map((atkType) => {
+        when(defender.getEvasiveStatForAttackType).calledWith(atkType).mockReturnValue(0);
+    });
 }
 
 beforeEach(resetValues);
@@ -67,9 +53,8 @@ describe('doesAttackHit is correct', () => {
         expect(results.attackerToHit).toBeGreaterThan(results.defenderEvade);
     });
 
-    // The test weapon attack type is strike, which maps to fortitude, which is calculated using str + con
     test('attackerToHit < defenderEvade', () => {
-        defender.attributeStats.set(Attribute.Strength, 5);
+        when(defender.getEvasiveStatForAttackType).calledWith(attacker.weapon.attackType).mockReturnValue(5);
 
         const results = calculateToHit(1, attacker, defender);
         expect(results.doesAttackHit).toBe(false);
@@ -77,7 +62,7 @@ describe('doesAttackHit is correct', () => {
     });
 
     test('attackerToHit == defenderEvade', () => {
-        defender.attributeStats.set(Attribute.Strength, 1);
+        when(defender.getEvasiveStatForAttackType).calledWith(attacker.weapon.attackType).mockReturnValue(1);
 
         const results = calculateToHit(1, attacker, defender);
         expect(results.doesAttackHit).toBe(true);
@@ -91,12 +76,12 @@ describe('toHit and evade calculation is correct', () => {
     });
 
     test('attacker stat changes attackerToHit', () => {
-        attacker.attributeStats.set(attacker.weapon.attribute, 12);
+        when(attacker.getAttributeStat).calledWith(attacker.weapon.attribute).mockReturnValue(12);
         expect(calculateToHit(1, attacker, defender).attackerToHit).toBe(13);  // 12 + 1
     });
 
     test('weapToHitMultiplier changes attackerToHit', () => {
-        attacker.attributeStats.set(attacker.weapon.attribute, 12);
+        when(attacker.getAttributeStat).calledWith(attacker.weapon.attribute).mockReturnValue(12);
         attacker.weapon.toHitMultiplier = 1.4;
         expect(calculateToHit(1, attacker, defender).attackerToHit).toBe(18);  // ceil(12 * 1.4) + 1
     });
@@ -107,131 +92,62 @@ describe('toHit and evade calculation is correct', () => {
     });
 
     test('defender stat changes defenderEvade', () => {
-        defender.attributeStats.set(Attribute.Constitution, 15);
-        defender.attributeStats.set(Attribute.Strength, 14);
-        expect(calculateToHit(1, attacker, defender).defenderEvade).toBe(22);  // ceil(0.75 * (15 + 14))
-    });
-});
-
-describe('stats used by toHit calculation are correct', () => {
-    test('weapon attribute changes attackerToHit', () => {
-        for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
-            resetValues();
-            attacker.weapon.attribute = attribute;
-            attacker.attributeStats.set(attribute, 20);
-
-            const results = calculateToHit(1, attacker, defender);
-            expect(results.attackerToHit).toBe(21);  // 20 + 1
-            expect(results.defenderEvade).toBe(0);  // unaffected from initial 0 value
-        }
-    });
-
-    test('weapon attack type changes defender evade', () => {
-        function resetAndTest(
-            attackType: AttackType, attribute1: Attribute, attribute2: Attribute) {
-            resetValues();
-
-            attacker.weapon.attackType = attackType;
-            defender.attributeStats.set(attribute1, 20);
-            defender.attributeStats.set(attribute2, 20);
-
-            const results = calculateToHit(1, attacker, defender);
-            expect(results.attackerToHit).toBe(1);  // 0 stats + 1 for the roll
-            expect(results.defenderEvade).toBe(30);  // 0.75 * (20 + 20)
-        }
-
-        resetAndTest(AttackType.Strike, Attribute.Constitution, Attribute.Strength);
-        resetAndTest(AttackType.Projectile, Attribute.Dexterity, Attribute.Wisdom);
-        resetAndTest(AttackType.Curse, Attribute.Intelligence, Attribute.Charisma);
+        when(defender.getEvasiveStatForAttackType).calledWith(attacker.weapon.attackType).mockReturnValue(22);
+        expect(calculateToHit(1, attacker, defender).defenderEvade).toBe(22);
     });
 });
 
 describe('damage calculation is correct', () => {
-    test('weapon attribute changes damage', () => {
-        for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
-            resetValues();
-
-            attacker.weapon.attribute = attribute;
-            attacker.attributeStats.set(attribute, 15);
-
-            expect(calculateDamage(attacker, defender)).toBe(15);
-        }
-    });
-
     test('weapon baseDamage changes damage', () => {
-        attacker.weapon.damageType = DamageType.Piercing;
-        attacker.weapon.attribute = Attribute.Charisma;
         attacker.weapon.baseDamage = 5;
-        attacker.attributeStats.set(Attribute.Charisma, 15);
-
-        expect(calculateDamage(attacker, defender)).toBe(20);  // 5 + 15 = 12
+        expect(calculateDamage(attacker, defender)).toBe(5);
     });
 
     test('weapon damageMultiplier changes damage', () => {
-        attacker.weapon.damageType = DamageType.Piercing;
-        attacker.weapon.attribute = Attribute.Charisma;
         attacker.weapon.damageMultiplier = 1.25;
-        attacker.attributeStats.set(Attribute.Charisma, 15);
+        when(attacker.getAttributeStat).calledWith(attacker.weapon.attribute).mockReturnValue(15);
 
         expect(calculateDamage(attacker, defender)).toBe(19);  // ceil(1.25 * 15) = 19
     });
 
     test('weapon damageMultiplier applied before baseDamage', () => {
-        attacker.weapon.damageType = DamageType.Piercing;
-        attacker.weapon.attribute = Attribute.Charisma;
-        attacker.weapon.damageMultiplier = 1.25;
         attacker.weapon.baseDamage = 5;
-        attacker.attributeStats.set(Attribute.Charisma, 15);
+        attacker.weapon.damageMultiplier = 1.25;
+        when(attacker.getAttributeStat).calledWith(attacker.weapon.attribute).mockReturnValue(15);
 
         expect(calculateDamage(attacker, defender)).toBe(24);  // ceil(1.25 * 15) + 5 = 24. ceil(1.25 * (15 + 5)) = 25
     });
 
     test('defender percentage res changes damage', () => {
-        for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
-            resetValues();
+        when(defender.getResistanceStat).calledWith(attacker.weapon.damageType)
+            .mockReturnValue({percent: 0.25, flat: 0});
+        when(attacker.getAttributeStat).calledWith(attacker.weapon.attribute).mockReturnValue(15);
 
-            attacker.weapon.damageType = damageType;
-            attacker.weapon.attribute = Attribute.Charisma;
-            attacker.attributeStats.set(Attribute.Charisma, 15);
-            defender.resistanceStats.set(damageType, {percent: 0.25, flat: 0});
-
-            expect(calculateDamage(attacker, defender)).toBe(12);  // ceil(15 * 0.75) = 12
-        }
+        expect(calculateDamage(attacker, defender)).toBe(12);  // ceil(15 * 0.75) = 12
     });
 
     test('defender flat res changes damage', () => {
-        for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
-            resetValues();
+        when(defender.getResistanceStat).calledWith(attacker.weapon.damageType)
+            .mockReturnValue({percent: 0, flat: 5});
+        when(attacker.getAttributeStat).calledWith(attacker.weapon.attribute).mockReturnValue(15);
 
-            attacker.weapon.damageType = damageType;
-            attacker.weapon.attribute = Attribute.Charisma;
-            attacker.attributeStats.set(Attribute.Charisma, 15);
-            defender.resistanceStats.set(damageType, {percent: 0, flat: 5});
-
-            expect(calculateDamage(attacker, defender)).toBe(10);
-        }
+        expect(calculateDamage(attacker, defender)).toBe(10);
     });
 
     // Not sure if this is correct, but in either case there should be a test for it/ the ceil
     test('defender percent res applied before flat res', () => {
-        for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
-            resetValues();
+        when(defender.getResistanceStat).calledWith(attacker.weapon.damageType)
+            .mockReturnValue({percent: 0.25, flat: 5});
+        when(attacker.getAttributeStat).calledWith(attacker.weapon.attribute).mockReturnValue(15);
 
-            attacker.weapon.damageType = damageType;
-            attacker.weapon.attribute = Attribute.Charisma;
-            attacker.attributeStats.set(Attribute.Charisma, 15);
-            defender.resistanceStats.set(damageType, {percent: 0.25, flat: 5});
-
-            expect(calculateDamage(attacker, defender)).toBe(7);  // ceil(15 * 0.75) - 5. ceil((15 - 5) * 0.75) = 8
-        }
+        expect(calculateDamage(attacker, defender)).toBe(7);  // ceil(15 * 0.75) - 5. ceil((15 - 5) * 0.75) = 8
     });
 
     // Not sure if this is correct, but it should be tested
     test('damage minimum is 1', () => {
-        attacker.weapon.damageType = DamageType.Piercing;
-        attacker.weapon.attribute = Attribute.Charisma;
-        attacker.attributeStats.set(Attribute.Charisma, 15);
-        defender.resistanceStats.set(DamageType.Piercing, {percent: 1, flat: 0});
+        when(defender.getResistanceStat).calledWith(attacker.weapon.damageType)
+            .mockReturnValue({percent: 1, flat: 0});
+        when(attacker.getAttributeStat).calledWith(attacker.weapon.attribute).mockReturnValue(15);
 
         expect(calculateDamage(attacker, defender)).toBe(1);
     });
