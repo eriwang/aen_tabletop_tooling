@@ -1,7 +1,7 @@
 import { AttributeStats } from 'attribute_stats';
 import { Attribute, Skills, AttackType, DamageType } from 'base_game_enums';
 import { Profile } from 'profile';
-import { ResistanceStats } from 'resistance_stats';
+import { ResistanceStat, ResistanceStats } from 'resistance_stats';
 import { Weapon } from 'weapon';
 
 
@@ -18,8 +18,36 @@ export class Character {
         this.profile = prof;  // as of time of writing, unused in real code
     }
 
+    getAttributeStat(attr: Attribute) : number {
+        return this.attributeStats.get(attr);
+    }
+
+    getResistanceStat(dmgType: DamageType) : ResistanceStat {
+        return this.resistanceStats.get(dmgType);
+    }
+
+    getEvasiveStatForAttackType(atkType: AttackType) : number {
+        let statSum: number;
+        switch (atkType) {
+            case AttackType.Strike:  // fortitude
+                statSum = this.attributeStats.get(Attribute.Constitution) + this.attributeStats.get(Attribute.Strength);
+                break;
+            case AttackType.Projectile:  // reflex
+                statSum = this.attributeStats.get(Attribute.Dexterity) + this.attributeStats.get(Attribute.Wisdom);
+                break;
+            case AttackType.Curse:  // willpower:
+                statSum = this.attributeStats.get(Attribute.Intelligence) + this.attributeStats.get(Attribute.Charisma);
+                break;
+
+            default:
+                throw `Unknown attackType ${atkType}`;
+        }
+
+        return Math.ceil(0.75 * statSum);
+    }
+
     // as of writing, unused and untested
-    getSkillTotal(skill: Skills): number {
+    getSkillTotal(skill: Skills) : number {
         let multiplier: number = 4;
         let bonus: number = this.profile.getSkillBonus(skill) * multiplier;
 
