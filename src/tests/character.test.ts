@@ -3,16 +3,14 @@ import { AttackType, Attribute, DamageType, Skills } from 'base_game_enums';
 import { Character } from 'character';
 import { Profile } from 'profile';
 import { ResistanceStat, ResistanceStats } from 'resistance_stats';
-import { Weapon } from 'weapon';
 
 import { when } from 'jest-when';
 
 const mockAttrStats = { get: jest.fn() } as any as AttributeStats;
 const mockResStats = { get: jest.fn() } as any as ResistanceStats;
-const mockWeapon = {} as any as Weapon;  // unused
 const mockProfile = {} as any as Profile;  // unused for now
 
-const character = new Character(mockAttrStats, mockResStats, mockWeapon, mockProfile);
+const character = new Character(mockAttrStats, mockResStats, mockProfile);
 
 test('getAttributeStat', () => {
     when(mockAttrStats.get).expectCalledWith(Attribute.Dexterity).mockReturnValueOnce(50);

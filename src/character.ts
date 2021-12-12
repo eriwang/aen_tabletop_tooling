@@ -2,19 +2,15 @@ import { AttributeStats } from 'attribute_stats';
 import { Attribute, Skills, AttackType, DamageType } from 'base_game_enums';
 import { Profile } from 'profile';
 import { ResistanceStat, ResistanceStats } from 'resistance_stats';
-import { Weapon } from 'weapon';
-
 
 export class Character {
     attributeStats: AttributeStats;
     resistanceStats: ResistanceStats;
-    weapon: Weapon;
     profile: Profile;
 
-    constructor(attrStats: AttributeStats, resStats: ResistanceStats, weap: Weapon, prof: Profile) {
+    constructor(attrStats: AttributeStats, resStats: ResistanceStats, prof: Profile) {
         this.attributeStats = attrStats;
         this.resistanceStats = resStats;
-        this.weapon = weap;
         this.profile = prof;  // as of time of writing, unused in real code
     }
 
