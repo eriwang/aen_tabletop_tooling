@@ -1,4 +1,4 @@
-import { calculateToHit, calculateDamage } from 'attack_calculator';
+import { calculateToHit, calculateDamage, Attack } from 'attack_calculator';
 import { AttributeStats } from 'attribute_stats';
 import { Skills } from 'base_game_enums';
 import { Character } from 'character';
@@ -6,7 +6,6 @@ import { loadItem } from 'gsheets/loader';
 import { Profile } from 'profile';
 import { ResistanceStats } from 'resistance_stats';
 import { getNonNull, arrayToMap } from 'utils';
-import { Weapon } from 'weapon';
 
 function loadCharacter(characterName: string) : Character {
     // As of time of writing, profile does not impact damage calculations. This will change in the future
@@ -14,12 +13,10 @@ function loadCharacter(characterName: string) : Character {
 
     const unitMap = loadItem('Units', characterName, true);
     const armorMap = loadItem('Armors', unitMap.get('Armor'), false);
-    const weaponMap = loadItem('Weapons', unitMap.get('Weapons'), true);
 
     return new Character(
         AttributeStats.buildFromMap(unitMap),
         ResistanceStats.buildFromMap(armorMap),
-        Weapon.buildFromMap(weaponMap),
         dummyProfile);
 }
 
@@ -36,8 +33,9 @@ global.calculateAttack = () => {
     const attacker = loadCharacter(attackerName);
     const defender = loadCharacter(defenderName);
 
-    const toHitResult = calculateToHit(roll, attacker, defender);
-    const damage = calculateDamage(attacker, defender);
+    // stopping build complaints, this code is changing later anyways
+    const toHitResult = calculateToHit(roll, attacker, defender, {} as Attack);
+    const damage = calculateDamage(attacker, defender, {} as Attack);
 
     getNonNull(nameToRange.get('attackerToHit')).setValue(toHitResult.attackerToHit);
     getNonNull(nameToRange.get('defenderEvade')).setValue(toHitResult.defenderEvade);
