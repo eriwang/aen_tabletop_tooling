@@ -19,6 +19,10 @@ Note that this is mostly (if not all) automatable, and one day could be put into
 - `clasp create --title aen_tabletop_testing --parentId <id_of_your_sheet>`
 - `clasp push` (or use `--watch` if it works on your system)
 
+- `yarn install`
+- `yarn firebase login`
+
+
 ### Testing
 
 - `yarn jest`

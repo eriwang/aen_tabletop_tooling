@@ -25,6 +25,7 @@
     "eslint": "^8.1.0",
     "eslint-plugin-googleappsscript": "^1.0.4",
     "eslint-plugin-jest": "^25.2.2",
+    "firebase-tools": "^9.23.1",
     "gas-webpack-plugin": "^2.1.0",
     "jest": "^27.3.1",
     "jest-when": "^3.4.2",
