@@ -4,8 +4,8 @@
   "repository": "git@github.com:eriwang/aen_tabletop_tooling.git",
   "license": "MIT",
   "scripts": {
-    "lint": "yarn --cwd functions/ lint",
-    "test": "yarn --cwd functions/ test",
+    "lint": "yarn eslint --ext .js,.ts .",
+    "test": "yarn jest",
     "build": "yarn --cwd functions/ build",
     "serve": "yarn build && yarn firebase emulators:start --only functions",
     "shell": "yarn build && yarn firebase functions:shell",
@@ -14,6 +14,11 @@
     "logs": "yarn firebase functions:log"
   },
   "devDependencies": {
-    "firebase-tools": "^9.23.1"
-  }
+    "eslint": "7.6.0",
+    "eslint-plugin-import": "^2.25.3",
+    "firebase-tools": "^9.23.1",
+    "jest": "^27.4.4",
+    "jest-when": "^3.4.2"
+  },
+  "dependencies": {}
 }
