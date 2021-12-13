@@ -1,0 +1,8 @@
+{
+  "functions": {
+    "predeploy": [
+      "yarn run lint",
+      "yarn --cwd \"$RESOURCE_DIR\" run build"
+    ]
+  }
+}
