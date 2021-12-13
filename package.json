@@ -4,34 +4,16 @@
   "repository": "git@github.com:eriwang/aen_tabletop_tooling.git",
   "license": "MIT",
   "scripts": {
-    "lint": "yarn eslint . --ext ts,js",
-    "build-watch": "yarn webpack --watch",
-    "deploy-watch": "yarn clasp push --watch",
-    "push": "yarn webpack && yarn clasp push"
+    "lint": "yarn --cwd functions/ lint",
+    "test": "yarn --cwd functions/ test",
+    "build": "yarn --cwd functions/ build",
+    "serve": "yarn build && yarn firebase emulators:start --only functions",
+    "shell": "yarn build && yarn firebase functions:shell",
+    "start": "yarn shell",
+    "deploy": "yarn firebase deploy --only functions",
+    "logs": "yarn firebase functions:log"
   },
   "devDependencies": {
-    "@babel/cli": "^7.16.0",
-    "@babel/core": "^7.16.0",
-    "@babel/preset-env": "^7.16.0",
-    "@babel/preset-typescript": "^7.16.0",
-    "@google/clasp": "^2.4.1",
-    "@types/google-apps-script": "^1.0.38",
-    "@types/jest": "^27.0.2",
-    "@types/jest-when": "^2.7.3",
-    "@typescript-eslint/eslint-plugin": "^5.2.0",
-    "@typescript-eslint/parser": "^5.2.0",
-    "awesome-typescript-loader": "^5.2.1",
-    "babel-loader": "^8.2.3",
-    "eslint": "^8.1.0",
-    "eslint-plugin-googleappsscript": "^1.0.4",
-    "eslint-plugin-jest": "^25.2.2",
-    "firebase-tools": "^9.23.1",
-    "gas-webpack-plugin": "^2.1.0",
-    "jest": "^27.3.1",
-    "jest-when": "^3.4.2",
-    "ts-jest": "^27.0.7",
-    "typescript": "^4.4.4",
-    "webpack": "^5.61.0",
-    "webpack-cli": "^4.9.1"
+    "firebase-tools": "^9.23.1"
   }
 }
