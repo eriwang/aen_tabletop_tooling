@@ -1,4 +1,4 @@
-import { Attribute, EvasiveStatType, getAbbrevFromAttr } from 'base_game_enums';
+import { Attribute, getAbbrevFromAttr } from 'base_game_enums';
 import { enumerateEnumValues, getNonNull } from 'utils';
 
 export class AttributeStats {
@@ -24,25 +24,4 @@ export class AttributeStats {
     set(attribute: Attribute, value: number) {
         this.attributeToStat[attribute] = value;
     }
-
-    getEvasiveStat(evasiveStatType: EvasiveStatType) : number {
-        let statSum: number;
-        switch (evasiveStatType) {
-            case EvasiveStatType.Fortitude:
-                statSum = this.get(Attribute.Constitution) + this.get(Attribute.Strength);
-                break;
-            case EvasiveStatType.Reflex:
-                statSum = this.get(Attribute.Dexterity) + this.get(Attribute.Wisdom);
-                break;
-            case EvasiveStatType.Willpower:
-                statSum = this.get(Attribute.Intelligence) + this.get(Attribute.Charisma);
-                break;
-
-            default:
-                throw `Unknown evasiveStatType ${evasiveStatType}`;
-        }
-
-        return Math.ceil(0.75 * statSum);
-    }
-
 }

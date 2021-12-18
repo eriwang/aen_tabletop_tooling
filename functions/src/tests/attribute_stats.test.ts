@@ -1,5 +1,5 @@
 import { AttributeStats } from 'attribute_stats';
-import { Attribute, EvasiveStatType } from 'base_game_enums';
+import { Attribute } from 'base_game_enums';
 
 describe('buildFromMap', () => {
     test('initializes correctly', () => {
@@ -24,19 +24,4 @@ describe('buildFromMap', () => {
     test('throws when attr not found', () => {
         expect(() => AttributeStats.buildFromMap(new Map<string, number>([['CON', 1], ['STR', 2]]))).toThrowError();
     });
-});
-
-test('getEvasiveStat uses correct attributes', () => {
-    const attributeStats = new AttributeStats({
-        [Attribute.Constitution]: 1,
-        [Attribute.Strength]: 2,
-        [Attribute.Dexterity]: 3,
-        [Attribute.Wisdom]: 4,
-        [Attribute.Intelligence]: 5,
-        [Attribute.Charisma]: 6,
-    });
-
-    expect(attributeStats.getEvasiveStat(EvasiveStatType.Fortitude)).toBe(3);  // ceil(0.75 * (1 + 2))
-    expect(attributeStats.getEvasiveStat(EvasiveStatType.Reflex)).toBe(6);  // ceil(0.75 * (3 + 4))
-    expect(attributeStats.getEvasiveStat(EvasiveStatType.Willpower)).toBe(9);  // ceil(0.75 * (5 + 6))
 });

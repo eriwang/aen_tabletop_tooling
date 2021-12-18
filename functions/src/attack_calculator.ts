@@ -18,6 +18,23 @@ export interface Attack {
 }
 
 /*
+Character should be composed of:
+
+- Unit
+    - Base stats
+- Profile
+    - Armor
+        - Resistances
+    - Stat updates
+
+Character should be able to:
+
+- calc any attribute stat
+- calc any resistance stat
+- calc any evasive stat (which uses the attr stats)
+*/
+
+/*
 Not yet implemented for toHit:
 
 - Crits should add 10 to attackerToHit
