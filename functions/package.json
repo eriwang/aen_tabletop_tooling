@@ -1,9 +1,5 @@
 {
   "name": "functions",
-  "scripts": {
-    "test": "jest",
-    "build": "tsc"
-  },
   "engines": {
     "node": "14"
   },
