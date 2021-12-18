@@ -1,5 +1,5 @@
 import { Unit } from 'unit';
-import { Attribute, Skills, AttackType, DamageType } from 'base_game_enums';
+import { Attribute, AttackType, DamageType } from 'base_game_enums';
 import { Profile } from 'profile';
 import { ResistanceStat, ResistanceStats } from 'resistance_stats';
 
@@ -43,40 +43,40 @@ export class Character {
     }
 
     // as of writing, unused and untested
-    getSkillTotal(skill: Skills) : number {
-        let multiplier: number = 4;
-        let bonus: number = this.profile.getSkillBonus(skill) * multiplier;
+    // getSkillTotal(skill: Skills) : number {
+    //     let multiplier: number = 4;
+    //     let bonus: number = this.profile.getSkillBonus(skill) * multiplier;
 
-        switch (skill) {
-            case Skills.Endurance:
-                return this.unit.get(Attribute.Constitution) + bonus;
+    //     switch (skill) {
+    //         case Skills.Endurance:
+    //             return this.unit.get(Attribute.Constitution) + bonus;
 
-            case Skills.Athletics:
-                return this.unit.get(Attribute.Strength) + bonus;
+    //         case Skills.Athletics:
+    //             return this.unit.get(Attribute.Strength) + bonus;
 
-            case Skills.Acrobatics:
-            case Skills.SleightOfHand:
-                return this.unit.get(Attribute.Dexterity) + bonus;
+    //         case Skills.Acrobatics:
+    //         case Skills.SleightOfHand:
+    //             return this.unit.get(Attribute.Dexterity) + bonus;
 
-            case Skills.Nature:
-            case Skills.Religion:
-            case Skills.Medicine:
-            case Skills.Stealth: // Should this be wisdom?
-            case Skills.Survival:
-                return this.unit.get(Attribute.Wisdom) + bonus;
+    //         case Skills.Nature:
+    //         case Skills.Religion:
+    //         case Skills.Medicine:
+    //         case Skills.Stealth: // Should this be wisdom?
+    //         case Skills.Survival:
+    //             return this.unit.get(Attribute.Wisdom) + bonus;
 
-            case Skills.Arcana:
-            case Skills.History:
-            case Skills.Investigation:
-            case Skills.Culture:
-                return this.unit.get(Attribute.Intelligence) + bonus;
+    //         case Skills.Arcana:
+    //         case Skills.History:
+    //         case Skills.Investigation:
+    //         case Skills.Culture:
+    //             return this.unit.get(Attribute.Intelligence) + bonus;
 
-            case Skills.Deception:
-            case Skills.Intimidation:
-            case Skills.Performance:
-            case Skills.Persuasion:
-            case Skills.Insight:
-                return this.unit.get(Attribute.Charisma) + bonus;
-        }
-    }
+    //         case Skills.Deception:
+    //         case Skills.Intimidation:
+    //         case Skills.Performance:
+    //         case Skills.Persuasion:
+    //         case Skills.Insight:
+    //             return this.unit.get(Attribute.Charisma) + bonus;
+    //     }
+    // }
 }

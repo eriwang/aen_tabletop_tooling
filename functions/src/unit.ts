@@ -2,7 +2,9 @@ import { Attribute, getAbbrevFromAttr } from 'base_game_enums';
 import { enumerateEnumValues, getNonNull } from 'utils';
 
 export class Unit {
-    attributeToStat: Record<Attribute, number>;
+    attributeToStat: Record<Attribute, number>;q
+    // hpPerCon: number;
+    // fpPerInt: number;
 
     constructor(attributeToStat: Record<Attribute, number>) {
         this.attributeToStat = attributeToStat;
