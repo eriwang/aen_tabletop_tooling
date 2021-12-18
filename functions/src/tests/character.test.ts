@@ -1,4 +1,4 @@
-import { AttributeStats } from 'attribute_stats';
+import { Unit } from 'unit';
 import { AttackType, Attribute, DamageType } from 'base_game_enums';
 import { Character } from 'character';
 import { Profile } from 'profile';
@@ -6,7 +6,7 @@ import { ResistanceStat, ResistanceStats } from 'resistance_stats';
 
 import { when } from 'jest-when';
 
-const mockAttrStats = { get: jest.fn() } as any as AttributeStats;
+const mockAttrStats = { get: jest.fn() } as any as Unit;
 const mockResStats = { get: jest.fn() } as any as ResistanceStats;
 const mockProfile = {} as any as Profile;  // unused for now
 

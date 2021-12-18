@@ -1,21 +1,21 @@
-import { AttributeStats } from 'attribute_stats';
+import { Unit } from 'unit';
 import { Attribute, Skills, AttackType, DamageType } from 'base_game_enums';
 import { Profile } from 'profile';
 import { ResistanceStat, ResistanceStats } from 'resistance_stats';
 
 export class Character {
-    attributeStats: AttributeStats;
+    unit: Unit;
     resistanceStats: ResistanceStats;
     profile: Profile;
 
-    constructor(attrStats: AttributeStats, resStats: ResistanceStats, prof: Profile) {
-        this.attributeStats = attrStats;
+    constructor(unit: Unit, resStats: ResistanceStats, prof: Profile) {
+        this.unit = unit;
         this.resistanceStats = resStats;
         this.profile = prof;  // as of time of writing, unused in real code
     }
 
     getAttributeStat(attr: Attribute) : number {
-        return this.attributeStats.get(attr);
+        return this.unit.get(attr);
     }
 
     getResistanceStat(dmgType: DamageType) : ResistanceStat {
@@ -26,13 +26,13 @@ export class Character {
         let statSum: number;
         switch (atkType) {
             case AttackType.Strike:  // fortitude
-                statSum = this.attributeStats.get(Attribute.Constitution) + this.attributeStats.get(Attribute.Strength);
+                statSum = this.unit.get(Attribute.Constitution) + this.unit.get(Attribute.Strength);
                 break;
             case AttackType.Projectile:  // reflex
-                statSum = this.attributeStats.get(Attribute.Dexterity) + this.attributeStats.get(Attribute.Wisdom);
+                statSum = this.unit.get(Attribute.Dexterity) + this.unit.get(Attribute.Wisdom);
                 break;
             case AttackType.Curse:  // willpower:
-                statSum = this.attributeStats.get(Attribute.Intelligence) + this.attributeStats.get(Attribute.Charisma);
+                statSum = this.unit.get(Attribute.Intelligence) + this.unit.get(Attribute.Charisma);
                 break;
 
             default:
@@ -49,34 +49,34 @@ export class Character {
 
         switch (skill) {
             case Skills.Endurance:
-                return this.attributeStats.get(Attribute.Constitution) + bonus;
+                return this.unit.get(Attribute.Constitution) + bonus;
 
             case Skills.Athletics:
-                return this.attributeStats.get(Attribute.Strength) + bonus;
+                return this.unit.get(Attribute.Strength) + bonus;
 
             case Skills.Acrobatics:
             case Skills.SleightOfHand:
-                return this.attributeStats.get(Attribute.Dexterity) + bonus;
+                return this.unit.get(Attribute.Dexterity) + bonus;
 
             case Skills.Nature:
             case Skills.Religion:
             case Skills.Medicine:
             case Skills.Stealth: // Should this be wisdom?
             case Skills.Survival:
-                return this.attributeStats.get(Attribute.Wisdom) + bonus;
+                return this.unit.get(Attribute.Wisdom) + bonus;
 
             case Skills.Arcana:
             case Skills.History:
             case Skills.Investigation:
             case Skills.Culture:
-                return this.attributeStats.get(Attribute.Intelligence) + bonus;
+                return this.unit.get(Attribute.Intelligence) + bonus;
 
             case Skills.Deception:
             case Skills.Intimidation:
             case Skills.Performance:
             case Skills.Persuasion:
             case Skills.Insight:
-                return this.attributeStats.get(Attribute.Charisma) + bonus;
+                return this.unit.get(Attribute.Charisma) + bonus;
         }
     }
 }
