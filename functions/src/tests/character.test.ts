@@ -2,7 +2,7 @@ import { Unit } from 'unit';
 import { AttackType, Attribute, DamageType } from 'base_game_enums';
 import { Character } from 'character';
 import { Profile } from 'profile';
-import { ResistanceStat, Armor } from 'armor';
+import { Armor, ResistanceStat } from 'armor';
 
 import { when } from 'jest-when';
 

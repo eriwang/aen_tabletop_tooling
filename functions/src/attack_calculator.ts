@@ -1,4 +1,4 @@
-import { Attribute, AttackType, DamageType, } from 'base_game_enums';
+import { AttackType, Attribute, DamageType, } from 'base_game_enums';
 import { Character } from 'character';
 
 interface ToHitResults {

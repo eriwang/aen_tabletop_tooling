@@ -1,6 +1,6 @@
-import { Profile } from 'profile';
-import { Attribute } from 'base_game_enums';
 import { Armor } from 'armor';
+import { Attribute } from 'base_game_enums';
+import { Profile } from 'profile';
 
 describe('getAttributeStatDiff', () => {
     const attributeToStatDiff : Record<Attribute, number> = {

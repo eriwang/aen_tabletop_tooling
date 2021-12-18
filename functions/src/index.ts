@@ -11,7 +11,7 @@ ModuleAlias.addPath(__dirname);
 
 import * as functions from 'firebase-functions';
 
-import { calculateToHit, calculateDamage, Attack } from 'attack_calculator';
+import { Attack, calculateDamage, calculateToHit } from 'attack_calculator';
 import { Character } from 'character';
 
 export const calculateAttack = functions.https.onRequest((request, response) => {

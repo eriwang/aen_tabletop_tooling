@@ -1,5 +1,5 @@
-import { DamageType } from 'base_game_enums';
 import { Armor } from 'armor';
+import { DamageType } from 'base_game_enums';
 
 describe('buildFromMap', () => {
     let resStatsMap : Map<string, number>;

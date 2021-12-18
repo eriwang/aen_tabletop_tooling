@@ -1,5 +1,5 @@
-import { Unit } from 'unit';
 import { Attribute } from 'base_game_enums';
+import { Unit } from 'unit';
 
 describe('buildFromMap', () => {
     test('initializes correctly', () => {

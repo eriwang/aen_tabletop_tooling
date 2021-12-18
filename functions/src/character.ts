@@ -1,5 +1,5 @@
 import { Unit } from 'unit';
-import { Attribute, AttackType, DamageType } from 'base_game_enums';
+import { AttackType, Attribute, DamageType } from 'base_game_enums';
 import { Profile } from 'profile';
 import { ResistanceStat } from 'armor';
 
