@@ -11,11 +11,11 @@ export class Character {
     constructor(unit: Unit, armor: Armor, prof: Profile) {
         this.unit = unit;
         this.armor = armor;
-        this.profile = prof;  // as of time of writing, unused in real code
+        this.profile = prof;
     }
 
     getAttributeStat(attr: Attribute) : number {
-        return this.unit.getAttribute(attr);
+        return this.unit.getAttribute(attr) + this.profile.getAttributeStatDiff(attr);
     }
 
     getResistanceStat(dmgType: DamageType) : ResistanceStat {
@@ -26,13 +26,13 @@ export class Character {
         let statSum: number;
         switch (atkType) {
             case AttackType.Strike:  // fortitude
-                statSum = this.unit.getAttribute(Attribute.Constitution) + this.unit.getAttribute(Attribute.Strength);
+                statSum = this.getAttributeStat(Attribute.Constitution) + this.getAttributeStat(Attribute.Strength);
                 break;
             case AttackType.Projectile:  // reflex
-                statSum = this.unit.getAttribute(Attribute.Dexterity) + this.unit.getAttribute(Attribute.Wisdom);
+                statSum = this.getAttributeStat(Attribute.Dexterity) + this.getAttributeStat(Attribute.Wisdom);
                 break;
             case AttackType.Curse:  // willpower:
-                statSum = this.unit.getAttribute(Attribute.Intelligence) + this.unit.getAttribute(Attribute.Charisma);
+                statSum = this.getAttributeStat(Attribute.Intelligence) + this.getAttributeStat(Attribute.Charisma);
                 break;
 
             default:

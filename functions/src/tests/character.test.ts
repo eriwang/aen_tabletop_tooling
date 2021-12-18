@@ -6,15 +6,16 @@ import { ResistanceStat, Armor } from 'armor';
 
 import { when } from 'jest-when';
 
-const mockAttrStats = { getAttribute: jest.fn() } as any as Unit;
+const mockUnit = { getAttribute: jest.fn() } as any as Unit;
 const mockArmor = { getResistance: jest.fn() } as any as Armor;
-const mockProfile = {} as any as Profile;  // unused for now
+const mockProfile = {getAttributeStatDiff: jest.fn() } as any as Profile;
 
-const character = new Character(mockAttrStats, mockArmor, mockProfile);
+const character = new Character(mockUnit, mockArmor, mockProfile);
 
 test('getAttributeStat', () => {
-    when(mockAttrStats.getAttribute).expectCalledWith(Attribute.Dexterity).mockReturnValueOnce(50);
-    expect(character.getAttributeStat(Attribute.Dexterity)).toBe(50);
+    when(mockUnit.getAttribute).expectCalledWith(Attribute.Dexterity).mockReturnValueOnce(50);
+    when(mockProfile.getAttributeStatDiff).expectCalledWith(Attribute.Dexterity).mockReturnValueOnce(10);
+    expect(character.getAttributeStat(Attribute.Dexterity)).toBe(60);
 });
 
 test('getResistanceStat', () => {
@@ -39,12 +40,13 @@ describe('getEvasiveStat', () => {
         };
         for (const [attr, value] of Object.entries(attrToValue)) {
             // when looping through a js object, attr is a string, we parse out the int version of it for the enum
-            when(mockAttrStats.getAttribute).calledWith(parseInt(attr)).mockReturnValue(value);
+            when(mockUnit.getAttribute).calledWith(parseInt(attr)).mockReturnValue(value);
+            when(mockProfile.getAttributeStatDiff).calledWith(parseInt(attr)).mockReturnValue(1);
         }
 
-        expect(character.getEvasiveStatForAttackType(AttackType.Strike)).toBe(3);  // ceil(0.75 * (1 + 2))
-        expect(character.getEvasiveStatForAttackType(AttackType.Projectile)).toBe(6);  // ceil(0.75 * (3 + 4))
-        expect(character.getEvasiveStatForAttackType(AttackType.Curse)).toBe(9);  // ceil(0.75 * (5 + 6))
+        expect(character.getEvasiveStatForAttackType(AttackType.Strike)).toBe(4);  // ceil(0.75 * (1 + 2 + 1 + 1))
+        expect(character.getEvasiveStatForAttackType(AttackType.Projectile)).toBe(7);  // ceil(0.75 * (3 + 4 + 1 + 1))
+        expect(character.getEvasiveStatForAttackType(AttackType.Curse)).toBe(10);  // ceil(0.75 * (5 + 6 + 1 + 1))
     });
 
     test('invalid', () => {
