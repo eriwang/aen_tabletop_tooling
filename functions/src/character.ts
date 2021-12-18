@@ -1,16 +1,14 @@
 import { Unit } from 'unit';
 import { Attribute, AttackType, DamageType } from 'base_game_enums';
 import { Profile } from 'profile';
-import { ResistanceStat, Armor } from 'armor';
+import { ResistanceStat } from 'armor';
 
 export class Character {
     unit: Unit;
-    armor: Armor;
     profile: Profile;
 
-    constructor(unit: Unit, armor: Armor, prof: Profile) {
+    constructor(unit: Unit, prof: Profile) {
         this.unit = unit;
-        this.armor = armor;
         this.profile = prof;
     }
 
@@ -19,7 +17,7 @@ export class Character {
     }
 
     getResistanceStat(dmgType: DamageType) : ResistanceStat {
-        return this.armor.getResistance(dmgType);
+        return this.profile.getArmor().getResistance(dmgType);
     }
 
     getEvasiveStatForAttackType(atkType: AttackType) : number {
@@ -31,7 +29,7 @@ export class Character {
             case AttackType.Projectile:  // reflex
                 statSum = this.getAttributeStat(Attribute.Dexterity) + this.getAttributeStat(Attribute.Wisdom);
                 break;
-            case AttackType.Curse:  // willpower:
+            case AttackType.Curse:  // willpower
                 statSum = this.getAttributeStat(Attribute.Intelligence) + this.getAttributeStat(Attribute.Charisma);
                 break;
 
