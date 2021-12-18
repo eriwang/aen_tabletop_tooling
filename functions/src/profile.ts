@@ -7,8 +7,6 @@ export class Profile {
     armor: Armor;
 
     // skills: Record<Skills, number>;
-    // level: number;
-    // armor: string;
 
     constructor(level: number, attrToStatDiff: Record<Attribute, number>, armor: Armor) {
         this.level = level;
