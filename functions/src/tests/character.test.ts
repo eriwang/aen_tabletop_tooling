@@ -6,14 +6,14 @@ import { ResistanceStat, Armor } from 'armor';
 
 import { when } from 'jest-when';
 
-const mockAttrStats = { get: jest.fn() } as any as Unit;
+const mockAttrStats = { getAttribute: jest.fn() } as any as Unit;
 const mockArmor = { getResistance: jest.fn() } as any as Armor;
 const mockProfile = {} as any as Profile;  // unused for now
 
 const character = new Character(mockAttrStats, mockArmor, mockProfile);
 
 test('getAttributeStat', () => {
-    when(mockAttrStats.get).expectCalledWith(Attribute.Dexterity).mockReturnValueOnce(50);
+    when(mockAttrStats.getAttribute).expectCalledWith(Attribute.Dexterity).mockReturnValueOnce(50);
     expect(character.getAttributeStat(Attribute.Dexterity)).toBe(50);
 });
 
@@ -39,7 +39,7 @@ describe('getEvasiveStat', () => {
         };
         for (const [attr, value] of Object.entries(attrToValue)) {
             // when looping through a js object, attr is a string, we parse out the int version of it for the enum
-            when(mockAttrStats.get).calledWith(parseInt(attr)).mockReturnValue(value);
+            when(mockAttrStats.getAttribute).calledWith(parseInt(attr)).mockReturnValue(value);
         }
 
         expect(character.getEvasiveStatForAttackType(AttackType.Strike)).toBe(3);  // ceil(0.75 * (1 + 2))

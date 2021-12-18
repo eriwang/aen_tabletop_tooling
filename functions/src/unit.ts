@@ -19,7 +19,7 @@ export class Unit {
         return new Unit(attributeToStat);
     }
 
-    get(attribute: Attribute) : number {
+    getAttribute(attribute: Attribute) : number {
         return this.attributeToStat[attribute];
     }
 }

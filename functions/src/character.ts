@@ -15,7 +15,7 @@ export class Character {
     }
 
     getAttributeStat(attr: Attribute) : number {
-        return this.unit.get(attr);
+        return this.unit.getAttribute(attr);
     }
 
     getResistanceStat(dmgType: DamageType) : ResistanceStat {
@@ -26,13 +26,13 @@ export class Character {
         let statSum: number;
         switch (atkType) {
             case AttackType.Strike:  // fortitude
-                statSum = this.unit.get(Attribute.Constitution) + this.unit.get(Attribute.Strength);
+                statSum = this.unit.getAttribute(Attribute.Constitution) + this.unit.getAttribute(Attribute.Strength);
                 break;
             case AttackType.Projectile:  // reflex
-                statSum = this.unit.get(Attribute.Dexterity) + this.unit.get(Attribute.Wisdom);
+                statSum = this.unit.getAttribute(Attribute.Dexterity) + this.unit.getAttribute(Attribute.Wisdom);
                 break;
             case AttackType.Curse:  // willpower:
-                statSum = this.unit.get(Attribute.Intelligence) + this.unit.get(Attribute.Charisma);
+                statSum = this.unit.getAttribute(Attribute.Intelligence) + this.unit.getAttribute(Attribute.Charisma);
                 break;
 
             default:

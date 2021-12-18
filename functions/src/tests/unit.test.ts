@@ -13,12 +13,12 @@ describe('buildFromMap', () => {
             ['N/A', 10]
         ]));
 
-        expect(unit.get(Attribute.Constitution)).toBe(1);
-        expect(unit.get(Attribute.Strength)).toBe(2);
-        expect(unit.get(Attribute.Dexterity)).toBe(3);
-        expect(unit.get(Attribute.Wisdom)).toBe(4);
-        expect(unit.get(Attribute.Intelligence)).toBe(5);
-        expect(unit.get(Attribute.Charisma)).toBe(6);
+        expect(unit.getAttribute(Attribute.Constitution)).toBe(1);
+        expect(unit.getAttribute(Attribute.Strength)).toBe(2);
+        expect(unit.getAttribute(Attribute.Dexterity)).toBe(3);
+        expect(unit.getAttribute(Attribute.Wisdom)).toBe(4);
+        expect(unit.getAttribute(Attribute.Intelligence)).toBe(5);
+        expect(unit.getAttribute(Attribute.Charisma)).toBe(6);
     });
 
     test('throws when attr not found', () => {
