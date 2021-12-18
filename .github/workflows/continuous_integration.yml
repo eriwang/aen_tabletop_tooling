@@ -16,6 +16,8 @@ jobs:
         node-version: '14'
     - name: Install dependencies
       run: yarn install
+    - name: Install functions dependencies
+      run: yarn --cwd functions/ install
     - name: Build
       run: yarn build
     - name: Lint
