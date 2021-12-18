@@ -2,15 +2,15 @@ import { Unit } from 'unit';
 import { AttackType, Attribute, DamageType } from 'base_game_enums';
 import { Character } from 'character';
 import { Profile } from 'profile';
-import { ResistanceStat, ResistanceStats } from 'resistance_stats';
+import { ResistanceStat, Armor } from 'armor';
 
 import { when } from 'jest-when';
 
 const mockAttrStats = { get: jest.fn() } as any as Unit;
-const mockResStats = { get: jest.fn() } as any as ResistanceStats;
+const mockArmor = { getResistance: jest.fn() } as any as Armor;
 const mockProfile = {} as any as Profile;  // unused for now
 
-const character = new Character(mockAttrStats, mockResStats, mockProfile);
+const character = new Character(mockAttrStats, mockArmor, mockProfile);
 
 test('getAttributeStat', () => {
     when(mockAttrStats.get).expectCalledWith(Attribute.Dexterity).mockReturnValueOnce(50);
@@ -23,7 +23,7 @@ test('getResistanceStat', () => {
         percent: 10
     };
 
-    when(mockResStats.get).expectCalledWith(DamageType.Radiant).mockReturnValueOnce(resStat);
+    when(mockArmor.getResistance).expectCalledWith(DamageType.Radiant).mockReturnValueOnce(resStat);
     expect(character.getResistanceStat(DamageType.Radiant)).toStrictEqual(resStat);
 });
 

@@ -6,14 +6,14 @@ export interface ResistanceStat {
     flat: number;
 }
 
-export class ResistanceStats {
+export class Armor {
     damageTypeToResistance: Record<DamageType, ResistanceStat>;
 
     constructor(damageTypeToResistance: Record<DamageType, ResistanceStat>) {
         this.damageTypeToResistance = damageTypeToResistance;
     }
 
-    static buildFromMap(map: Map<string, any>) : ResistanceStats {
+    static buildFromMap(map: Map<string, any>) : Armor {
         const damageTypeToResistance = {} as Record<DamageType, ResistanceStat>;
         for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
             const damageTypeStr = DamageType[damageType];
@@ -23,14 +23,10 @@ export class ResistanceStats {
             };
         }
 
-        return new ResistanceStats(damageTypeToResistance);
+        return new Armor(damageTypeToResistance);
     }
 
-    get(damageType: DamageType) : ResistanceStat {
+    getResistance(damageType: DamageType) : ResistanceStat {
         return this.damageTypeToResistance[damageType];
-    }
-
-    set(damageType: DamageType, resistanceStat: ResistanceStat) {
-        this.damageTypeToResistance[damageType] = resistanceStat;
     }
 }

@@ -1,16 +1,16 @@
 import { Unit } from 'unit';
 import { Attribute, AttackType, DamageType } from 'base_game_enums';
 import { Profile } from 'profile';
-import { ResistanceStat, ResistanceStats } from 'resistance_stats';
+import { ResistanceStat, Armor } from 'armor';
 
 export class Character {
     unit: Unit;
-    resistanceStats: ResistanceStats;
+    armor: Armor;
     profile: Profile;
 
-    constructor(unit: Unit, resStats: ResistanceStats, prof: Profile) {
+    constructor(unit: Unit, armor: Armor, prof: Profile) {
         this.unit = unit;
-        this.resistanceStats = resStats;
+        this.armor = armor;
         this.profile = prof;  // as of time of writing, unused in real code
     }
 
@@ -19,7 +19,7 @@ export class Character {
     }
 
     getResistanceStat(dmgType: DamageType) : ResistanceStat {
-        return this.resistanceStats.get(dmgType);
+        return this.armor.getResistance(dmgType);
     }
 
     getEvasiveStatForAttackType(atkType: AttackType) : number {
