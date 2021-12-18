@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "yarn eslint --ext .js,.ts .",
     "test": "yarn jest",
-    "build": "yarn --cwd functions/ build",
+    "test-fast": "yarn jest --globals '{\"ts-jest\": { \"isolatedModules\": true } }'",
+    "build": "yarn tsc -p functions/",
     "serve": "yarn build && yarn firebase emulators:start --only functions",
     "shell": "yarn build && yarn firebase functions:shell",
     "start": "yarn shell",

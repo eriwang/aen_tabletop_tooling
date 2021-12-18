@@ -1,21 +1,28 @@
-import { Skills } from 'base_game_enums';
+import { Armor } from 'armor';
+import { Attribute } from 'base_game_enums';
 
 export class Profile {
-    skills: Record<Skills, number>;
-    hpPerCon: number;
-    fpPerInt: number;
     level: number;
-    armor: string;
+    attributeToStatDiff: Record<Attribute, number>;
+    armor: Armor;
 
-    constructor(skills: Record<Skills, number>, hpPerCon: number, fpPerInt: number, level: number, armor: string) {
-        this.skills = skills;
-        this.hpPerCon = hpPerCon;
-        this.fpPerInt = fpPerInt;
+    // skills: Record<Skills, number>;
+
+    constructor(level: number, attrToStatDiff: Record<Attribute, number>, armor: Armor) {
         this.level = level;
+        this.attributeToStatDiff = attrToStatDiff;
         this.armor = armor;
     }
 
-    getSkillBonus(skill: Skills): number {
-        return this.skills[skill];
+    getAttributeStatDiff(attr: Attribute) : number {
+        return this.attributeToStatDiff[attr] + this.level;
     }
+
+    getArmor() : Armor {
+        return this.armor;
+    }
+
+    // getSkillBonus(skill: Skills): number {
+    //     return this.skills[skill];
+    // }
 }

@@ -1,4 +1,4 @@
-import { Attribute, AttackType, DamageType, getAttrFromAbbrev } from 'base_game_enums';
+import { AttackType, Attribute, DamageType, getAttrFromAbbrev } from 'base_game_enums';
 import { getNonNull } from 'utils';
 
 export class Weapon {

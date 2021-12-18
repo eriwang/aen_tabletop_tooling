@@ -1,5 +1,5 @@
-import { Attack, calculateToHit, calculateDamage } from 'attack_calculator';
-import { Attribute, AttackType, DamageType } from 'base_game_enums';
+import { Attack, calculateDamage, calculateToHit } from 'attack_calculator';
+import { AttackType, Attribute, DamageType } from 'base_game_enums';
 import { Character } from 'character';
 import { enumerateEnumValues } from 'utils';
 

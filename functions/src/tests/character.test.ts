@@ -1,20 +1,19 @@
-import { AttributeStats } from 'attribute_stats';
+import { Unit } from 'unit';
 import { AttackType, Attribute, DamageType } from 'base_game_enums';
 import { Character } from 'character';
 import { Profile } from 'profile';
-import { ResistanceStat, ResistanceStats } from 'resistance_stats';
+import { Armor, ResistanceStat } from 'armor';
 
 import { when } from 'jest-when';
 
-const mockAttrStats = { get: jest.fn() } as any as AttributeStats;
-const mockResStats = { get: jest.fn() } as any as ResistanceStats;
-const mockProfile = {} as any as Profile;  // unused for now
-
-const character = new Character(mockAttrStats, mockResStats, mockProfile);
+const mockUnit = { getAttribute: jest.fn() } as any as Unit;
+const mockProfile = { getAttributeStatDiff: jest.fn(), getArmor: jest.fn() } as any as Profile;
+const character = new Character(mockUnit, mockProfile);
 
 test('getAttributeStat', () => {
-    when(mockAttrStats.get).expectCalledWith(Attribute.Dexterity).mockReturnValueOnce(50);
-    expect(character.getAttributeStat(Attribute.Dexterity)).toBe(50);
+    when(mockUnit.getAttribute).expectCalledWith(Attribute.Dexterity).mockReturnValueOnce(50);
+    when(mockProfile.getAttributeStatDiff).expectCalledWith(Attribute.Dexterity).mockReturnValueOnce(10);
+    expect(character.getAttributeStat(Attribute.Dexterity)).toBe(60);
 });
 
 test('getResistanceStat', () => {
@@ -23,7 +22,9 @@ test('getResistanceStat', () => {
         percent: 10
     };
 
-    when(mockResStats.get).expectCalledWith(DamageType.Radiant).mockReturnValueOnce(resStat);
+    const mockArmor = { getResistance: jest.fn() } as any as Armor;
+    when(mockProfile.getArmor).expectCalledWith().mockReturnValue(mockArmor);
+    when(mockArmor.getResistance).expectCalledWith(DamageType.Radiant).mockReturnValueOnce(resStat);
     expect(character.getResistanceStat(DamageType.Radiant)).toStrictEqual(resStat);
 });
 
@@ -39,12 +40,13 @@ describe('getEvasiveStat', () => {
         };
         for (const [attr, value] of Object.entries(attrToValue)) {
             // when looping through a js object, attr is a string, we parse out the int version of it for the enum
-            when(mockAttrStats.get).calledWith(parseInt(attr)).mockReturnValue(value);
+            when(mockUnit.getAttribute).calledWith(parseInt(attr)).mockReturnValue(value);
+            when(mockProfile.getAttributeStatDiff).calledWith(parseInt(attr)).mockReturnValue(1);
         }
 
-        expect(character.getEvasiveStatForAttackType(AttackType.Strike)).toBe(3);  // ceil(0.75 * (1 + 2))
-        expect(character.getEvasiveStatForAttackType(AttackType.Projectile)).toBe(6);  // ceil(0.75 * (3 + 4))
-        expect(character.getEvasiveStatForAttackType(AttackType.Curse)).toBe(9);  // ceil(0.75 * (5 + 6))
+        expect(character.getEvasiveStatForAttackType(AttackType.Strike)).toBe(4);  // ceil(0.75 * (1 + 2 + 1 + 1))
+        expect(character.getEvasiveStatForAttackType(AttackType.Projectile)).toBe(7);  // ceil(0.75 * (3 + 4 + 1 + 1))
+        expect(character.getEvasiveStatForAttackType(AttackType.Curse)).toBe(10);  // ceil(0.75 * (5 + 6 + 1 + 1))
     });
 
     test('invalid', () => {
