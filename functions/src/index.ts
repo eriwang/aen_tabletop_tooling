@@ -57,7 +57,7 @@ export const createCharacter = functions.https.onRequest((request, response) => 
     const unit = new Unit(attrToStat);
     const profile = new Profile(1, attrToStat, armor);
 
-    const character = new Character(unit, profile);
+    const character = Character.build(unit, profile);
 
     response.send('done');
 });

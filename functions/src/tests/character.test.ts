@@ -7,12 +7,15 @@ import { Armor, ResistanceStat } from 'armor';
 import { when } from 'jest-when';
 
 const mockUnit = { getAttribute: jest.fn() } as any as Unit;
+const mockArmor = { getResistance: jest.fn() } as any as Armor;
 const mockProfile = { getAttributeStatDiff: jest.fn(), getArmor: jest.fn() } as any as Profile;
-const character = new Character(mockUnit, mockProfile);
+when(mockProfile.getArmor).mockReturnValue(mockArmor);
 
 test('getAttributeStat', () => {
-    when(mockUnit.getAttribute).expectCalledWith(Attribute.Dexterity).mockReturnValueOnce(50);
-    when(mockProfile.getAttributeStatDiff).expectCalledWith(Attribute.Dexterity).mockReturnValueOnce(10);
+    when(mockUnit.getAttribute).calledWith(Attribute.Dexterity).mockReturnValueOnce(50);
+    when(mockProfile.getAttributeStatDiff).calledWith(Attribute.Dexterity).mockReturnValueOnce(10);
+
+    const character = Character.build(mockUnit, mockProfile);
     expect(character.getAttributeStat(Attribute.Dexterity)).toBe(60);
 });
 
@@ -21,10 +24,9 @@ test('getResistanceStat', () => {
         flat: 5,
         percent: 10
     };
+    when(mockArmor.getResistance).calledWith(DamageType.Radiant).mockReturnValueOnce(resStat);
 
-    const mockArmor = { getResistance: jest.fn() } as any as Armor;
-    when(mockProfile.getArmor).expectCalledWith().mockReturnValue(mockArmor);
-    when(mockArmor.getResistance).expectCalledWith(DamageType.Radiant).mockReturnValueOnce(resStat);
+    const character = Character.build(mockUnit, mockProfile);
     expect(character.getResistanceStat(DamageType.Radiant)).toStrictEqual(resStat);
 });
 
@@ -44,12 +46,14 @@ describe('getEvasiveStat', () => {
             when(mockProfile.getAttributeStatDiff).calledWith(parseInt(attr)).mockReturnValue(1);
         }
 
+        const character = Character.build(mockUnit, mockProfile);
         expect(character.getEvasiveStatForAttackType(AttackType.Strike)).toBe(4);  // ceil(0.75 * (1 + 2 + 1 + 1))
         expect(character.getEvasiveStatForAttackType(AttackType.Projectile)).toBe(7);  // ceil(0.75 * (3 + 4 + 1 + 1))
         expect(character.getEvasiveStatForAttackType(AttackType.Curse)).toBe(10);  // ceil(0.75 * (5 + 6 + 1 + 1))
     });
 
     test('invalid', () => {
+        const character = Character.build(mockUnit, mockProfile);
         expect(() => character.getEvasiveStatForAttackType(-1 as AttackType)).toThrowError();
     });
 });
