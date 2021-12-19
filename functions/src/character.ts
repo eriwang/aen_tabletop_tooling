@@ -3,6 +3,8 @@ import { AttackType, Attribute, DamageType } from 'base_game_enums';
 import { Profile } from 'profile';
 import { ResistanceStat } from 'armor';
 
+// TODO: should be able to construct using a Unit and a Profile, but the state should likely live raw because the
+//       table won't be querying the unit/ profile
 export class Character {
     unit: Unit;
     profile: Profile;
