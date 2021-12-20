@@ -5,8 +5,10 @@
   "license": "MIT",
   "scripts": {
     "lint": "yarn eslint --ext .js,.ts .",
-    "test": "yarn jest",
-    "test-fast": "yarn jest --globals '{\"ts-jest\": { \"isolatedModules\": true } }'",
+    "test": "yarn test:unit && yarn test:firestore",
+    "test:unit": "yarn jest --selectProjects functions-unit",
+    "test:unit-fast": "yarn test:unit --globals '{\"ts-jest\": { \"isolatedModules\": true } }'",
+    "test:firestore": "yarn firebase emulators:exec --only firestore 'yarn jest --selectProjects functions-firestore'",
     "build": "yarn tsc -p functions/",
     "serve-dev": "yarn build && yarn firebase emulators:start",
     "shell": "yarn build && yarn firebase functions:shell",

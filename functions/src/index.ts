@@ -19,6 +19,8 @@ import { Attribute, DamageType } from 'base_game_enums';
 import { Profile } from 'profile';
 import { Armor, ResistanceStat } from 'armor';
 
+admin.initializeApp();
+
 export const calculateAttack = functions.https.onRequest((request, response) => {
     functions.logger.info('Beginning to calculate attack');
 
@@ -27,7 +29,7 @@ export const calculateAttack = functions.https.onRequest((request, response) => 
     response.send(`${{damage: 5, toHit: 10}}}\ngoodbye`);
 });
 
-export const createCharacter = functions.https.onRequest((request, response) => {
+export const createCharacter = functions.https.onRequest(async (request, response) => {
     functions.logger.info('Beginning to create character');
 
     const attrToStat = {
@@ -58,6 +60,23 @@ export const createCharacter = functions.https.onRequest((request, response) => 
     const profile = new Profile(1, attrToStat, armor);
 
     const character = Character.build(unit, profile);
+
+    await admin.firestore().collection('Characters').add({
+        attributeToStat: attrToStat,
+        resistanceToResStat: {
+            [DamageType.Slashing]: resStat,
+            [DamageType.Bludgeoning]: resStat,
+            [DamageType.Piercing]: resStat,
+            [DamageType.Fire]: resStat,
+            [DamageType.Water]: resStat,
+            [DamageType.Air]: resStat,
+            [DamageType.Earth]: resStat,
+            [DamageType.Poison]: resStat,
+            [DamageType.Radiant]: resStat,
+            [DamageType.Necrotic]: resStat,
+            [DamageType.Psychic]: resStat,
+        },
+    });
 
     response.send('done');
 });
