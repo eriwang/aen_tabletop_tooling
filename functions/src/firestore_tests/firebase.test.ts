@@ -1,8 +1,7 @@
 import * as admin from 'firebase-admin';
 
-admin.initializeApp({projectId: 'test'});
-
 beforeAll(async () => {
+    admin.initializeApp();
     await admin.firestore().collection('Characters').add({
         hello: 'goodbye'
     });
