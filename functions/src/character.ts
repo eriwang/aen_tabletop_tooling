@@ -8,7 +8,7 @@ export class Character {
     attributeToStat: Record<Attribute, number>;
     resistanceToResStat: Record<DamageType, ResistanceStat>
 
-    private constructor(attrToStat: Record<Attribute, number>, resToResStat: Record<DamageType, ResistanceStat>) {
+    constructor(attrToStat: Record<Attribute, number>, resToResStat: Record<DamageType, ResistanceStat>) {
         this.attributeToStat = attrToStat;
         this.resistanceToResStat = resToResStat;
     }
