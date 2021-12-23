@@ -2,22 +2,37 @@ import { Unit } from 'unit';
 import { AttackType, Attribute, DamageType } from 'base_game_enums';
 import { Profile } from 'profile';
 import { ResistanceStat } from 'armor';
+import { enumerateEnumValues } from 'utils';
 
 export class Character {
-    unit: Unit;
-    profile: Profile;
+    attributeToStat: Record<Attribute, number>;
+    resistanceToResStat: Record<DamageType, ResistanceStat>
 
-    constructor(unit: Unit, prof: Profile) {
-        this.unit = unit;
-        this.profile = prof;
+    constructor(attrToStat: Record<Attribute, number>, resToResStat: Record<DamageType, ResistanceStat>) {
+        this.attributeToStat = attrToStat;
+        this.resistanceToResStat = resToResStat;
+    }
+
+    static build(unit: Unit, prof: Profile) : Character {
+        const attributeToStat = {} as Record<Attribute, number>;
+        for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
+            attributeToStat[attribute] = unit.getAttribute(attribute) + prof.getAttributeStatDiff(attribute);
+        }
+
+        const resistanceToResStat = {} as Record<DamageType, ResistanceStat>;
+        for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
+            resistanceToResStat[damageType] = prof.getArmor().getResistance(damageType);
+        }
+
+        return new Character(attributeToStat, resistanceToResStat);
     }
 
     getAttributeStat(attr: Attribute) : number {
-        return this.unit.getAttribute(attr) + this.profile.getAttributeStatDiff(attr);
+        return this.attributeToStat[attr];
     }
 
     getResistanceStat(dmgType: DamageType) : ResistanceStat {
-        return this.profile.getArmor().getResistance(dmgType);
+        return this.resistanceToResStat[dmgType];
     }
 
     getEvasiveStatForAttackType(atkType: AttackType) : number {

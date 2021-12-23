@@ -13,14 +13,14 @@ describe('getAttributeStatDiff', () => {
     };
 
     test('works for multiple attribute types', () => {
-        const profile = new Profile(0, attributeToStatDiff, {} as any as Armor);
+        const profile = new Profile(1, attributeToStatDiff, {} as any as Armor);
         expect(profile.getAttributeStatDiff(Attribute.Strength)).toBe(2);
         expect(profile.getAttributeStatDiff(Attribute.Wisdom)).toBe(4);
         expect(profile.getAttributeStatDiff(Attribute.Intelligence)).toBe(5);
     });
 
     test('adds level', () => {
-        const profile = new Profile(5, attributeToStatDiff, {} as any as Armor);
+        const profile = new Profile(6, attributeToStatDiff, {} as any as Armor);
         expect(profile.getAttributeStatDiff(Attribute.Constitution)).toBe(6);  // 1 + 5
         expect(profile.getAttributeStatDiff(Attribute.Dexterity)).toBe(8);  // 3 + 5
         expect(profile.getAttributeStatDiff(Attribute.Charisma)).toBe(11);  // 6 + 5

@@ -15,7 +15,7 @@ export class Profile {
     }
 
     getAttributeStatDiff(attr: Attribute) : number {
-        return this.attributeToStatDiff[attr] + this.level;
+        return this.attributeToStatDiff[attr] + this.level - 1;
     }
 
     getArmor() : Armor {

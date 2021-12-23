@@ -1,7 +1,8 @@
 module.exports = {
+    'displayName': 'functions-firestore',
     'preset': 'ts-jest',
     'testMatch': [
-        '<rootDir>/src/tests/**/*.test.*'
+        '<rootDir>/src/firestore_tests/**/*.test.*'
     ],
     'moduleDirectories': [
         'src',

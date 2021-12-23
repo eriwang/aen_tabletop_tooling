@@ -9,16 +9,15 @@ TypeScript transpiler will dump everything directly in the same directory.
 import ModuleAlias from 'module-alias';
 ModuleAlias.addPath(__dirname);
 
+import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 
-import { Attack, calculateDamage, calculateToHit } from 'attack_calculator';
-import { Character } from 'character';
+admin.initializeApp();
 
 export const calculateAttack = functions.https.onRequest((request, response) => {
     functions.logger.info('Beginning to calculate attack');
 
-    const toHitResult = calculateToHit(5, {} as Character, {} as Character, {} as Attack);
-    const damage = calculateDamage({} as Character, {} as Character, {} as Attack);
+    // lol
 
-    response.send(`${toHitResult}\n${damage}`);
+    response.send(`${{damage: 5, toHit: 10}}}\ngoodbye`);
 });
