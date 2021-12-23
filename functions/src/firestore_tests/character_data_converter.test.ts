@@ -3,8 +3,8 @@ import characterDataConverter from 'firestore_converters/character_data_converte
 import * as admin from 'firebase-admin';
 import { CollectionReference } from 'firebase-admin/firestore';
 import { Character } from 'character';
-import { enumerateEnumValues } from 'utils';
-import { DamageType } from 'base_game_enums';
+import { enumerateEnumValues, getNonNull } from 'utils';
+import { Attribute, DamageType, getAbbrevFromAttr } from 'base_game_enums';
 import { ResistanceStat } from 'armor';
 
 let testCharacterData: any;
@@ -58,14 +58,20 @@ beforeEach(() => {
 });
 
 test('toFirestore', async () => {
+    const attributeToStat = {} as Record<Attribute, number>;
+    for (const attr of enumerateEnumValues<Attribute>(Attribute)) {
+        attributeToStat[attr] = testCharacterData['attributeToStat'][getAbbrevFromAttr(attr)];
+    }
+
     const resistanceToResStat = {} as Record<DamageType, ResistanceStat>;
     for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
+        const damageTypeStr = DamageType[damageType];
         resistanceToResStat[damageType] = {
-            percent: testCharacterData['resistanceToPercentStat'][damageType],
-            flat: testCharacterData['resistanceToFlatStat'][damageType],
+            percent: testCharacterData['resistanceToPercentStat'][damageTypeStr],
+            flat: testCharacterData['resistanceToFlatStat'][damageTypeStr],
         };
     }
-    const testCharacter = new Character(testCharacterData.attributeToStat, resistanceToResStat);
+    const testCharacter = new Character(attributeToStat, resistanceToResStat);
 
     await testCollection.withConverter(characterDataConverter).doc('toFirestoreValid').set(testCharacter);
     expect((await testCollection.doc('toFirestoreValid').get()).data()).toStrictEqual(testCharacterData);
@@ -74,15 +80,40 @@ test('toFirestore', async () => {
 describe('fromFirestore', () => {
     test('valid value', async () => {
         await testCollection.doc('fromFirestoreValid').set(testCharacterData);
+        const character = getNonNull((
+            await testCollection.doc('fromFirestoreValid').withConverter(characterDataConverter).get()
+        ).data());
+
+        for (const attr of enumerateEnumValues<Attribute>(Attribute)) {
+            expect(character.getAttributeStat(attr))
+                .toBe(testCharacterData['attributeToStat'][getAbbrevFromAttr(attr)]);
+        }
+
+        for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
+            expect(character.getResistanceStat(damageType)).toStrictEqual({
+                percent: testCharacterData['resistanceToPercentStat'][DamageType[damageType]],
+                flat: testCharacterData['resistanceToFlatStat'][DamageType[damageType]],
+            });
+        }
     });
 
     test('missing attribute', async () => {
         delete testCharacterData['attributeToStat']['CON'];
         await testCollection.doc('fromFirestoreMissingAttr').set(testCharacterData);
+        const testDoc = await testCollection
+            .doc('fromFirestoreMissingAttr')
+            .withConverter(characterDataConverter)
+            .get();
+        expect(() => testDoc.data()).toThrowError();
     });
 
     test('missing resistance', async () => {
         delete testCharacterData['resistanceToFlatStat']['Slashing'];
         await testCollection.doc('fromFirestoreMissingRes').set(testCharacterData);
+        const testDoc = await testCollection
+            .withConverter(characterDataConverter)
+            .doc('fromFirestoreMissingRes')
+            .get();
+        expect(() => testDoc.data()).toThrowError();
     });
 });
