@@ -4,7 +4,7 @@ import * as admin from 'firebase-admin';
 import { CollectionReference } from 'firebase-admin/firestore';
 import { Character } from 'character';
 import { enumerateEnumValues, getNonNull } from 'utils';
-import { Attribute, DamageType, getAbbrevFromAttr } from 'base_game_enums';
+import { AttackType, Attribute, DamageType, getAbbrevFromAttr } from 'base_game_enums';
 import { ResistanceStat } from 'armor';
 
 let testCharacterData: any;
@@ -53,7 +53,15 @@ beforeEach(() => {
             Radiant: 90,
             Necrotic: 100,
             Psychic: 110,
-        }
+        },
+        weapons: [
+            {
+                attribute: Attribute.Strength,
+            },
+            {
+                attribute: Attribute.Intelligence,
+            }
+        ]
     };
 });
 
@@ -71,7 +79,7 @@ test('toFirestore', async () => {
             flat: testCharacterData['resistanceToFlatStat'][damageTypeStr],
         };
     }
-    const testCharacter = new Character(attributeToStat, resistanceToResStat, []);
+    const testCharacter = new Character(attributeToStat, resistanceToResStat, testCharacterData['weapons']);
 
     await testCollection.withConverter(characterDataConverter).doc('toFirestoreValid').set(testCharacter);
     expect((await testCollection.doc('toFirestoreValid').get()).data()).toStrictEqual(testCharacterData);
@@ -95,6 +103,8 @@ describe('fromFirestore', () => {
                 flat: testCharacterData['resistanceToFlatStat'][DamageType[damageType]],
             });
         }
+
+        expect(character.weapons).toHaveLength(2);
     });
 
     test('missing attribute', async () => {
