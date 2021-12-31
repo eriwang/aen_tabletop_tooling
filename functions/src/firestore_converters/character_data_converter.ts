@@ -43,7 +43,7 @@ const characterDataConverter: FirestoreDataConverter<Character> = {
             };
         }
 
-        return new Character(attributeToStat, resistanceToResStat);
+        return new Character(attributeToStat, resistanceToResStat, []);
     },
 };
 

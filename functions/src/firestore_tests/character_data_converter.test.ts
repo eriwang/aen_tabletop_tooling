@@ -71,7 +71,7 @@ test('toFirestore', async () => {
             flat: testCharacterData['resistanceToFlatStat'][damageTypeStr],
         };
     }
-    const testCharacter = new Character(attributeToStat, resistanceToResStat);
+    const testCharacter = new Character(attributeToStat, resistanceToResStat, []);
 
     await testCollection.withConverter(characterDataConverter).doc('toFirestoreValid').set(testCharacter);
     expect((await testCollection.doc('toFirestoreValid').get()).data()).toStrictEqual(testCharacterData);
