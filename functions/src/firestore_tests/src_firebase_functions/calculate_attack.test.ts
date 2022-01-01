@@ -4,10 +4,15 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules-unit-testing';
 
+import * as attackCalculator from 'attack_calculator';
 import { getTestCharacterFirestoreRepr } from 'firestore_tests/utils';
+import { Character } from 'character';
+import { Weapon } from 'weapon';
 
 let testCollection: admin.firestore.CollectionReference;
 let testEnv: RulesTestEnvironment;
+
+let testWeapon: Weapon;
 let testRequest: functions.https.Request;
 const testResponse = { send: jest.fn() } as any as functions.Response;
 
@@ -21,13 +26,14 @@ beforeAll(async () => {
 beforeEach(() => {
     const testAttacker = getTestCharacterFirestoreRepr();
     const testDefender = getTestCharacterFirestoreRepr();
-    testDefender['weapons'] = [];  // overwrite to make attacker/defender different
+    testDefender['weapons'] = [];  // overwrite so one has no weapons
 
+    testWeapon = testAttacker['weapons'][0];
     testRequest = {
         query: {
             attackerId: 'attacker',
             defenderId: 'defender',
-            weaponName: testAttacker['weapons'][0]['name'],
+            weaponName: testWeapon['name'],
             roll: 5,
         }
     } as any as functions.https.Request;
@@ -44,23 +50,42 @@ afterAll(async () => {
 
 test('attacker does not exist', async () => {
     await testCollection.doc('attacker').delete();
-    expect(await calculateAttack(testRequest, testResponse)).toThrowError();
+    await expect(calculateAttack(testRequest, testResponse)).rejects.toMatch('Could not find attacker');
 });
 
 test('defender does not exist', async () => {
     await testCollection.doc('defender').delete();
-    expect(() => calculateAttack(testRequest, testResponse)).toThrowError();
+    await expect(calculateAttack(testRequest, testResponse)).rejects.toMatch('Could not find defender');
 });
 
-test('weaponId does not exist on attacker', () => {
+test('weaponId does not exist on attacker', async () => {
     testRequest['query']['attackerId'] = 'defender';
-    expect(() => calculateAttack(testRequest, testResponse)).toThrowError();
+    await expect(calculateAttack(testRequest, testResponse)).rejects.toMatch('Could not find weapon');
 });
 
-test('calls downstream correctly', () => {
+test('calls downstream and sends correct response', async () => {
+    const mockCalculateToHit = jest.spyOn(attackCalculator, 'calculateToHit')
+        .mockImplementation(() => { return {doesAttackHit: true, attackerToHit: 10, defenderEvade: 2}; });
+    const mockCalculateDamage = jest.spyOn(attackCalculator, 'calculateDamage')
+        .mockImplementation(() => 3);
 
-});
+    await calculateAttack(testRequest, testResponse);
 
-test('sends correct response', () => {
-
+    expect(mockCalculateToHit).toHaveBeenCalledWith(
+        5,
+        expect.any(Character),
+        expect.any(Character),
+        testWeapon,
+    );
+    expect(mockCalculateDamage).toHaveBeenCalledWith(
+        expect.any(Character),
+        expect.any(Character),
+        testWeapon,
+    );
+    expect(testResponse.send).toHaveBeenCalledWith({
+        doesAttackHit: true,
+        attackerToHit: 10,
+        defenderEvade: 2,
+        damage: 3,
+    });
 });
