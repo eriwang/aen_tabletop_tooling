@@ -5,6 +5,7 @@ import { Character } from 'character';
 import { enumerateEnumValues, getNonNull } from 'utils';
 import { Attribute, DamageType, getAbbrevFromAttr } from 'base_game_enums';
 import { ResistanceStat } from 'armor';
+import { getTestCharacterFirestoreRepr } from './utils';
 
 let testCharacterData: any;
 let testCollection: admin.firestore.CollectionReference;
@@ -18,50 +19,7 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
-    testCharacterData = {
-        attributeToStat: {
-            CON: 1,
-            STR: 2,
-            DEX: 3,
-            WIS: 4,
-            INT: 5,
-            CHAR: 6,
-        },
-        resistanceToFlatStat: {
-            Slashing: 1,
-            Bludgeoning: 2,
-            Piercing: 3,
-            Fire: 4,
-            Water: 5,
-            Air: 6,
-            Earth: 7,
-            Poison: 8,
-            Radiant: 9,
-            Necrotic: 10,
-            Psychic: 11,
-        },
-        resistanceToPercentStat: {
-            Slashing: 10,
-            Bludgeoning: 20,
-            Piercing: 30,
-            Fire: 40,
-            Water: 50,
-            Air: 60,
-            Earth: 70,
-            Poison: 80,
-            Radiant: 90,
-            Necrotic: 100,
-            Psychic: 110,
-        },
-        weapons: [
-            {
-                attribute: Attribute.Strength,
-            },
-            {
-                attribute: Attribute.Intelligence,
-            }
-        ]
-    };
+    testCharacterData = getTestCharacterFirestoreRepr();
 });
 
 test('toFirestore', async () => {

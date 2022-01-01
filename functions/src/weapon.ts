@@ -1,6 +1,7 @@
 import { AttackType, Attribute, DamageType } from 'base_game_enums';
 
 export interface Weapon {
+    name: string;
     attribute: Attribute;
     attackType: AttackType;
     damageType: DamageType;
