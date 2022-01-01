@@ -1,25 +1,31 @@
 import characterDataConverter from 'firestore_converters/character_data_converter';
 
 import * as admin from 'firebase-admin';
+import { initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules-unit-testing';
+
 import { Character } from 'character';
 import { enumerateEnumValues, getNonNull } from 'utils';
 import { Attribute, DamageType, getAbbrevFromAttr } from 'base_game_enums';
 import { ResistanceStat } from 'armor';
-import { getTestCharacterFirestoreRepr } from './utils';
+import { getTestCharacterFirestoreRepr } from 'firestore_tests/utils';
 
 let testCharacterData: any;
 let testCollection: admin.firestore.CollectionReference;
+let testEnv: RulesTestEnvironment;
 
-beforeAll(() => {
+beforeAll(async () => {
     admin.initializeApp();
-
-    // Generate a random collection name to avoid interfering with other tests
-    const randomCollectionName = Math.random().toString(36).slice(2);
-    testCollection = admin.firestore().collection(randomCollectionName);
+    testEnv = await initializeTestEnvironment({});
+    await testEnv.clearFirestore();
+    testCollection = admin.firestore().collection('collection');
 });
 
 beforeEach(() => {
     testCharacterData = getTestCharacterFirestoreRepr();
+});
+
+afterAll(async () => {
+    await testEnv.clearFirestore();
 });
 
 test('toFirestore', async () => {

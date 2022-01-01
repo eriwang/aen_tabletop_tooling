@@ -8,7 +8,7 @@
     "test": "yarn test:unit && yarn test:firestore",
     "test:unit": "yarn jest --selectProjects functions-unit",
     "test:unit-fast": "yarn test:unit --globals '{\"ts-jest\": { \"isolatedModules\": true } }'",
-    "test:firestore": "yarn firebase emulators:exec --only firestore 'yarn jest --selectProjects functions-firestore'",
+    "test:firestore": "yarn firebase emulators:exec --only firestore 'yarn jest --runInBand --selectProjects functions-firestore'",
     "build": "yarn tsc -p functions/",
     "serve-dev": "yarn build && yarn firebase emulators:start",
     "shell": "yarn build && yarn firebase functions:shell",
@@ -17,6 +17,7 @@
     "logs": "yarn firebase functions:log"
   },
   "devDependencies": {
+    "@firebase/rules-unit-testing": "^2.0.1",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
     "eslint": "7.6.0",
@@ -27,6 +28,7 @@
     "typescript": "^4.5.3"
   },
   "dependencies": {
+    "firebase": "^9.6.1",
     "ts-jest": "^27.1.1"
   }
 }

@@ -2,21 +2,23 @@ import calculateAttack from 'src_firebase_functions/calculate_attack';
 
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
+import { initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules-unit-testing';
+
 import { getTestCharacterFirestoreRepr } from 'firestore_tests/utils';
 
 let testCollection: admin.firestore.CollectionReference;
+let testEnv: RulesTestEnvironment;
 let testRequest: functions.https.Request;
 const testResponse = { send: jest.fn() } as any as functions.Response;
 
-beforeAll(() => {
+beforeAll(async () => {
     admin.initializeApp();
-
-    // Generate a random collection name to avoid interfering with other tests
-    const randomCollectionName = Math.random().toString(36).slice(2);
-    testCollection = admin.firestore().collection(randomCollectionName);
+    testEnv = await initializeTestEnvironment({});
+    await testEnv.clearFirestore();
+    testCollection = admin.firestore().collection('character');
 });
 
-beforeEach(async () => {
+beforeEach(() => {
     const testAttacker = getTestCharacterFirestoreRepr();
     const testDefender = getTestCharacterFirestoreRepr();
     testDefender['weapons'] = [];  // overwrite to make attacker/defender different
@@ -30,15 +32,19 @@ beforeEach(async () => {
         }
     } as any as functions.https.Request;
 
-    await Promise.all([
+    return Promise.all([
         testCollection.doc('attacker').set(testAttacker),
         testCollection.doc('defender').set(testDefender)
     ]);
 });
 
+afterAll(async () => {
+    await testEnv.clearFirestore();
+});
+
 test('attacker does not exist', async () => {
     await testCollection.doc('attacker').delete();
-    expect(() => calculateAttack(testRequest, testResponse)).toThrowError();
+    expect(await calculateAttack(testRequest, testResponse)).toThrowError();
 });
 
 test('defender does not exist', async () => {
