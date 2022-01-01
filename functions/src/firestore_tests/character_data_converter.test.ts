@@ -1,14 +1,13 @@
 import characterDataConverter from 'firestore_converters/character_data_converter';
 
 import * as admin from 'firebase-admin';
-import { CollectionReference } from 'firebase-admin/firestore';
 import { Character } from 'character';
 import { enumerateEnumValues, getNonNull } from 'utils';
-import { AttackType, Attribute, DamageType, getAbbrevFromAttr } from 'base_game_enums';
+import { Attribute, DamageType, getAbbrevFromAttr } from 'base_game_enums';
 import { ResistanceStat } from 'armor';
 
 let testCharacterData: any;
-let testCollection: CollectionReference;
+let testCollection: admin.firestore.CollectionReference;
 
 beforeAll(() => {
     admin.initializeApp();

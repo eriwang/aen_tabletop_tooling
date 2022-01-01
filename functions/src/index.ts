@@ -10,14 +10,9 @@ import ModuleAlias from 'module-alias';
 ModuleAlias.addPath(__dirname);
 
 import * as admin from 'firebase-admin';
-import * as functions from 'firebase-functions';
+
+import calculateAttack from 'src_firebase_functions/calculate_attack';
 
 admin.initializeApp();
 
-export const calculateAttack = functions.https.onRequest((request, response) => {
-    functions.logger.info('Beginning to calculate attack');
-
-    // lol
-
-    response.send(`${{damage: 5, toHit: 10}}}\ngoodbye`);
-});
+export { calculateAttack };
