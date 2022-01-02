@@ -3,14 +3,18 @@ import { AttackType, Attribute, DamageType } from 'base_game_enums';
 import { Profile } from 'profile';
 import { ResistanceStat } from 'armor';
 import { enumerateEnumValues } from 'utils';
+import { Weapon } from 'weapon';
 
 export class Character {
     attributeToStat: Record<Attribute, number>;
-    resistanceToResStat: Record<DamageType, ResistanceStat>
+    resistanceToResStat: Record<DamageType, ResistanceStat>;
+    weapons: Weapon[];
 
-    constructor(attrToStat: Record<Attribute, number>, resToResStat: Record<DamageType, ResistanceStat>) {
+    constructor(attrToStat: Record<Attribute, number>, resToResStat: Record<DamageType, ResistanceStat>,
+        weaps: Weapon[]) {
         this.attributeToStat = attrToStat;
         this.resistanceToResStat = resToResStat;
+        this.weapons = weaps;
     }
 
     static build(unit: Unit, prof: Profile) : Character {
@@ -24,7 +28,7 @@ export class Character {
             resistanceToResStat[damageType] = prof.getArmor().getResistance(damageType);
         }
 
-        return new Character(attributeToStat, resistanceToResStat);
+        return new Character(attributeToStat, resistanceToResStat, []);
     }
 
     getAttributeStat(attr: Attribute) : number {

@@ -1,60 +1,31 @@
 import characterDataConverter from 'firestore_converters/character_data_converter';
 
 import * as admin from 'firebase-admin';
-import { CollectionReference } from 'firebase-admin/firestore';
+import { initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules-unit-testing';
+
 import { Character } from 'character';
 import { enumerateEnumValues, getNonNull } from 'utils';
 import { Attribute, DamageType, getAbbrevFromAttr } from 'base_game_enums';
 import { ResistanceStat } from 'armor';
+import { getTestCharacterFirestoreRepr } from 'firestore_tests/utils';
 
 let testCharacterData: any;
-let testCollection: CollectionReference;
+let testCollection: admin.firestore.CollectionReference;
+let testEnv: RulesTestEnvironment;
 
-beforeAll(() => {
+beforeAll(async () => {
     admin.initializeApp();
-
-    // Generate a random collection name to avoid interfering with other tests
-    const randomCollectionName = Math.random().toString(36).slice(2);
-    testCollection = admin.firestore().collection(randomCollectionName);
+    testEnv = await initializeTestEnvironment({});
+    await testEnv.clearFirestore();
+    testCollection = admin.firestore().collection('collection');
 });
 
 beforeEach(() => {
-    testCharacterData = {
-        attributeToStat: {
-            CON: 1,
-            STR: 2,
-            DEX: 3,
-            WIS: 4,
-            INT: 5,
-            CHAR: 6,
-        },
-        resistanceToFlatStat: {
-            Slashing: 1,
-            Bludgeoning: 2,
-            Piercing: 3,
-            Fire: 4,
-            Water: 5,
-            Air: 6,
-            Earth: 7,
-            Poison: 8,
-            Radiant: 9,
-            Necrotic: 10,
-            Psychic: 11,
-        },
-        resistanceToPercentStat: {
-            Slashing: 10,
-            Bludgeoning: 20,
-            Piercing: 30,
-            Fire: 40,
-            Water: 50,
-            Air: 60,
-            Earth: 70,
-            Poison: 80,
-            Radiant: 90,
-            Necrotic: 100,
-            Psychic: 110,
-        }
-    };
+    testCharacterData = getTestCharacterFirestoreRepr();
+});
+
+afterAll(async () => {
+    await testEnv.clearFirestore();
 });
 
 test('toFirestore', async () => {
@@ -71,7 +42,7 @@ test('toFirestore', async () => {
             flat: testCharacterData['resistanceToFlatStat'][damageTypeStr],
         };
     }
-    const testCharacter = new Character(attributeToStat, resistanceToResStat);
+    const testCharacter = new Character(attributeToStat, resistanceToResStat, testCharacterData['weapons']);
 
     await testCollection.withConverter(characterDataConverter).doc('toFirestoreValid').set(testCharacter);
     expect((await testCollection.doc('toFirestoreValid').get()).data()).toStrictEqual(testCharacterData);
@@ -95,6 +66,8 @@ describe('fromFirestore', () => {
                 flat: testCharacterData['resistanceToFlatStat'][DamageType[damageType]],
             });
         }
+
+        expect(character.weapons).toHaveLength(2);
     });
 
     test('missing attribute', async () => {
