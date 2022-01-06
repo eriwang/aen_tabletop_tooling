@@ -8,12 +8,16 @@ import { Weapon } from 'weapon';
 export class Character {
     attributeToStat: Record<Attribute, number>;
     resistanceToResStat: Record<DamageType, ResistanceStat>;
+    maxHp: number;
+    currentHp: number;
     weapons: Weapon[];
 
     constructor(attrToStat: Record<Attribute, number>, resToResStat: Record<DamageType, ResistanceStat>,
-        weaps: Weapon[]) {
+        maxHp: number, currentHp: number, weaps: Weapon[]) {
         this.attributeToStat = attrToStat;
         this.resistanceToResStat = resToResStat;
+        this.maxHp = maxHp;
+        this.currentHp = currentHp;
         this.weapons = weaps;
     }
 
@@ -28,7 +32,8 @@ export class Character {
             resistanceToResStat[damageType] = prof.getArmor().getResistance(damageType);
         }
 
-        return new Character(attributeToStat, resistanceToResStat, []);
+        // TODO
+        return new Character(attributeToStat, resistanceToResStat, 0, 0, []);
     }
 
     getAttributeStat(attr: Attribute) : number {

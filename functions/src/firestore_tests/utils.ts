@@ -60,6 +60,8 @@ export function getTestCharacterFirestoreRepr() : any {
             Necrotic: 100,
             Psychic: 110,
         },
-        weapons: weapons
+        maxHp: 100,
+        currentHp: 90,
+        weapons: weapons,
     };
 }
