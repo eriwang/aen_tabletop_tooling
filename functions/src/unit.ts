@@ -3,11 +3,12 @@ import { enumerateEnumValues, getNonNull } from 'utils';
 
 export class Unit {
     attributeToStat: Record<Attribute, number>;
-    // hpPerCon: number;
+    hpPerCon: number;
     // fpPerInt: number;
 
-    constructor(attributeToStat: Record<Attribute, number>) {
+    constructor(attributeToStat: Record<Attribute, number>, hpPerCon: number) {
         this.attributeToStat = attributeToStat;
+        this.hpPerCon = hpPerCon;
     }
 
     static buildFromMap(map: Map<string, any>) : Unit {
@@ -16,7 +17,8 @@ export class Unit {
             attributeToStat[attribute] = getNonNull(map.get(getAbbrevFromAttr(attribute)));
         }
 
-        return new Unit(attributeToStat);
+        // FIXME (if this function still ends up being used)
+        return new Unit(attributeToStat, 0);
     }
 
     getAttribute(attribute: Attribute) : number {

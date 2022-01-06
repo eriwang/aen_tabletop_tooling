@@ -11,6 +11,10 @@ const mockArmor = { getResistance: jest.fn() } as any as Armor;
 const mockProfile = { getAttributeStatDiff: jest.fn(), getArmor: jest.fn() } as any as Profile;
 when(mockProfile.getArmor).mockReturnValue(mockArmor);
 
+test('maxHp', () => {
+
+});
+
 test('getAttributeStat', () => {
     when(mockUnit.getAttribute).calledWith(Attribute.Dexterity).mockReturnValueOnce(50);
     when(mockProfile.getAttributeStatDiff).calledWith(Attribute.Dexterity).mockReturnValueOnce(10);

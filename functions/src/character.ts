@@ -9,15 +9,15 @@ export class Character {
     attributeToStat: Record<Attribute, number>;
     resistanceToResStat: Record<DamageType, ResistanceStat>;
     maxHp: number;
-    currentHp: number;
+    hpLost: number;
     weapons: Weapon[];
 
     constructor(attrToStat: Record<Attribute, number>, resToResStat: Record<DamageType, ResistanceStat>,
-        maxHp: number, currentHp: number, weaps: Weapon[]) {
+        maxHp: number, hpLost: number, weaps: Weapon[]) {
         this.attributeToStat = attrToStat;
         this.resistanceToResStat = resToResStat;
         this.maxHp = maxHp;
-        this.currentHp = currentHp;
+        this.hpLost = hpLost;
         this.weapons = weaps;
     }
 

@@ -61,7 +61,7 @@ export function getTestCharacterFirestoreRepr() : any {
             Psychic: 110,
         },
         maxHp: 100,
-        currentHp: 90,
+        hpLost: 90,
         weapons: weapons,
     };
 }
