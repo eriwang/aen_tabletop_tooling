@@ -6,7 +6,7 @@ import { Armor, ResistanceStat } from 'armor';
 
 import { when } from 'jest-when';
 
-const mockUnit = { getAttribute: jest.fn() } as any as Unit;
+const mockUnit = { getAttribute: jest.fn(), hpPerCon: 10} as any as Unit;
 const mockArmor = { getResistance: jest.fn() } as any as Armor;
 const mockProfile = { getAttributeStatDiff: jest.fn(), getArmor: jest.fn() } as any as Profile;
 when(mockProfile.getArmor).mockReturnValue(mockArmor);
@@ -56,4 +56,13 @@ describe('getEvasiveStat', () => {
         const character = Character.build(mockUnit, mockProfile);
         expect(() => character.getEvasiveStatForAttackType(-1 as AttackType)).toThrowError();
     });
+});
+
+test('hp values correct on build', () => {
+    when(mockUnit.getAttribute).calledWith(Attribute.Constitution).mockReturnValueOnce(10);
+    when(mockProfile.getAttributeStatDiff).calledWith(Attribute.Constitution).mockReturnValueOnce(2);
+
+    const character = Character.build(mockUnit, mockProfile);
+    expect(character.maxHp).toBe(120);
+    expect(character.currentHp).toBe(120);
 });

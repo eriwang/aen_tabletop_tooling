@@ -23,6 +23,8 @@ const characterDataConverter: FirestoreDataConverter<Character> = {
             documentData['resistanceToPercentStat'][damageTypeStr] = resStat.percent;
         }
 
+        documentData['maxHp'] = char.maxHp;
+        documentData['currentHp'] = char.currentHp;
         documentData['weapons'] = char.weapons;
 
         return documentData;
@@ -45,7 +47,8 @@ const characterDataConverter: FirestoreDataConverter<Character> = {
             };
         }
 
-        return new Character(attributeToStat, resistanceToResStat, charData['weapons']);
+        return new Character(attributeToStat, resistanceToResStat, charData['maxHp'], charData['currentHp'],
+            charData['weapons']);
     },
 };
 
