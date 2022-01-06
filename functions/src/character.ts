@@ -32,8 +32,8 @@ export class Character {
             resistanceToResStat[damageType] = prof.getArmor().getResistance(damageType);
         }
 
-        // TODO
-        return new Character(attributeToStat, resistanceToResStat, 0, 0, []);
+        const maxHp = attributeToStat[Attribute.Constitution] * unit.hpPerCon;
+        return new Character(attributeToStat, resistanceToResStat, maxHp, 0, []);
     }
 
     getAttributeStat(attr: Attribute) : number {
