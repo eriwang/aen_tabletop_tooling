@@ -64,5 +64,5 @@ test('hp values correct on build', () => {
 
     const character = Character.build(mockUnit, mockProfile);
     expect(character.maxHp).toBe(120);
-    expect(character.currentHp).toBe(0);
+    expect(character.currentHp).toBe(120);
 });
