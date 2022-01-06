@@ -43,7 +43,7 @@ test('toFirestore', async () => {
         };
     }
     const testCharacter = new Character(attributeToStat, resistanceToResStat, testCharacterData['maxHp'],
-        testCharacterData['hpLost'], testCharacterData['weapons']);
+        testCharacterData['currentHp'], testCharacterData['weapons']);
 
     await testCollection.withConverter(characterDataConverter).doc('toFirestoreValid').set(testCharacter);
     expect((await testCollection.doc('toFirestoreValid').get()).data()).toStrictEqual(testCharacterData);
@@ -69,7 +69,7 @@ describe('fromFirestore', () => {
         }
 
         expect(character.maxHp).toBe(testCharacterData['maxHp']);
-        expect(character.hpLost).toBe(testCharacterData['hpLost']);
+        expect(character.currentHp).toBe(testCharacterData['currentHp']);
         expect(character.weapons).toHaveLength(testCharacterData['weapons'].length);
     });
 

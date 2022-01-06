@@ -21,7 +21,7 @@ beforeAll(async () => {
 
 beforeEach(() => {
     const testCharacter = getTestCharacterFirestoreRepr();
-    testCharacter['hpLost'] = 0;
+    testCharacter['currentHp'] = 100;
     return testCollection.doc('character').set(testCharacter);
 });
 
@@ -35,15 +35,6 @@ function buildRequest(body: any) : functions.https.Request {
     } as any as functions.https.Request;
 }
 
-test('character does not exist', async () => {
-    const request = buildRequest({
-        characterId: 'dne',
-        mode: 'set',
-        amount: 5
-    });
-    await expect(changeCharacterHp(request, testResponse)).rejects.toMatch('Character "dne"');
-});
-
 test('mode is invalid', async () => {
     const request = buildRequest({
         characterId: 'character',
@@ -51,6 +42,15 @@ test('mode is invalid', async () => {
         amount: 5
     });
     await expect(changeCharacterHp(request, testResponse)).rejects.toMatch('Unexpected mode "invalid"');
+});
+
+test('character does not exist', async () => {
+    const request = buildRequest({
+        characterId: 'dne',
+        mode: 'set',
+        amount: 5
+    });
+    await expect(changeCharacterHp(request, testResponse)).rejects.toMatch('Character "dne"');
 });
 
 test('set HP', async () => {
@@ -62,7 +62,7 @@ test('set HP', async () => {
     await changeCharacterHp(request, testResponse);
 
     const charData = getNonNull((await testCollection.doc('character').get()).data());
-    expect(charData['hpLost']).toBe(charData['maxHp'] - 5);
+    expect(charData['currentHp']).toBe(5);
 });
 
 test('adjust HP multiple times', async () => {
@@ -74,7 +74,7 @@ test('adjust HP multiple times', async () => {
     await changeCharacterHp(decreaseRequest, testResponse);
 
     let charData = getNonNull((await testCollection.doc('character').get()).data());
-    expect(charData['hpLost']).toBe(5);
+    expect(charData['currentHp']).toBe(95);
 
     const increaseRequest = buildRequest({
         characterId: 'character',
@@ -84,16 +84,14 @@ test('adjust HP multiple times', async () => {
     await changeCharacterHp(increaseRequest, testResponse);
 
     charData = getNonNull((await testCollection.doc('character').get()).data());
-    expect(charData['hpLost']).toBe(2);
+    expect(charData['currentHp']).toBe(98);
 });
 
 test('response is correct', async () => {
     const request = buildRequest({
-        body: {
-            characterId: 'character',
-            mode: 'set',
-            amount: 5
-        }
+        characterId: 'character',
+        mode: 'set',
+        amount: 5
     });
     await changeCharacterHp(request, testResponse);
 
