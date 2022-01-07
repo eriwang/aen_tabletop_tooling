@@ -6,6 +6,8 @@
   "main": "dist/index.js",
   "dependencies": {
     "@types/module-alias": "^2.0.1",
+    "csv-parse": "^5.0.4",
+    "csv-parser": "^3.0.0",
     "firebase-admin": "^10.0.1",
     "firebase-functions": "^3.16.0",
     "module-alias": "^2.2.2"
