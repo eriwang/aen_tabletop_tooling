@@ -7,7 +7,7 @@ import { Character } from 'character';
 import { enumerateEnumValues, getNonNull } from 'utils';
 import { Attribute, DamageType, getAbbrevFromAttr } from 'base_game_enums';
 import { ResistanceStat } from 'armor';
-import { getTestCharacterFirestoreRepr } from 'firestore_tests/utils';
+import { getCharacterRepr } from 'firestore_tests/firestore_repr';
 
 let testCharacterData: any;
 let testCollection: admin.firestore.CollectionReference;
@@ -21,7 +21,7 @@ beforeAll(async () => {
 });
 
 beforeEach(() => {
-    testCharacterData = getTestCharacterFirestoreRepr();
+    testCharacterData = getCharacterRepr();
 });
 
 afterAll(async () => {

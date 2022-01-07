@@ -5,7 +5,7 @@ import * as functions from 'firebase-functions';
 import { initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules-unit-testing';
 
 import * as attackCalculator from 'attack_calculator';
-import { getTestCharacterFirestoreRepr } from 'firestore_tests/utils';
+import { getCharacterRepr } from 'firestore_tests/firestore_repr';
 import { Character } from 'character';
 import { Weapon } from 'weapon';
 
@@ -24,8 +24,8 @@ beforeAll(async () => {
 });
 
 beforeEach(() => {
-    const testAttacker = getTestCharacterFirestoreRepr();
-    const testDefender = getTestCharacterFirestoreRepr();
+    const testAttacker = getCharacterRepr();
+    const testDefender = getCharacterRepr();
     testDefender['weapons'] = [];  // overwrite so one has no weapons
 
     testWeapon = testAttacker['weapons'][0];

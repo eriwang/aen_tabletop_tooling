@@ -4,7 +4,7 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules-unit-testing';
 
-import { getTestCharacterFirestoreRepr } from 'firestore_tests/utils';
+import { getCharacterRepr } from 'firestore_tests/firestore_repr';
 import { getNonNull } from 'utils';
 
 let testCollection: admin.firestore.CollectionReference;
@@ -20,7 +20,7 @@ beforeAll(async () => {
 });
 
 beforeEach(() => {
-    const testCharacter = getTestCharacterFirestoreRepr();
+    const testCharacter = getCharacterRepr();
     testCharacter['currentHp'] = 100;
     return testCollection.doc('character').set(testCharacter);
 });
