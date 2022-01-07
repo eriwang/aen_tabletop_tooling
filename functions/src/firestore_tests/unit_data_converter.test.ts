@@ -30,7 +30,7 @@ afterAll(async () => {
 test('toFirestore', async () => {
     const attributeToStat = {} as Record<Attribute, number>;
     for (const attr of enumerateEnumValues<Attribute>(Attribute)) {
-        attributeToStat[attr] = testUnitData['attributeToStat'][getAbbrevFromAttr(attr)];
+        attributeToStat[attr] = testUnitData[getAbbrevFromAttr(attr)];
     }
 
     const testUnit = new Unit(
