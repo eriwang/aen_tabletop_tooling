@@ -6,7 +6,6 @@ import { initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules
 import { Character } from 'character';
 import { enumerateEnumValues, getNonNull } from 'utils';
 import { Attribute, DamageType, getAbbrevFromAttr } from 'base_game_enums';
-import { ResistanceStat } from 'armor';
 import { getCharacterRepr } from 'firestore_tests/firestore_repr';
 
 let testCharacterData: any;
@@ -29,22 +28,7 @@ afterAll(async () => {
 });
 
 test('toFirestore', async () => {
-    const attributeToStat = {} as Record<Attribute, number>;
-    for (const attr of enumerateEnumValues<Attribute>(Attribute)) {
-        attributeToStat[attr] = testCharacterData['attributeToStat'][getAbbrevFromAttr(attr)];
-    }
-
-    const resistanceToResStat = {} as Record<DamageType, ResistanceStat>;
-    for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
-        const damageTypeStr = DamageType[damageType];
-        resistanceToResStat[damageType] = {
-            percent: testCharacterData['resistanceToPercentStat'][damageTypeStr],
-            flat: testCharacterData['resistanceToFlatStat'][damageTypeStr],
-        };
-    }
-    const testCharacter = new Character(attributeToStat, resistanceToResStat, testCharacterData['maxHp'],
-        testCharacterData['currentHp'], testCharacterData['weapons']);
-
+    const testCharacter = new Character(testCharacterData);
     await testCollection.withConverter(characterDataConverter).doc('toFirestoreValid').set(testCharacter);
     expect((await testCollection.doc('toFirestoreValid').get()).data()).toStrictEqual(testCharacterData);
 });
@@ -70,7 +54,7 @@ describe('fromFirestore', () => {
 
         expect(character.maxHp).toBe(testCharacterData['maxHp']);
         expect(character.currentHp).toBe(testCharacterData['currentHp']);
-        expect(character.weapons).toHaveLength(testCharacterData['weapons'].length);
+        expect(character.data.weapons).toHaveLength(testCharacterData['weapons'].length);
     });
 
     test('missing attribute', async () => {
