@@ -15,5 +15,7 @@
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "downlevelIteration": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": false
     }
 }
