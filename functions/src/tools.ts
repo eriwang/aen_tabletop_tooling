@@ -52,13 +52,13 @@ async function writeToDatabase(collection: string, data:any[]) {
         console.log(element.Name);
         resultmap.push(setDoc(doc(db, collection, element.Name),{
             Type: element.Type,
-            Range: element.Range,
-            HitDC: element['Hit DC'],
+            Range: +element.Range,
+            HitDC: +element['Hit DC'],
             DamageType: element['Damage Type'],
             Attribute: element['Primary Attribute'],
-            BaseDamage: element['Base Damage'],
-            Cooldown: element['Cooldown'],
-            FPCost: element['FP Cost'],
+            BaseDamage: +element['Base Damage'],
+            Cooldown: +element['Cooldown'],
+            FPCost: +element['FP Cost'],
             Description: element['Description'],
             Category: element['Category']
         }));
