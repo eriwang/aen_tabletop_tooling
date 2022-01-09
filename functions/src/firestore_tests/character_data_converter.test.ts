@@ -52,9 +52,9 @@ describe('fromFirestore', () => {
             });
         }
 
-        expect(character.maxHp).toBe(testCharacterData['maxHp']);
-        expect(character.currentHp).toBe(testCharacterData['currentHp']);
-        expect(character.data.weapons).toHaveLength(testCharacterData['weapons'].length);
+        expect(character.getMaxHp()).toBe(testCharacterData['maxHp']);
+        expect(character.getCurrentHp()).toBe(testCharacterData['currentHp']);
+        expect(character.getWeapons()).toHaveLength(testCharacterData['weapons'].length);
     });
 
     test('missing attribute', async () => {

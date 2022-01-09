@@ -41,7 +41,7 @@ export default functions.https.onRequest(async (request, response) => {
     const defender = characterDataConverter.fromFirestore(defenderDoc as QueryDocumentSnapshot);
 
     let weapon = null;
-    for (const w of attacker.weapons) {
+    for (const w of attacker.getWeapons()) {
         if (w.name === weaponName) {
             weapon = w;
             break;

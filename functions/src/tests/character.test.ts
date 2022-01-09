@@ -39,8 +39,8 @@ describe('build', () => {
         when(mockProfile.getAttributeStatDiff).calledWith(Attribute.Constitution).mockReturnValueOnce(2);
 
         const character = Character.build(mockUnit, mockProfile);
-        expect(character.maxHp).toBe(120);
-        expect(character.currentHp).toBe(120);
+        expect(character.getMaxHp()).toBe(120);
+        expect(character.getCurrentHp()).toBe(120);
     });
 });
 
@@ -85,6 +85,6 @@ describe('getEvasiveStat', () => {
 
 test('hp values', () => {
     const character = new Character(getCharacterRepr());
-    expect(character.maxHp).toBe(100);
-    expect(character.currentHp).toBe(90);
+    expect(character.getMaxHp()).toBe(100);
+    expect(character.getCurrentHp()).toBe(90);
 });

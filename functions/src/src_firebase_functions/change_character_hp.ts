@@ -32,12 +32,8 @@ export default functions.https.onRequest(async (request, response) => {
         throw `Character "${characterId}" was not found`;
     }
 
-    if (mode === 'set') {
-        character.currentHp = amount;
-    }
-    else {
-        character.currentHp += amount;
-    }
+    const newHp = (mode === 'set') ? amount : character.getCurrentHp() + amount;
+    character.setCurrentHp(newHp);
 
     await characterDocRef.set(character);
 

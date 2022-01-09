@@ -63,13 +63,9 @@ export interface CharacterData extends yup.InferType<typeof characterSchema> {}
 
 export class Character {
     data: CharacterData;
-    maxHp: number;
-    currentHp: number;
 
     constructor(charData: CharacterData) {
         this.data = charData;
-        this.maxHp = charData.maxHp;
-        this.currentHp = charData.currentHp;
     }
 
     static build(unit: Unit, prof: Profile) : Character {
@@ -131,6 +127,22 @@ export class Character {
         }
 
         return Math.ceil(0.75 * statSum);
+    }
+
+    getMaxHp() : number {
+        return this.data.maxHp;
+    }
+
+    getCurrentHp() : number {
+        return this.data.currentHp;
+    }
+
+    setCurrentHp(hp: number) {
+        this.data.currentHp = hp;
+    }
+
+    getWeapons() : WeaponData[] {
+        return this.data.weapons;
     }
 
     // as of writing, unused and untested
