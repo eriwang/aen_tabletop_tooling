@@ -4,7 +4,7 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules-unit-testing';
 
-import { getCharacterRepr } from 'firestore_tests/firestore_repr';
+import { getCharacterRepr } from 'tests/test_data';
 import { getNonNull } from 'utils';
 
 let testCollection: admin.firestore.CollectionReference;

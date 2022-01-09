@@ -5,7 +5,7 @@ import * as functions from 'firebase-functions';
 import { initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules-unit-testing';
 
 import * as attackCalculator from 'attack_calculator';
-import { getCharacterRepr } from 'firestore_tests/firestore_repr';
+import { getCharacterRepr } from 'tests/test_data';
 import { Character } from 'character';
 import { Weapon } from 'weapon';
 
