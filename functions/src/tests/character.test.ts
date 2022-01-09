@@ -7,7 +7,7 @@ import { getCharacterRepr } from 'tests/test_data';
 
 import { when } from 'jest-when';
 
-const mockUnit = { getAttribute: jest.fn(), hpPerCon: 10} as any as Unit;
+const mockUnit = { getAttribute: jest.fn(), getHpPerCon: jest.fn().mockReturnValue(10)} as any as Unit;
 const mockArmor = { getResistance: jest.fn() };
 const mockProfile = { getAttributeStatDiff: jest.fn(), getArmor: jest.fn() } as any as Profile;
 when(mockProfile.getArmor).mockReturnValue(mockArmor as any as Armor);
