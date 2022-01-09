@@ -1,5 +1,6 @@
 import { AttackType, Attribute, DamageType } from 'base_game_enums';
-import { CharacterData, WeaponData } from 'character';
+import { CharacterData } from 'character';
+import { WeaponData } from 'weapon';
 
 export function getCharacterRepr() : CharacterData {
     const weapons: WeaponData[] = [

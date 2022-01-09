@@ -5,17 +5,7 @@ import { AttackType, Attribute, DamageType, getAbbrevFromAttr } from 'base_game_
 import { Profile } from 'profile';
 import { ResistanceStat } from 'armor';
 import { enumerateEnumValues } from 'utils';
-
-const weaponSchema = yup.object().shape({
-    name: yup.string().required(),
-    attribute: yup.number().required(),
-    attackType: yup.number().required(),
-    damageType: yup.number().required(),
-    baseDamage: yup.number().required(),
-    toHitMultiplier: yup.number().required(),
-    damageMultiplier: yup.number().required(),
-    difficultyClass: yup.number().required(),
-});
+import { WeaponData, weaponSchema } from 'weapon';
 
 export const characterSchema = yup.object().shape({
     attributeToStat: yup.object().shape({
@@ -56,8 +46,6 @@ export const characterSchema = yup.object().shape({
     currentHp: yup.number().required(),
     weapons: yup.array(weaponSchema).required(),
 });
-
-export interface WeaponData extends yup.InferType<typeof weaponSchema> {}
 
 export interface CharacterData extends yup.InferType<typeof characterSchema> {}
 

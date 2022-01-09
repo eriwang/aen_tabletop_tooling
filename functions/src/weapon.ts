@@ -1,12 +1,14 @@
-import { AttackType, Attribute, DamageType } from 'base_game_enums';
+import * as yup from 'yup';
 
-export interface Weapon {
-    name: string;
-    attribute: Attribute;
-    attackType: AttackType;
-    damageType: DamageType;
-    baseDamage: number;
-    toHitMultiplier: number;
-    damageMultiplier: number;
-    difficultyClass: number;
-}
+export const weaponSchema = yup.object().shape({
+    name: yup.string().required(),
+    attribute: yup.number().required(),  // TODO: string transformed to enum
+    attackType: yup.number().required(),  // TODO: string transformed to enum
+    damageType: yup.number().required(),  // TODO: string transformed to enum
+    baseDamage: yup.number().required(),
+    toHitMultiplier: yup.number().required(),
+    damageMultiplier: yup.number().required(),
+    difficultyClass: yup.number().required(),
+});
+
+export interface WeaponData extends yup.InferType<typeof weaponSchema> {}

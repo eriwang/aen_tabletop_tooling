@@ -7,12 +7,12 @@ import { initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules
 import * as attackCalculator from 'attack_calculator';
 import { getCharacterRepr } from 'tests/test_data';
 import { Character } from 'character';
-import { Weapon } from 'weapon';
+import { WeaponData } from 'weapon';
 
 let testCollection: admin.firestore.CollectionReference;
 let testEnv: RulesTestEnvironment;
 
-let testWeapon: Weapon;
+let testWeapon: WeaponData;
 let testRequest: functions.https.Request;
 const testResponse = { send: jest.fn() } as any as functions.Response;
 
