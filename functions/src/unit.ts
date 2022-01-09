@@ -1,30 +1,41 @@
+import * as yup from 'yup';
+
 import { Attribute, getAbbrevFromAttr } from 'base_game_enums';
-import { enumerateEnumValues, getNonNull } from 'utils';
+
+export const unitSchema = yup.object().shape({
+    CON: yup.number().required(),
+    STR: yup.number().required(),
+    DEX: yup.number().required(),
+    WIS: yup.number().required(),
+    INT: yup.number().required(),
+    CHAR: yup.number().required(),
+    hpPerCon: yup.number().required(),
+    fpPerInt: yup.number().required(),
+    movement: yup.number().required(),
+});
+
+export interface UnitData extends yup.InferType<typeof unitSchema> {}
 
 export class Unit {
-    attributeToStat: Record<Attribute, number>;
-    hpPerCon: number;
-    fpPerInt: number;
-    movement: number;
+    data: UnitData;
 
-    constructor(attributeToStat: Record<Attribute, number>, hpPerCon: number, fpPerInt: number, movement: number) {
-        this.attributeToStat = attributeToStat;
-        this.hpPerCon = hpPerCon;
-        this.fpPerInt = fpPerInt;
-        this.movement = movement;
-    }
-
-    static buildFromMap(map: Map<string, any>) : Unit {
-        const attributeToStat = {} as Record<Attribute, number>;
-        for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
-            attributeToStat[attribute] = getNonNull(map.get(getAbbrevFromAttr(attribute)));
-        }
-
-        // FIXME (if this function still ends up being used)
-        return new Unit(attributeToStat, 0, 0, 0);
+    constructor(data: UnitData) {
+        this.data = data;
     }
 
     getAttribute(attribute: Attribute) : number {
-        return this.attributeToStat[attribute];
+        return (this.data as any)[getAbbrevFromAttr(attribute)];
+    }
+
+    getHpPerCon() : number {
+        return this.data.hpPerCon;
+    }
+
+    getFpPerInt(): number {
+        return this.data.fpPerInt;
+    }
+
+    getMovement(): number {
+        return this.data.movement;
     }
 }

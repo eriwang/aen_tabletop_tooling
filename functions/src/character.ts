@@ -85,7 +85,7 @@ export class Character {
         }
 
         // For simplicity, set current HP to max HP every time we build a character
-        const maxHp = attributeToStat['CON'] * unit.hpPerCon;
+        const maxHp = attributeToStat['CON'] * unit.getHpPerCon();
         const data = {
             attributeToStat: attributeToStat,
             resistanceToFlatStat: resistanceToFlatStat,

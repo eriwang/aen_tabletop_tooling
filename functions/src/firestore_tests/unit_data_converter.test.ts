@@ -1,4 +1,4 @@
-import unitDataConverter from 'firestore_converters/unit_data_converter';
+import { unitDataConverter } from 'firestore_utils/data_converters';
 
 import * as admin from 'firebase-admin';
 import { initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules-unit-testing';
@@ -6,7 +6,7 @@ import { initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules
 import { Unit } from 'unit';
 import { enumerateEnumValues, getNonNull } from 'utils';
 import { Attribute, getAbbrevFromAttr } from 'base_game_enums';
-import { getUnitRepr } from 'firestore_tests/firestore_repr';
+import { getUnitRepr } from 'tests/test_data';
 
 let testUnitData: any;
 let testCollection: admin.firestore.CollectionReference;
@@ -33,8 +33,7 @@ test('toFirestore', async () => {
         attributeToStat[attr] = testUnitData[getAbbrevFromAttr(attr)];
     }
 
-    const testUnit = new Unit(
-        attributeToStat, testUnitData['hpPerCon'], testUnitData['fpPerInt'], testUnitData['movement']);
+    const testUnit = new Unit(testUnitData);
     await testCollection.withConverter(unitDataConverter).doc('toFirestore').set(testUnit);
     expect((await testCollection.doc('toFirestore').get()).data()).toStrictEqual(testUnitData);
 });
@@ -50,9 +49,9 @@ describe('fromFirestore', () => {
             expect(unit.getAttribute(attr)).toBe(testUnitData[getAbbrevFromAttr(attr)]);
         }
 
-        expect(unit.fpPerInt).toBe(testUnitData['fpPerInt']);
-        expect(unit.hpPerCon).toBe(testUnitData['hpPerCon']);
-        expect(unit.movement).toBe(testUnitData['movement']);
+        expect(unit.getFpPerInt()).toBe(testUnitData['fpPerInt']);
+        expect(unit.getHpPerCon()).toBe(testUnitData['hpPerCon']);
+        expect(unit.getMovement()).toBe(testUnitData['movement']);
     });
 
     test('missing attribute', async () => {

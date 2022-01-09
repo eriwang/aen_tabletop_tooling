@@ -65,3 +65,17 @@ export function getCharacterRepr() : CharacterData {
         weapons: weapons,
     };
 }
+
+export function getUnitRepr() : any {
+    return {
+        CON: 1,
+        STR: 2,
+        DEX: 3,
+        WIS: 4,
+        INT: 5,
+        CHAR: 6,
+        hpPerCon: 7,
+        fpPerInt: 8,
+        movement: 9,
+    };
+}
