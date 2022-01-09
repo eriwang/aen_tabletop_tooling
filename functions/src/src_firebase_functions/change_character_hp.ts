@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 
-import characterDataConverter from 'firestore_converters/character_data_converter';
+import { characterDataConverter } from 'firestore_utils/data_converters';
 
 /*
 request.body: {

@@ -64,8 +64,8 @@ export interface CharacterData extends yup.InferType<typeof characterSchema> {}
 export class Character {
     data: CharacterData;
 
-    constructor(charData: CharacterData) {
-        this.data = charData;
+    constructor(data: CharacterData) {
+        this.data = data;
     }
 
     static build(unit: Unit, prof: Profile) : Character {
