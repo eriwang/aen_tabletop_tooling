@@ -4,6 +4,7 @@ import Firebase, { withFirebase } from '../Firebase';
 import { withRouter } from '../Navigation';
 import * as ROUTES from '../../constants/routes';
 import { SignUpLink } from '../SignUp';
+import { SignInLink } from '../SignIn';
 
 function HomePage() {
     return (
@@ -30,24 +31,28 @@ class UserStatusBase extends Component<UserStatusProps, UserStatusState> {
     }
 
     logoutButton = () => {
-        this.props.firebase.doSignOut();
-        this.setState({user: this.props.firebase.auth.currentUser})
+        this.props.firebase.doSignOut()
+        .then(() => {
+            this.setState({user: this.props.firebase.auth.currentUser});
+        })
+        .catch((error: any) => {
+            console.log(error);
+        });
     }
 
     render() {
-        const user = this.props.firebase.auth.currentUser;
-
-        if(user === null) {
+        if(this.state.user === null) {
             return(
                 <div>
                     <p>Not signed in.</p>
+                    <SignInLink />
                     <SignUpLink />
                 </div>
             )
         } else {
             return(
                 <div>
-                    <p>Signed in as {user.email}.</p>
+                    <p>Signed in as {this.state.user.email}.</p>
                     <button onClick={this.logoutButton}>Log out</button>
                 </div>
             )

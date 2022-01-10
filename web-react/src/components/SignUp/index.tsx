@@ -3,6 +3,7 @@ import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 import Firebase, { withFirebase } from '../Firebase';
 import { withRouter } from '../Navigation';
+import { SignInLink } from '../SignIn';
 
 const INITIAL_STATE = {
     username: '',
@@ -17,6 +18,7 @@ function SignUpPage() {
         <div>
             <h1>Sign Up</h1>
             <SignUpForm />
+            <SignInLink />
         </div>
     )
 }
