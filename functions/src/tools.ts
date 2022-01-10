@@ -1,4 +1,3 @@
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import {parse} from 'csv-parse';
 import { doc, setDoc, getFirestore } from 'firebase/firestore';
 
@@ -22,10 +21,9 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 
 async function readFromCSV(filename:string): Promise<any> {
-    const csv = require('csv-parser');
     const fs = require('fs');
     let results:any[] = [];
     const parser = parse({columns: true}, function(err, data) {
