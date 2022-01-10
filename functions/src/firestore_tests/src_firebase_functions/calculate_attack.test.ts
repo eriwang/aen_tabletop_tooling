@@ -5,14 +5,14 @@ import * as functions from 'firebase-functions';
 import { initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules-unit-testing';
 
 import * as attackCalculator from 'attack_calculator';
-import { getTestCharacterFirestoreRepr } from 'firestore_tests/utils';
+import { getCharacterRepr } from 'tests/test_data';
 import { Character } from 'character';
-import { Weapon } from 'weapon';
+import { WeaponData } from 'weapon';
 
 let testCollection: admin.firestore.CollectionReference;
 let testEnv: RulesTestEnvironment;
 
-let testWeapon: Weapon;
+let testWeapon: WeaponData;
 let testRequest: functions.https.Request;
 const testResponse = { send: jest.fn() } as any as functions.Response;
 
@@ -24,8 +24,8 @@ beforeAll(async () => {
 });
 
 beforeEach(() => {
-    const testAttacker = getTestCharacterFirestoreRepr();
-    const testDefender = getTestCharacterFirestoreRepr();
+    const testAttacker = getCharacterRepr();
+    const testDefender = getCharacterRepr();
     testDefender['weapons'] = [];  // overwrite so one has no weapons
 
     testWeapon = testAttacker['weapons'][0];

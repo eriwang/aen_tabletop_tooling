@@ -1,8 +1,9 @@
 import { AttackType, Attribute, DamageType } from 'base_game_enums';
-import { Weapon } from 'weapon';
+import { CharacterData } from 'character';
+import { WeaponData } from 'weapon';
 
-export function getTestCharacterFirestoreRepr() : any {
-    const weapons: Weapon[] = [
+export function getCharacterRepr() : CharacterData {
+    const weapons: WeaponData[] = [
         {
             name: 'weapon1',
             attribute: Attribute.Strength,
@@ -60,6 +61,22 @@ export function getTestCharacterFirestoreRepr() : any {
             Necrotic: 100,
             Psychic: 110,
         },
-        weapons: weapons
+        maxHp: 100,
+        currentHp: 90,
+        weapons: weapons,
+    };
+}
+
+export function getUnitRepr() : any {
+    return {
+        CON: 1,
+        STR: 2,
+        DEX: 3,
+        WIS: 4,
+        INT: 5,
+        CHAR: 6,
+        hpPerCon: 7,
+        fpPerInt: 8,
+        movement: 9,
     };
 }

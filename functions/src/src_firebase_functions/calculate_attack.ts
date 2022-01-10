@@ -1,9 +1,8 @@
 import * as admin from 'firebase-admin';
-import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
 import * as functions from 'firebase-functions';
 
 import { calculateDamage, calculateToHit } from 'attack_calculator';
-import characterDataConverter from 'firestore_converters/character_data_converter';
+import { characterDataConverter } from 'firestore_utils/data_converters';
 
 /*
 request.query: {
@@ -37,11 +36,11 @@ export default functions.https.onRequest(async (request, response) => {
         throw `Could not find defender with id ${attackerId}`;
     }
 
-    const attacker = characterDataConverter.fromFirestore(attackerDoc as QueryDocumentSnapshot);
-    const defender = characterDataConverter.fromFirestore(defenderDoc as QueryDocumentSnapshot);
+    const attacker = characterDataConverter.fromFirestore(attackerDoc as admin.firestore.QueryDocumentSnapshot);
+    const defender = characterDataConverter.fromFirestore(defenderDoc as admin.firestore.QueryDocumentSnapshot);
 
     let weapon = null;
-    for (const w of attacker.weapons) {
+    for (const w of attacker.getWeapons()) {
         if (w.name === weaponName) {
             weapon = w;
             break;

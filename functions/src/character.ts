@@ -1,42 +1,100 @@
+import * as yup from 'yup';
+
 import { Unit } from 'unit';
-import { AttackType, Attribute, DamageType } from 'base_game_enums';
+import { AttackType, Attribute, DamageType, getAbbrevFromAttr } from 'base_game_enums';
 import { Profile } from 'profile';
 import { ResistanceStat } from 'armor';
 import { enumerateEnumValues } from 'utils';
-import { Weapon } from 'weapon';
+import { WeaponData, weaponSchema } from 'weapon';
+
+export const characterSchema = yup.object().shape({
+    attributeToStat: yup.object().shape({
+        CON: yup.number().required(),
+        STR: yup.number().required(),
+        DEX: yup.number().required(),
+        WIS: yup.number().required(),
+        INT: yup.number().required(),
+        CHAR: yup.number().required(),
+    }),
+    resistanceToFlatStat: yup.object().shape({
+        Slashing: yup.number().required(),
+        Bludgeoning: yup.number().required(),
+        Piercing: yup.number().required(),
+        Fire: yup.number().required(),
+        Water: yup.number().required(),
+        Air: yup.number().required(),
+        Earth: yup.number().required(),
+        Poison: yup.number().required(),
+        Radiant: yup.number().required(),
+        Necrotic: yup.number().required(),
+        Psychic: yup.number().required(),
+    }),
+    resistanceToPercentStat: yup.object().shape({
+        Slashing: yup.number().required(),
+        Bludgeoning: yup.number().required(),
+        Piercing: yup.number().required(),
+        Fire: yup.number().required(),
+        Water: yup.number().required(),
+        Air: yup.number().required(),
+        Earth: yup.number().required(),
+        Poison: yup.number().required(),
+        Radiant: yup.number().required(),
+        Necrotic: yup.number().required(),
+        Psychic: yup.number().required(),
+    }),
+    maxHp: yup.number().required(),
+    currentHp: yup.number().required(),
+    weapons: yup.array(weaponSchema).required(),
+});
+
+export interface CharacterData extends yup.InferType<typeof characterSchema> {}
 
 export class Character {
-    attributeToStat: Record<Attribute, number>;
-    resistanceToResStat: Record<DamageType, ResistanceStat>;
-    weapons: Weapon[];
+    data: CharacterData;
 
-    constructor(attrToStat: Record<Attribute, number>, resToResStat: Record<DamageType, ResistanceStat>,
-        weaps: Weapon[]) {
-        this.attributeToStat = attrToStat;
-        this.resistanceToResStat = resToResStat;
-        this.weapons = weaps;
+    constructor(data: CharacterData) {
+        this.data = data;
     }
 
     static build(unit: Unit, prof: Profile) : Character {
-        const attributeToStat = {} as Record<Attribute, number>;
+        const attributeToStat: any = {};
         for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
-            attributeToStat[attribute] = unit.getAttribute(attribute) + prof.getAttributeStatDiff(attribute);
+            attributeToStat[getAbbrevFromAttr(attribute)] =
+                unit.getAttribute(attribute) + prof.getAttributeStatDiff(attribute);
         }
 
-        const resistanceToResStat = {} as Record<DamageType, ResistanceStat>;
+        const resistanceToFlatStat: any = {};
+        const resistanceToPercentStat: any = {};
         for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
-            resistanceToResStat[damageType] = prof.getArmor().getResistance(damageType);
+            const resStat = prof.getArmor().getResistance(damageType);
+            const damageTypeStr = DamageType[damageType];
+            resistanceToFlatStat[damageTypeStr] = resStat.flat;
+            resistanceToPercentStat[damageTypeStr] = resStat.percent;
         }
 
-        return new Character(attributeToStat, resistanceToResStat, []);
+        // For simplicity, set current HP to max HP every time we build a character
+        const maxHp = attributeToStat['CON'] * unit.getHpPerCon();
+        const data = {
+            attributeToStat: attributeToStat,
+            resistanceToFlatStat: resistanceToFlatStat,
+            resistanceToPercentStat: resistanceToPercentStat,
+            maxHp: maxHp,
+            currentHp: maxHp,
+        };
+
+        return new Character(data as any as CharacterData);
     }
 
     getAttributeStat(attr: Attribute) : number {
-        return this.attributeToStat[attr];
+        return (this.data.attributeToStat as any)[getAbbrevFromAttr(attr)];
     }
 
     getResistanceStat(dmgType: DamageType) : ResistanceStat {
-        return this.resistanceToResStat[dmgType];
+        const damageTypeStr = DamageType[dmgType];
+        return {
+            percent: (this.data.resistanceToPercentStat as any)[damageTypeStr],
+            flat: (this.data.resistanceToFlatStat as any)[damageTypeStr],
+        };
     }
 
     getEvasiveStatForAttackType(atkType: AttackType) : number {
@@ -57,6 +115,22 @@ export class Character {
         }
 
         return Math.ceil(0.75 * statSum);
+    }
+
+    getMaxHp() : number {
+        return this.data.maxHp;
+    }
+
+    getCurrentHp() : number {
+        return this.data.currentHp;
+    }
+
+    setCurrentHp(hp: number) {
+        this.data.currentHp = hp;
+    }
+
+    getWeapons() : WeaponData[] {
+        return this.data.weapons;
     }
 
     // as of writing, unused and untested
