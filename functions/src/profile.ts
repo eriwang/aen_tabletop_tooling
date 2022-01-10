@@ -1,5 +1,25 @@
+import * as yup from 'yup';
+
 import { Armor } from 'armor';
 import { Attribute } from 'base_game_enums';
+
+export const profileSchema = yup.object().shape({
+    abilities: yup.array(yup.string()).required(),
+    attributeToStat: yup.object().shape({
+        CON: yup.number().required(),
+        STR: yup.number().required(),
+        DEX: yup.number().required(),
+        WIS: yup.number().required(),
+        INT: yup.number().required(),
+        CHAR: yup.number().required(),
+    }),
+    armor: yup.string().required(),
+    level: yup.number().required(),
+    weapons: yup.array(yup.string()).required(),
+    // skillToPoints map
+});
+
+export interface ProfileData extends yup.InferType<typeof profileSchema> {}
 
 export class Profile {
     level: number;
