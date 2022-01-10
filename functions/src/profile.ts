@@ -1,7 +1,6 @@
 import * as yup from 'yup';
+import { Attribute, Skills } from 'base_game_enums';
 
-import { Armor } from 'armor';
-import { Attribute } from 'base_game_enums';
 
 export const profileSchema = yup.object().shape({
     abilities: yup.array(yup.string()).required(),
@@ -13,36 +12,54 @@ export const profileSchema = yup.object().shape({
         INT: yup.number().required(),
         CHAR: yup.number().required(),
     }),
+    skillToPoints: yup.object().shape({
+        Acrobatics: yup.number().required(),
+        Arcana: yup.number().required(),
+        Athletics: yup.number().required(),
+        Culture: yup.number().required(),
+        Deception: yup.number().required(),
+        Endurance: yup.number().required(),
+        History: yup.number().required(),
+        Insight: yup.number().required(),
+        Intimidation: yup.number().required(),
+        Investigation: yup.number().required(),
+        Medicine: yup.number().required(),
+        Nature: yup.number().required(),
+        Performance: yup.number().required(),
+        Persuasion: yup.number().required(),
+        Religion: yup.number().required(),
+        SleightOfHand: yup.number().required(),
+        Stealth: yup.number().required(),
+        Survival: yup.number().required(),
+    }),
     armor: yup.string().required(),
     level: yup.number().required(),
-    weapons: yup.array(yup.string()).required(),
-    // skillToPoints map
+    weapon: yup.array(yup.string()).required(),
 });
 
 export interface ProfileData extends yup.InferType<typeof profileSchema> {}
 
 export class Profile {
-    level: number;
-    attributeToStatDiff: Record<Attribute, number>;
-    armor: Armor;
+    data: ProfileData;
 
-    // skills: Record<Skills, number>;
-
-    constructor(level: number, attrToStatDiff: Record<Attribute, number>, armor: Armor) {
-        this.level = level;
-        this.attributeToStatDiff = attrToStatDiff;
-        this.armor = armor;
+    constructor(data: ProfileData) {
+        this.data = data;
     }
 
+    
     getAttributeStatDiff(attr: Attribute) : number {
-        return this.attributeToStatDiff[attr] + this.level - 1;
+        return this.data.attributeToStatDiff[attr] + this.data.level - 1;
+    }
+    
+    getArmor() : string {
+        return this.data.armor;
     }
 
-    getArmor() : Armor {
-        return this.armor;
+    get weapon(): string[] {
+        return this.data.weapons;
     }
 
-    // getSkillBonus(skill: Skills): number {
-    //     return this.skills[skill];
-    // }
+    getSkillBonus(skill: Skills): number {
+        return this.data.skillToPoints[skill];
+    }
 }
