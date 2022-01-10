@@ -1,5 +1,5 @@
 import React, { ChangeEvent, Component, FormEvent } from 'react';
-import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
+import { Link, NavigateFunction } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 import Firebase, { withFirebase } from '../Firebase';
 import { withRouter } from '../Navigation';
@@ -50,6 +50,7 @@ class SignUpFormBase extends Component<SignUpProps, SignUpState> {
           .doCreateUserWithEmailAndPassword(email, passwordOne)
           .then(() => {
               this.setState({...INITIAL_STATE})
+              // Store username + user ID from newly authenticated user in a database
               this.props.navigate(ROUTES.HOME)
           })
           .catch((error: any) => {

@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import { NavigateFunction } from 'react-router-dom';
 import Firebase, { withFirebase } from '../Firebase';
-import { withRouter } from '../Navigation';
-import * as ROUTES from '../../constants/routes';
 import { SignUpLink } from '../SignUp';
 import { SignInLink } from '../SignIn';
 

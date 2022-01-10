@@ -1,5 +1,5 @@
 import React, { ChangeEvent, Component, FormEvent } from 'react';
-import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
+import { Link, NavigateFunction } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 import Firebase, { withFirebase } from '../Firebase';
 import { withRouter } from '../Navigation';
