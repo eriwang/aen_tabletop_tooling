@@ -23,11 +23,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-app;
-
-// const auth = getAuth();
-
-
 
 async function readFromCSV(filename:string): Promise<any> {
     const csv = require('csv-parser');
@@ -72,12 +67,8 @@ async function writeDataFromCSV(filename:string) {
     const results = await readFromCSV(filename);
     console.log(results);
     await writeToDatabase('Abilities', results);
-    // clearInterval(forceWaitInterval);
     console.log('done done');
 
 }
-
-// const forceWaitInterval = setInterval(() => { console.log('ongoing...'); }, 1000);
-
 
 writeDataFromCSV('Abilities.csv');
