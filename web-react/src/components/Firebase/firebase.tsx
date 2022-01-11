@@ -1,5 +1,23 @@
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
+import { initializeApp } from 'firebase/app';
+import {
+    getAuth, 
+    onAuthStateChanged, 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, 
+    sendPasswordResetEmail, 
+    updatePassword, 
+    signOut, 
+    User 
+} from 'firebase/auth';
+import {
+    getFirestore,
+    collection,
+    doc,
+    setDoc,
+    DocumentReference,
+    getDoc,
+    DocumentData
+} from 'firebase/firestore';
 
 const config = {
     apiKey: "AIzaSyCd2eL7UFFBQWVfizJZEVdD-3aP2IXPCRk",
@@ -13,29 +31,53 @@ const config = {
 };
 
 class Firebase {
-    auth;
+    auth; db;
     constructor() {
-        firebase.initializeApp(config);
+        const firebaseApp = initializeApp(config);
 
-        this.auth = firebase.auth();
+        this.auth = getAuth(firebaseApp);
+        this.db = getFirestore(firebaseApp);
     }
 
     // *** Auth API *** //
 
     doCreateUserWithEmailAndPassword = (email: string, password: string) =>
-        this.auth.createUserWithEmailAndPassword(email, password);
+        createUserWithEmailAndPassword(this.auth, email, password);
 
     doSignInWithEmailAndPassword = (email: string, password: string) =>
-        this.auth.signInWithEmailAndPassword(email, password);
+        signInWithEmailAndPassword(this.auth, email, password);
 
     doSignOut = () =>
-        this.auth.signOut();
+        signOut(this.auth);
 
     doPasswordReset = (email: string) =>
-        this.auth.sendPasswordResetEmail(email);
+        sendPasswordResetEmail(this.auth, email);
 
     doPasswordUpdate = (password: string) =>
-        this.auth.currentUser?.updatePassword(password);
+        updatePassword(this.auth.currentUser!, password);
+
+    onAuthStateChanged = (callback: (user: User | null) => any) =>
+        onAuthStateChanged(this.auth, user => callback(user));
+
+    // *** User API *** //
+
+    doSetDoc = (document: DocumentReference, data: any) => setDoc(document, data);
+
+    user = (uid: string | undefined) => doc(collection(this.db, 'Users'), uid);
+
+    users = () => collection(this.db, 'Users');
+
+    setUserData = (uid: string | undefined, data: any) => setDoc(this.user(uid), data);
+
+    getUserData = (uid: string | undefined) => {
+        return new Promise<DocumentData | undefined>((resolve, reject) => {
+            getDoc(this.user(uid))
+                .then(snapshot => resolve(snapshot.data()))
+                .catch(error => reject(error))
+        })
+    }
+
+    units = () => collection(this.db, 'Units');
 }
 
 export default Firebase;

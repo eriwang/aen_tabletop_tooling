@@ -1,7 +1,8 @@
-import React from 'react';
+import { User } from 'firebase/auth';
+import React, { useContext } from 'react';
 import Firebase, { withFirebase } from '../Firebase';
 
-const AuthUserContext = React.createContext(null);
+const AuthUserContext = React.createContext<User | null>(null);
 
 export const withAuthentication = (Component: React.ComponentType<any>) => {
     interface AuthProps {
@@ -25,7 +26,7 @@ export const withAuthentication = (Component: React.ComponentType<any>) => {
         }
 
         componentDidMount() {
-            this.listener = this.props.firebase.auth.onAuthStateChanged(
+            this.listener = this.props.firebase.onAuthStateChanged(
                 authUser => {
                     authUser ? this.setState({ currentUser: authUser })
                     : this.setState({ currentUser: null });
@@ -49,5 +50,15 @@ export const withAuthentication = (Component: React.ComponentType<any>) => {
 
     return withFirebase(WithAuthentication)
 }
+
+export const withUser = (Component: React.ComponentType<any>) => (props: any) => (
+    <AuthUserContext.Consumer>
+        {currentUser => {console.log(currentUser); return <Component {...props} currentUser={currentUser} />}}
+    </AuthUserContext.Consumer>
+)
+
+// export const withUserContext = (Component: React.ComponentType<any>) => (props: any) => (
+//     <Component {...props} userContext={useContext(AuthUserContext)} />
+// )
 
 export default AuthUserContext;
