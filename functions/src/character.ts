@@ -44,6 +44,8 @@ export const characterSchema = yup.object().shape({
     }),
     maxHp: yup.number().required(),
     currentHp: yup.number().required(),
+    maxFp: yup.number().required(),
+    currentFp: yup.number().required(),
     weapons: yup.array(weaponSchema).required(),
 });
 
@@ -127,6 +129,14 @@ export class Character {
 
     setCurrentHp(hp: number) {
         this.data.currentHp = hp;
+    }
+
+    getCurrentFp() : number {
+        return this.data.currentFp;
+    }
+
+    setCurrentFp(fp: number) {
+        this.data.currentFp = fp;
     }
 
     getWeapons() : WeaponData[] {
