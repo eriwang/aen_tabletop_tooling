@@ -63,6 +63,8 @@ export function getCharacterRepr() : CharacterData {
         },
         maxHp: 100,
         currentHp: 90,
+        maxFp: 50,
+        currentFp: 40,
         weapons: weapons,
     };
 }
