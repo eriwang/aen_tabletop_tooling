@@ -8,6 +8,7 @@ import { enumerateEnumValues } from 'utils';
 import { WeaponData, weaponSchema } from 'weapon';
 
 export const characterSchema = yup.object().shape({
+    name: yup.string().required(),
     attributeToStat: yup.object().shape({
         CON: yup.number().required(),
         STR: yup.number().required(),

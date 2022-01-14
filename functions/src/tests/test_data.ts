@@ -27,6 +27,7 @@ export function getCharacterRepr() : CharacterData {
     ];
 
     return {
+        name: 'nevin_pls',
         attributeToStat: {
             CON: 1,
             STR: 2,
