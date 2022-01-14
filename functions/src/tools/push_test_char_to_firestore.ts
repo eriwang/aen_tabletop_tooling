@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc, getFirestore } from 'firebase/firestore';
+import * as readlineSync from 'readline-sync';
 
 import { getCharacterRepr } from 'tests/test_data';
 
@@ -18,11 +19,17 @@ const firebaseConfig = {
 initializeApp(firebaseConfig);
 
 async function main() {
-    const auth = getAuth();
     const db = getFirestore();
     const charData = getCharacterRepr();
 
+    const email = readlineSync.questionEMail('What is your DND email?\n');
+    const password = readlineSync.question('What is your DND password?\n', {hideEchoBack: true});
+    await signInWithEmailAndPassword(getAuth(), email, password);
+
     await setDoc(doc(db, 'Character', 'nevin_pls'), charData);
+
+    console.log('Completed successfully, force killing because other packages have hanging connections.');
+    process.exit(0);
 }
 
 main();
