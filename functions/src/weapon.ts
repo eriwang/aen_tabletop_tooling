@@ -1,41 +1,14 @@
-import { Attribute, AttackType, DamageType, getAttrFromAbbrev } from 'base_game_enums';
-import { getNonNull } from 'utils';
+import * as yup from 'yup';
 
-export class Weapon {
-    attribute: Attribute;
-    attackType: AttackType;
-    damageType: DamageType;
-    baseDamage: number;
-    toHitMultiplier: number;
-    damageMultiplier: number;
-    difficultyClass: number;
+export const weaponSchema = yup.object().shape({
+    name: yup.string().required(),
+    attribute: yup.number().required(),  // TODO: string transformed to enum
+    attackType: yup.number().required(),  // TODO: string transformed to enum
+    damageType: yup.number().required(),  // TODO: string transformed to enum
+    baseDamage: yup.number().required(),
+    toHitMultiplier: yup.number().required(),
+    damageMultiplier: yup.number().required(),
+    difficultyClass: yup.number().required(),
+});
 
-    constructor(
-        attr: Attribute,
-        atkType: AttackType,
-        dmgType: DamageType,
-        baseDmg: number,
-        toHitMult: number,
-        dmgMult: number,
-        diffCls: number) {
-        this.attribute = attr;
-        this.attackType = atkType;
-        this.damageType = dmgType;
-        this.baseDamage = baseDmg;
-        this.toHitMultiplier = toHitMult;
-        this.damageMultiplier = dmgMult;
-        this.difficultyClass = diffCls;
-    }
-
-    static buildFromMap(map: Map<string, any>) : Weapon {
-        const attribute = getAttrFromAbbrev(getNonNull(map.get('Primary Attribute')));
-        const atkType = getNonNull(AttackType[map.get('Type') as keyof typeof AttackType]);
-        const dmgType = getNonNull(DamageType[map.get('Damage Type') as keyof typeof DamageType]);
-        const baseDmg = getNonNull(map.get('Base Damage'));
-        const toHitMult = getNonNull(map.get('To Hit Multiplier'));
-        const dmgMult = getNonNull(map.get('Damage Multiplier'));
-        const diffCls = getNonNull(map.get('Hit DC'));
-
-        return new Weapon(attribute, atkType, dmgType, baseDmg, toHitMult, dmgMult, diffCls);
-    }
-}
+export interface WeaponData extends yup.InferType<typeof weaponSchema> {}
