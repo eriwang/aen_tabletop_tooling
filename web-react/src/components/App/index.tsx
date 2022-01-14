@@ -13,6 +13,7 @@ import DashboardPage from '../Dashboard';
 import NotFoundPage from '../NotFound';
 
 import * as ROUTES from '../../constants/routes';
+import AttackPage from '../Attack';
 
 class App extends React.Component<{},{}> {
     render() {
@@ -31,6 +32,7 @@ class App extends React.Component<{},{}> {
                         <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
                         <Route path={ROUTES.ACCOUNT} element={<AccountPage />} />
                         <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
+                        <Route path={ROUTES.ATTACK} element={<AttackPage />} />
                         <Route path="*" element={<NotFoundPage />} />
                     </Routes>
                 </div>

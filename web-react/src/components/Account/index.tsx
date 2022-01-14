@@ -84,7 +84,7 @@ interface CharacterSelectionProps {
 interface CharacterSelectionState {
     character: string;
     error: any;
-    characterList: { [key: string]: any };
+    characterList: { [key: string]: string };
 }
 
 class CharacterSelectionBase extends Component<CharacterSelectionProps, CharacterSelectionState> {
@@ -101,12 +101,12 @@ class CharacterSelectionBase extends Component<CharacterSelectionProps, Characte
     }
 
     getCharacterList = () => {
-        getDocs(this.props.firebase!.characters())
+        this.props.firebase!.getCharactersData()
             .then(snapshot => {
-                let characterList: { [key: string]: any } = {};
-                snapshot.forEach((doc) => {
+                let characterList: { [key: string]: string } = {};
+                snapshot?.forEach((doc) => {
                     const data = doc.data();
-                    characterList[doc.id] = doc.id;//data['Name'];
+                    characterList[doc.id] = data['name'];
                 });
                 this.setState({ characterList: characterList });
             })

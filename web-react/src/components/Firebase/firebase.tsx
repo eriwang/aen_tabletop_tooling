@@ -92,6 +92,14 @@ class Firebase {
 
     character = (id: string) => doc(collection(this.db, 'Character'), id);
 
+    getCharactersData = () => {
+        return new Promise<QuerySnapshot<DocumentData> | undefined>((resolve, reject) => {
+            getDocs(this.characters())
+                .then(snapshot => resolve(snapshot))
+                .catch(error => reject(error))
+        })
+    }
+
     getCharacterData = (id: string) => {
         return new Promise<DocumentData | undefined>((resolve, reject) => {
             getDoc(this.character(id))
@@ -117,6 +125,14 @@ class Firebase {
     //             .catch(error => reject(error))
     //     })
     // }
+
+    // *** Cloud Functions API *** //
+
+    calculateAttack = (attackerId: string, defenderId: string, weaponName: string, roll: number) => {
+        return new Promise<string>((resolve, reject) => {
+            
+        });
+    }
 }
 
 export default Firebase;
