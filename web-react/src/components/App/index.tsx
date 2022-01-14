@@ -11,6 +11,8 @@ import ForgotPasswordPage from '../ForgotPassword';
 import AccountPage from '../Account';
 
 import * as ROUTES from '../../constants/routes';
+import DashboardPage from '../Dashboard';
+import NotFoundPage from '../NotFound';
 
 class App extends React.Component<{},{}> {
     render() {
@@ -28,6 +30,8 @@ class App extends React.Component<{},{}> {
                         <Route path={ROUTES.SIGN_UP} element={<SignUpPage />} />
                         <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
                         <Route path={ROUTES.ACCOUNT} element={<AccountPage />} />
+                        <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
+                        <Route path="*" element={<NotFoundPage />} />
                     </Routes>
                 </div>
             </BrowserRouter>
