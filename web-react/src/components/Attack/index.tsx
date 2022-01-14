@@ -15,7 +15,13 @@ interface AttackState {
     weaponList: string[];
     weaponName: string;
     roll: number;
-    result: string | null;
+    loading: boolean;
+    result: {
+        doesAttackHit: boolean;
+        damage: number;
+        attackerToHit: number;
+        defenderEvade: number;
+    } | null;
     error: any | null;
 }
 
@@ -30,6 +36,7 @@ class AttackPageBase extends Component<AttackProps, AttackState> {
             weaponList: [],
             weaponName: "",
             roll: 0,
+            loading: false,
             result: null,
             error: null
         }
@@ -42,7 +49,27 @@ class AttackPageBase extends Component<AttackProps, AttackState> {
         "\n\tAttacker = " + this.state.attackerId +
         "\n\tDefender = " + this.state.defenderId +
         "\n\tWeapon = " + this.state.weaponName +
-        "\n\tDice Roll = " + this.state.roll)
+        "\n\tDice Roll = " + this.state.roll);
+        this.setState({loading: true, result: null, error: null});
+        this.props.firebase?.calculateAttack(
+            this.state.attackerId,
+            this.state.defenderId,
+            this.state.weaponName,
+            this.state.roll
+        )
+            .then(result => {
+                const output = {
+                    doesAttackHit: result.doesAttackHit,
+                    damage: result.damage,
+                    attackerToHit: result.attackerToHit,
+                    defenderEvade: result.defenderEvade
+                }
+                this.setState({ result: output, error: null, loading: false });
+            })
+            .catch(error => {
+                console.log(error);
+                this.setState({ error: error, result: null, loading: false });
+            })
         event.preventDefault();
     }
 
@@ -50,17 +77,6 @@ class AttackPageBase extends Component<AttackProps, AttackState> {
         const target = event.target as HTMLTextAreaElement;
         const newState = { [target.name]: target.value } as any as Pick<AttackState, keyof AttackState>;
         this.setState(newState);
-
-        // console.log(this.state);
-        // console.log(target.value);
-        // console.log(newState);
-        // if(target.name === "attackerId") {
-        //     if(target.value === "") {
-        //         this.setState({ weaponList: [] });
-        //     } else {
-        //         this.getWeaponList();
-        //     }
-        // }
     }
 
     componentDidUpdate = (prevProps: AttackProps, prevState: AttackState) => {
@@ -132,7 +148,16 @@ class AttackPageBase extends Component<AttackProps, AttackState> {
                     <p></p>
                     <button type="submit">Attack!</button>
                 </form>
-                {result && <p><strong>Result: </strong>{result}</p>}
+                {this.state.loading && <p>Loading...</p>}
+                {
+                    result && 
+                    <div>
+                        <p><strong>Result: </strong></p>
+                        <p>{result.doesAttackHit ? "Hit!" : "Miss..."}</p>
+                        <p>{result.doesAttackHit ? result.damage : 0} damage dealt</p>
+                        <p>Attacker's To-hit was {result.attackerToHit} versus Defender's Evasion of {result.defenderEvade}</p>
+                    </div>
+                }
                 {error && <p>{error.message}</p>}
             </div>
         )

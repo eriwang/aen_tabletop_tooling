@@ -23,6 +23,7 @@ import {
     DocumentSnapshot,
     onSnapshot
 } from 'firebase/firestore';
+import { getFunctions, httpsCallable } from 'firebase/functions'
 
 const config = {
     apiKey: "AIzaSyCd2eL7UFFBQWVfizJZEVdD-3aP2IXPCRk",
@@ -36,12 +37,13 @@ const config = {
 };
 
 class Firebase {
-    auth; db;
+    auth; db; fn;
     constructor() {
         const firebaseApp = initializeApp(config);
 
         this.auth = getAuth(firebaseApp);
         this.db = getFirestore(firebaseApp);
+        this.fn = getFunctions(firebaseApp);
     }
 
     // *** Auth API *** //
@@ -129,8 +131,19 @@ class Firebase {
     // *** Cloud Functions API *** //
 
     calculateAttack = (attackerId: string, defenderId: string, weaponName: string, roll: number) => {
-        return new Promise<string>((resolve, reject) => {
-            
+        return new Promise<any>((resolve, reject) => {
+            httpsCallable(this.fn, 'calculateAttack')({
+                attackerId: attackerId,
+                defenderId: defenderId,
+                weaponName: weaponName,
+                roll: roll
+            })
+                .then(result => {
+                    resolve(result.data);
+                })
+                .catch(error => {
+                    reject(error)
+                })
         });
     }
 }
