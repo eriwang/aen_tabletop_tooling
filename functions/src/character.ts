@@ -3,7 +3,7 @@ import * as yup from 'yup';
 import { Unit } from 'unit';
 import { AttackType, Attribute, DamageType, getAbbrevFromAttr } from 'base_game_enums';
 import { Profile } from 'profile';
-import { ResistanceStat } from 'armor';
+import { Armor, ArmorData, ResistanceStat } from 'armor';
 import { enumerateEnumValues } from 'utils';
 import { WeaponData, weaponSchema } from 'weapon';
 
@@ -54,35 +54,6 @@ export class Character {
 
     constructor(data: CharacterData) {
         this.data = data;
-    }
-
-    static build(unit: Unit, prof: Profile) : Character {
-        const attributeToStat: any = {};
-        for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
-            attributeToStat[getAbbrevFromAttr(attribute)] =
-                unit.getAttribute(attribute) + prof.getAttributeStatDiff(attribute);
-        }
-
-        const resistanceToFlatStat: any = {};
-        const resistanceToPercentStat: any = {};
-        for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
-            const resStat = prof.getArmor().getResistance(damageType);
-            const damageTypeStr = DamageType[damageType];
-            resistanceToFlatStat[damageTypeStr] = resStat.flat;
-            resistanceToPercentStat[damageTypeStr] = resStat.percent;
-        }
-
-        // For simplicity, set current HP to max HP every time we build a character
-        const maxHp = attributeToStat['CON'] * unit.getHpPerCon();
-        const data = {
-            attributeToStat: attributeToStat,
-            resistanceToFlatStat: resistanceToFlatStat,
-            resistanceToPercentStat: resistanceToPercentStat,
-            maxHp: maxHp,
-            currentHp: maxHp,
-        };
-
-        return new Character(data as any as CharacterData);
     }
 
     getAttributeStat(attr: Attribute) : number {

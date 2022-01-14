@@ -1,5 +1,6 @@
 import * as yup from 'yup';
-import { Attribute, Skills } from 'base_game_enums';
+import { Attribute, DamageType, Skills } from 'base_game_enums';
+import { Armor, ResistanceStat } from 'armor';
 
 
 export const profileSchema = yup.object().shape({
@@ -52,10 +53,14 @@ export class Profile {
     }
     
     getArmor() : string {
+
+        //We need to decide if armors are flat or percentage or both
+        //let armor: Armor = new Armor({} as Record<DamageType, ResistanceStat>)
+
         return this.data.armor;
     }
 
-    get weapon(): string[] {
+    getWeapon(): string[] {
         return this.data.weapons;
     }
 
