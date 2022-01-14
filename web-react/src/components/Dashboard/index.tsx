@@ -1,7 +1,7 @@
-function DashboardPage() {
-    return (
-        <div>Dashboard</div>
-    )
-}
+import Attributes from "./Attributes";
+import DashboardPage from "./DashboardPage";
+import EditableStat from "./EditableStat";
 
-export default DashboardPage;
+export default DashboardPage
+
+export { Attributes, EditableStat }

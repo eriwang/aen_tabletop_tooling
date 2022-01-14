@@ -19,7 +19,9 @@ import {
     DocumentData,
     getDocs,
     QuerySnapshot,
-    updateDoc
+    updateDoc,
+    DocumentSnapshot,
+    onSnapshot
 } from 'firebase/firestore';
 
 const config = {
@@ -87,6 +89,24 @@ class Firebase {
     // *** Character API *** //
 
     characters = () => collection(this.db, 'Character');
+
+    character = (id: string) => doc(collection(this.db, 'Character'), id);
+
+    getCharacterData = (id: string) => {
+        return new Promise<DocumentData | undefined>((resolve, reject) => {
+            getDoc(this.character(id))
+                .then(snapshot => resolve(snapshot.data()))
+                .catch(error => reject(error))
+        })
+    }
+
+    updateCharacterData = (id: string, property: string, newValue: any) => 
+        updateDoc(this.character(id), {[property]: isNaN(+newValue) ? newValue : +newValue});
+    
+
+    addCharacterListener = (id: string, callback: (doc: DocumentSnapshot<DocumentData>) => any) => {
+        return onSnapshot(doc(this.db, "Character", id), callback);
+    }
 
     // units = () => collection(this.db, 'Units');
 

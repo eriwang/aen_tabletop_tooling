@@ -9,10 +9,10 @@ import SignInPage from '../SignIn';
 import SignUpPage from '../SignUp';
 import ForgotPasswordPage from '../ForgotPassword';
 import AccountPage from '../Account';
-
-import * as ROUTES from '../../constants/routes';
 import DashboardPage from '../Dashboard';
 import NotFoundPage from '../NotFound';
+
+import * as ROUTES from '../../constants/routes';
 
 class App extends React.Component<{},{}> {
     render() {

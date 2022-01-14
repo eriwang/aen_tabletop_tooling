@@ -140,14 +140,14 @@ class CharacterSelectionBase extends Component<CharacterSelectionProps, Characte
         const {character, error} = this.state;
 
         let characterOptions = Object.entries(this.state.characterList)
-            .map(([id, name]) => <option value={id}>{name}</option>);
+            .map(([id, name]) => <option value={id} key={id}>{name}</option>);
 
         return(
             <div>
                 <p><strong>Character:</strong></p>
                 <form onSubmit={this.onSubmit}>
                     <select name="character" value={character} placeholder="Character" onChange={this.onChange}>
-                        <option value={""}></option>
+                        <option value={""} key="Not selected"></option>
                         {characterOptions}
                     </select>
                     <button type="submit">Select</button>
