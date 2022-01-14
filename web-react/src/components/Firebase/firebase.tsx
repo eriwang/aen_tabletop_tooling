@@ -16,7 +16,10 @@ import {
     setDoc,
     DocumentReference,
     getDoc,
-    DocumentData
+    DocumentData,
+    getDocs,
+    QuerySnapshot,
+    updateDoc
 } from 'firebase/firestore';
 
 const config = {
@@ -59,15 +62,19 @@ class Firebase {
     onAuthStateChanged = (callback: (user: User | null) => any) =>
         onAuthStateChanged(this.auth, user => callback(user));
 
-    // *** User API *** //
+    // *** Firestore API *** //
 
     doSetDoc = (document: DocumentReference, data: any) => setDoc(document, data);
+
+    // *** User API *** //
 
     user = (uid: string | undefined) => doc(collection(this.db, 'Users'), uid);
 
     users = () => collection(this.db, 'Users');
 
     setUserData = (uid: string | undefined, data: any) => setDoc(this.user(uid), data);
+
+    updateUserData = (uid: string | undefined, data: any) => updateDoc(this.user(uid), data);
 
     getUserData = (uid: string | undefined) => {
         return new Promise<DocumentData | undefined>((resolve, reject) => {
@@ -77,7 +84,19 @@ class Firebase {
         })
     }
 
-    units = () => collection(this.db, 'Units');
+    // *** Character API *** //
+
+    characters = () => collection(this.db, 'Character');
+
+    // units = () => collection(this.db, 'Units');
+
+    // units = () => {
+    //     return new Promise<QuerySnapshot<DocumentData>>((resolve, reject) => {
+    //         getDocs(collection(this.db, 'Units'))
+    //             .then(snapshot => resolve(snapshot))
+    //             .catch(error => reject(error))
+    //     })
+    // }
 }
 
 export default Firebase;

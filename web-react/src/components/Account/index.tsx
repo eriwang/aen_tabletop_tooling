@@ -1,7 +1,8 @@
 import { User } from "firebase/auth";
-import React, { Component, useContext } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import React, { ChangeEvent, Component, useContext, FormEvent } from "react";
 import Firebase, { FirebaseContext, withFirebase } from "../Firebase";
-import { AuthUserContext, withUser, withUserContext } from "../Session";
+import { AuthUserContext, withUser } from "../Session";
 
 const AccountPage = () => (
     <div>
@@ -41,6 +42,7 @@ class AccountDetailsBase extends Component<AccountDetailsProps, AccountDetailsSt
             console.log("User is null")
             return;
         }
+        console.log("User is not null");
         this.props.firebase!.getUserData(this.props.currentUser.uid)
             .then(userDetails => {
                 if (userDetails) {
@@ -59,7 +61,7 @@ class AccountDetailsBase extends Component<AccountDetailsProps, AccountDetailsSt
                 <div>
                     <p><strong>Email:</strong> {this.props.currentUser.email}</p>
                     <p><strong>Username:</strong> {this.state.username}</p>
-                    <p><strong>Character:</strong> {this.state.character ? this.state.character : <i>Not chosen</i>}</p>
+                    <CharacterSelection chosenCharacter={this.state.character} />
                 </div>
             )
         } else {
@@ -72,6 +74,91 @@ class AccountDetailsBase extends Component<AccountDetailsProps, AccountDetailsSt
         }
     }
 }
+
+interface CharacterSelectionProps {
+    firebase: Firebase | null;
+    currentUser: User | null;
+    chosenCharacter: string | null;
+}
+
+interface CharacterSelectionState {
+    character: string;
+    error: any;
+    characterList: { [key: string]: any };
+}
+
+class CharacterSelectionBase extends Component<CharacterSelectionProps, CharacterSelectionState> {
+    constructor(props: any) {
+        super(props);
+
+        this.state = {
+            character: this.props.chosenCharacter ? this.props.chosenCharacter : "",
+            characterList: {},
+            error: null
+        }
+
+        this.getCharacterList();
+    }
+
+    getCharacterList = () => {
+        getDocs(this.props.firebase!.characters())
+            .then(snapshot => {
+                let characterList: { [key: string]: any } = {};
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    characterList[doc.id] = doc.id;//data['Name'];
+                });
+                this.setState({ characterList: characterList });
+            })
+            .catch(error => {
+                this.setState({ error: error });
+            });
+    }
+
+    onChange = (event: ChangeEvent) => {
+        const target = event.target as HTMLSelectElement;
+        const newState = { [target.name]: target.value } as any as Pick<CharacterSelectionState, keyof CharacterSelectionState>;
+        this.setState(newState);
+    }
+
+    onSubmit = (event: FormEvent) => {
+        const { character } = this.state;
+
+        this.props.firebase?.updateUserData(this.props.currentUser?.uid, {character: character})
+            .then(() => {
+                console.log("Set character successfully");
+            })
+            .catch(error => {
+                this.setState({error: error})
+            })
+        //console.log("Selected " + this.state.character)
+
+        event.preventDefault();
+    };
+
+    render() {
+        const {character, error} = this.state;
+
+        let characterOptions = Object.entries(this.state.characterList)
+            .map(([id, name]) => <option value={id}>{name}</option>);
+
+        return(
+            <div>
+                <p><strong>Character:</strong></p>
+                <form onSubmit={this.onSubmit}>
+                    <select name="character" value={character} placeholder="Character" onChange={this.onChange}>
+                        <option value={""}></option>
+                        {characterOptions}
+                    </select>
+                    <button type="submit">Select</button>
+                </form>
+                {error && <p>{error.message}</p>}
+            </div>
+        )
+    }
+}
+
+const CharacterSelection = withUser(withFirebase(CharacterSelectionBase))
 
 // const AccountDetails = () => (
 //     <div>
@@ -86,4 +173,4 @@ const AccountDetails = withUser(withFirebase(AccountDetailsBase))
 
 export default AccountPage;
 
-export { AccountDetails }
+export { AccountDetails, CharacterSelection }
