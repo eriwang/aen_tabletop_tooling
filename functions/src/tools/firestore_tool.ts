@@ -1,6 +1,12 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import * as fs from 'fs';
+import * as path from 'path';
+
+import { initializeApp } from '@firebase/app';
+import { getAuth, signInWithEmailAndPassword } from '@firebase/auth';
+import { UserImpl } from '@firebase/auth/internal';
 import * as readlineSync from 'readline-sync';
+
+import { getNonNull } from 'utils';
 
 const firebaseConfig = {
     apiKey: 'AIzaSyA1adK0Bz1j4Ba895Y54EHAYwNNo32BPDs',
@@ -15,10 +21,39 @@ const firebaseConfig = {
 
 initializeApp(firebaseConfig);
 
-export async function run(fn: () => Promise<any>) {
+const firebaseTokenFile = path.resolve(__dirname + '/.firestore_tool_token.json');
+
+async function signIn() {
     const email = readlineSync.questionEMail('What is your DND email?\n');
     const password = readlineSync.question('What is your DND password?\n', {hideEchoBack: true});
     await signInWithEmailAndPassword(getAuth(), email, password);
+
+    console.log('Sign in successful, saving user data to disk.');
+    const userData = JSON.stringify(getNonNull(getAuth().currentUser).toJSON());
+    fs.writeFileSync(firebaseTokenFile, userData);
+}
+
+async function authUser() {
+    if (!fs.existsSync(firebaseTokenFile)) {
+        await signIn();
+        return;
+    }
+
+    const userData = require(firebaseTokenFile);
+    const user = UserImpl._fromJSON(getAuth() as any, userData);
+    try {
+        console.log('Attempting to sign in using saved token...');
+        await getAuth().updateCurrentUser(user);
+        console.log('Sign in successful.');
+    }
+    catch {
+        console.log('Automatic sign in failed, falling back to email/password.');
+        await signIn();
+    }
+}
+
+export async function run(fn: () => Promise<any>) {
+    await authUser();
 
     await fn();
 
