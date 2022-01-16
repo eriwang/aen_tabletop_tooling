@@ -3,13 +3,13 @@ import { Attribute, DamageType, Skills } from 'base_game_enums';
 import { CharacterData } from 'character';
 import { profileDataConverter } from 'firestore_utils/data_converters';
 import { Profile } from 'profile';
-import { ClassData, classSchema } from 'class';
+import { classSchema } from 'class';
 import { enumerateEnumValues, getNonNull } from 'utils';
 import { WeaponData, weaponSchema } from 'weapon';
 
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
-import { RaceData, raceSchema } from 'race';
+import { raceSchema } from 'race';
 import { AbilityData, abilitySchema } from 'ability';
 
 // Loads armor resistances
@@ -121,61 +121,35 @@ response: {
 */
 export default functions.https.onRequest(async (request, response) =>{
 
-    const profile: string = request.body.profile as string;
+    const profileName: string = request.body.profile as string;
     const profilesCollection = admin.firestore().collection('Profiles');
     const charactersCollection = admin.firestore().collection('Characters');
     const racesCollection = admin.firestore().collection('Races');
     const classesCollection = admin.firestore().collection('Classes');
 
-    let profileData: Profile = {} as Profile;
-    let armorData: ArmorData;
-    let weaponData: WeaponData[] = [] as WeaponData[];
-    let abilityData: AbilityData[] = [] as AbilityData[];
-    let classData: ClassData = {} as ClassData;
-    let raceData: RaceData = {} as RaceData;
-    let tempData: any;
+    const profile = getNonNull(getNonNull(
+        await profilesCollection.doc(profileName).withConverter(profileDataConverter).get()
+    ).data());
 
-    try {
-        profileData = getNonNull(getNonNull(await profilesCollection.doc(profile).
-            withConverter(profileDataConverter).get()).data());
-    }
-    catch {
-        throw `Profile "${profile}" was not found`;
-    }
+    const classData = classSchema.validateSync(
+        getNonNull(getNonNull(await classesCollection.doc(profile.getClass()).get()).data())
+    );
+    const raceData = raceSchema.validateSync(
+        getNonNull(getNonNull(await racesCollection.doc(profile.getRace()).get()).data())
+    );
 
-    try {
-        // Store class data temporarily then validate it
-        tempData = getNonNull(getNonNull(await classesCollection.doc(profileData.getClass()).get()).data());
-        classData = classSchema.validateSync(tempData);
-    }
-    catch {
-        throw `Class "${profileData.getClass()}" was not found`;
-    }
+    const armorData = await loadArmor(profile.getArmor());
+    const weaponData = await loadWeapons(profile.getWeapons());
+    const abilityData = await loadAbilities(profile.getAbilities());
 
-    try {
-        // Store race data temporarily then validate it
-        tempData = getNonNull(getNonNull(await racesCollection.doc(profileData.getRace()).get()).data());
-        raceData = raceSchema.validateSync(tempData);
-    }
-    catch {
-        throw `Race "${profileData.getRace()}" was not found`;
-    }
-
-
-    armorData = await loadArmor(profileData.getArmor());
-
-    weaponData = await loadWeapons(profileData.getWeapons());
-
-    abilityData = await loadAbilities(profileData.getAbilities());
-
-    const attributes = calculateAttributes(profileData);
-    const skills = calculateSkills(profileData);
+    const attributes = calculateAttributes(profile);
+    const skills = calculateSkills(profile);
 
     // For simplicity, set current HP to max HP every time we build a character
     const maxHp = attributes['CON'] * classData.hpPerCon;
     const maxFP = attributes['INT'] * classData.fpPerInt;
     const characterData: CharacterData = {
-        name: profile,
+        name: profileName,
         attributes: attributes,
         resistanceToFlat: armorData!.resistanceToFlat,
         resistanceToPercent: armorData!.resistanceToPercent,
@@ -184,19 +158,19 @@ export default functions.https.onRequest(async (request, response) =>{
         currentHp: maxHp,
         maxFp: maxFP,
         currentFp: maxFP,
-        level: profileData.getLevel(),
+        level: profile.getLevel(),
         initiative: 0,
         cooldowns: ' ',
         statuses: ' ',
-        armor: profileData.getArmor(),
-        race: profileData.getRace(),
-        class: profileData.getClass(),
+        armor: profile.getArmor(),
+        race: profile.getRace(),
+        class: profile.getClass(),
         movement: raceData.movement,
         weapons: weaponData,
         abilities: abilityData,
-    } as any as CharacterData;
+    };
 
-    await charactersCollection.doc(profile).set(characterData);
+    await charactersCollection.doc(profileName).set(characterData);
 
     response.send(characterData);
 

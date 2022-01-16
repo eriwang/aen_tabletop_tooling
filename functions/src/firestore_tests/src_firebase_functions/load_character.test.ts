@@ -50,7 +50,7 @@ function buildRequest(body: any) : functions.https.Request {
     } as any as functions.https.Request;
 }
 
-test('Create character Magikarp', async() => {
+test('Create character Magikarp', async () => {
     const request = buildRequest({
         profile: 'Magikarp'
     });
