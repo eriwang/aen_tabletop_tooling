@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { initializeApp } from '@firebase/app';
-import { getAuth, signInWithEmailAndPassword } from '@firebase/auth';
+import { initializeApp } from 'firebase/app';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { UserImpl } from '@firebase/auth/internal';
 import * as readlineSync from 'readline-sync';
 
