@@ -15,14 +15,15 @@
     "start": "yarn shell",
     "deploy": "yarn firebase deploy --only functions",
     "logs": "yarn firebase functions:log",
-	"web-deploy": "yarn --cwd web-react build && firebase deploy --only hosting",
-	"web-test": "yarn --cwd web-react start"
+    "web-deploy": "yarn --cwd web-react build && firebase deploy --only hosting",
+    "web-test": "yarn --cwd web-react start"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^2.0.1",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
     "eslint": "7.6.0",
+    "eslint-config-react-app": "^7.0.0",
     "eslint-plugin-import": "^2.25.3",
     "firebase-tools": "^9.23.1",
     "jest": "^27.4.4",
@@ -32,6 +33,6 @@
   "dependencies": {
     "firebase": "^9.6.1",
     "ts-jest": "^27.1.1",
-	"yarn": "^1.22.17"
+    "yarn": "^1.22.17"
   }
 }
