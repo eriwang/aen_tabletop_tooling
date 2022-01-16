@@ -4,7 +4,7 @@
   "repository": "git@github.com:eriwang/aen_tabletop_tooling.git",
   "license": "MIT",
   "scripts": {
-    "lint": "yarn eslint --ext .js,.ts .",
+    "lint": "yarn eslint --ext .js,.ts,.jsx,.tsx .",
     "test": "yarn test:unit && yarn test:firestore",
     "test:unit": "yarn jest --selectProjects functions-unit",
     "test:unit-fast": "yarn test:unit --globals '{\"ts-jest\": { \"isolatedModules\": true } }'",
