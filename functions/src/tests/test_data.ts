@@ -27,7 +27,8 @@ export function getCharacterRepr() : CharacterData {
     ];
 
     return {
-        attributes: {
+        name: 'nevin_pls',
+        attribute: {
             CON: 1,
             STR: 2,
             DEX: 3,
@@ -63,6 +64,8 @@ export function getCharacterRepr() : CharacterData {
         },
         maxHp: 100,
         currentHp: 90,
+        maxFp: 50,
+        currentFp: 40,
         weapons: weapons,
     };
 }

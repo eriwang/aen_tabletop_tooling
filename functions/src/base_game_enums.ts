@@ -95,11 +95,8 @@ export enum Skills {
     Insight,
 }
 
-export enum Stats {
-    HP,
-    FP,
-    FOR,
-    REF,
-    WILL,
-    Movement
+export enum AbilityCategory {
+    Basic = 'Basic',
+    Passive = 'Passive',
+    Ultimate = 'Ultimate',
 }
