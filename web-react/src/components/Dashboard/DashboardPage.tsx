@@ -1,7 +1,7 @@
 import { User } from "firebase/auth";
 import { DocumentData, DocumentSnapshot, Unsubscribe } from "firebase/firestore";
 import React, { Component } from "react";
-import { Attributes, BasicStats, Weapons } from ".";
+import { Abilities, Attributes, BasicStats, Weapons } from ".";
 import Firebase, { withFirebase } from "../Firebase";
 import { withUser } from "../Session";
 
@@ -106,6 +106,14 @@ class CharacterSheetBase extends Component<CharacterSheetProps, CharacterSheetSt
                     this.state.characterId && 
                     <Weapons 
                         weaponList={this.state.characterDetails.weapons} 
+                        characterId={this.state.characterId} 
+                        charactersList={this.state.charactersList} />
+                }
+                {
+                    this.state.characterDetails && 
+                    this.state.characterId && 
+                    <Abilities 
+                        abilityList={this.state.characterDetails.abilities} 
                         characterId={this.state.characterId} 
                         charactersList={this.state.charactersList} />
                 }
