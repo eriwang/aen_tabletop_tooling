@@ -1,5 +1,3 @@
-import { collection, getFirestore, addDoc } from 'firebase/firestore';
-
 import { run } from 'tools/firestore_tool';
 import { pushCsvToFirestore } from './firestore_csv_pusher';
 
@@ -18,16 +16,6 @@ function rowToDoc(row: any) : any {
         Category: row['Category']
     };
 }
-
-async function writeToDatabase(collectionName: string, data: any[]) {
-    const db = getFirestore();
-    const targetCollection = collection(db, collectionName);
-    return Promise.all(data.map((d) => addDoc(targetCollection, rowToDoc(d))));
-}
-
-// async function writeDataFromCSV(filename:string) {
-//     await writeToDatabase('TestAbilities', await readFromCSV(filename));
-// }
 
 run(async () => {
     await pushCsvToFirestore('Abilities.csv', 'TestAbilities', rowToDoc);

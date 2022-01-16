@@ -11,10 +11,18 @@ async function readFromCSV(filename: string) {
     });
 }
 
-export async function pushCsvToFirestore(filename: string, collectionName: string, rowToDoc: (row: any) => any) {
+export async function pushCsvToFirestore(filename: string, collectionName: string, rowToDoc: (row: any) => any,
+    dryRun?: boolean) {
     const csvData = await readFromCSV(filename);
+    const firestoreData = csvData.map((d: any) => rowToDoc(d));
+
+    if (dryRun) {
+        console.log('Dry run mode, no data will be pushed.');
+        console.log(firestoreData);
+        return;
+    }
 
     const db = getFirestore();
     const targetCollection = collection(db, collectionName);
-    return Promise.all(csvData.map((d: any) => addDoc(targetCollection, rowToDoc(d))));
+    return Promise.all(firestoreData.map((d: any) => addDoc(targetCollection, d)));
 }
