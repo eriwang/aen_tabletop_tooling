@@ -1,17 +1,28 @@
 import { collection, getDocs, setDoc, getFirestore } from 'firebase/firestore';
 
 import { abilitySchema, AbilityData } from 'ability';
+import { AbilityCategory } from 'base_game_enums';
 import { run } from 'tools/firestore_tool';
 
-function setIfStringNonEmpty(abilityData: AbilityData, key: string, s: string) {
-    if (s !== '') {
-        (abilityData as any)[key] = s;
+function getCategory(category: string) : AbilityCategory {
+    if (category.includes('Basic')) {
+        return AbilityCategory.Basic;
     }
+    if (category.includes('Passive')) {
+        return AbilityCategory.Passive;
+    }
+
+    throw `Could not find a category in string ${category}`;
 }
 
-function setIfNumNonZero(abilityData: AbilityData, key: string, n: number) {
-    if (n !== 0) {
-        (abilityData as any)[key] = n;
+function getIsAttack(attackType: string) : boolean {
+    switch (attackType) {
+        case 'Strike':
+        case 'Projectile':
+        case 'Curse':
+            return true;
+        default:
+            return false;
     }
 }
 
@@ -24,18 +35,22 @@ run(async () => {
         const d = doc.data();
         const docAbilityData: AbilityData = {
             name: doc.id,
-            category: d.Category,
+            category: getCategory(d.Category),
             cooldown: d.Cooldown,
             description: d.Description,
             fpCost: d.FPCost,
+            isAttack: getIsAttack(d.Type),
         };
 
-        setIfStringNonEmpty(docAbilityData, 'attribute', d.Attribute);
-        setIfStringNonEmpty(docAbilityData, 'damageType', d.DamageType);
-        setIfStringNonEmpty(docAbilityData, 'attackType', d.Type);
-        setIfNumNonZero(docAbilityData, 'baseDamage', d.BaseDamage);
-        setIfNumNonZero(docAbilityData, 'hitDC', d.HitDC);
-        setIfNumNonZero(docAbilityData, 'range', d.Range);
+        if (getIsAttack(d.Type)) {
+            docAbilityData.attribute = d.Attribute;
+            docAbilityData.damageType = d.DamageType;
+            docAbilityData.attackType = d.Type;
+            docAbilityData.baseDamage = d.BaseDamage;
+            docAbilityData.damageMultiplier = d.DamageMultiplier;
+            docAbilityData.hitDC = d.HitDC;
+            docAbilityData.range = d.Range;
+        }
 
         abilitySchema.validateSync(docAbilityData);
         abilityData.push(docAbilityData);
