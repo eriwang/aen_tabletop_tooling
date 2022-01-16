@@ -9,7 +9,7 @@ import { CharacterData } from 'character';
 
 export const flail : WeaponData = {
     name: 'flail',
-    attribute: Attribute.Strength,
+    attribute: Attribute.STR,
     attackType: AttackType.Strike,
     damageType: DamageType.Bludgeoning,
     baseDamage: 1,

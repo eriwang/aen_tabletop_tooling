@@ -1,5 +1,6 @@
 import { AttackType, Attribute, DamageType, } from 'base_game_enums';
 import { Character } from 'character';
+import { WeaponData } from 'weapon';
 
 interface ToHitResults {
     doesAttackHit: boolean;
@@ -24,7 +25,8 @@ Not yet implemented for toHit:
 - Eventually probs some passives that modify to hit in certain situations, both for attacker/defender(s)
 - Dual wield - toHit
  */
-export function calculateToHit(roll: number, attacker: Character, defender: Character, attack: Attack) : ToHitResults {
+export function calculateToHit(roll: number, attacker: Character, defender: Character, attack: WeaponData)
+    : ToHitResults {
     const attackerToHitScalingFactor = Math.ceil(
         attacker.getAttributeStat(attack.attribute) *
         attack.toHitMultiplier
@@ -45,7 +47,7 @@ Not yet implemented for damage:
 - Crits do extra 50% damage
 - Two handing weapon multiplier
 */
-export function calculateDamage(attacker: Character, defender: Character, attack: Attack) : number {
+export function calculateDamage(attacker: Character, defender: Character, attack: WeaponData) : number {
     const attackerDamageScalingFactor = Math.ceil(
         attacker.getAttributeStat(attack.attribute) *
         attack.damageMultiplier

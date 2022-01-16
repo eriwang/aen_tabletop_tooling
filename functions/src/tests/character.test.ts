@@ -3,7 +3,7 @@ import { Character } from 'character';
 import { getCharacterRepr } from 'tests/test_data';
 
 test('getAttributeStat', () => {
-    expect(new Character(getCharacterRepr()).getAttributeStat(Attribute.Dexterity)).toBe(3);
+    expect(new Character(getCharacterRepr()).getAttributeStat(Attribute.DEX)).toBe(3);
 });
 
 test('getResistanceStat', () => {

@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { Attribute, getAbbrevFromAttr, Skills } from 'base_game_enums';
+import { Attribute, Skills } from 'base_game_enums';
 
 
 export const profileSchema = yup.object().shape({
@@ -50,21 +50,20 @@ export const profileSchema = yup.object().shape({
 export interface ProfileData extends yup.InferType<typeof profileSchema> {}
 
 export class Profile {
-    
+
     data: ProfileData;
 
     constructor(data: ProfileData) {
         this.data = data;
     }
 
-    
+
     getAttributeDiff(attr: Attribute) : number {
-        return (this.data.attributeBonuses as any)[getAbbrevFromAttr(attr)] + this.data.level - 1;
+        return this.data.attributeBonuses[attr] + this.data.level - 1;
     }
 
     getAttributeTotal(attr: Attribute) : number {
-        return (this.data.attributeBonuses as any)[getAbbrevFromAttr(attr)] + this.data.level
-             + (this.data.unitAttributes as any)[getAbbrevFromAttr(attr)] - 1;
+        return this.data.attributeBonuses[attr] + this.data.level + this.data.unitAttributes[attr] - 1;
     }
 
     getClass(): string {
@@ -74,7 +73,7 @@ export class Profile {
     getRace(): string {
         return this.data.race;
     }
-    
+
     getArmor() : string {
 
         if (this.data.armor === undefined) {
@@ -111,34 +110,34 @@ export class Profile {
 
         switch (skill) {
             case Skills.Endurance:
-                return this.getAttributeTotal(Attribute.Constitution) + bonus;
+                return this.getAttributeTotal(Attribute.CON) + bonus;
 
             case Skills.Athletics:
-                return this.getAttributeTotal(Attribute.Strength) + bonus;
+                return this.getAttributeTotal(Attribute.STR) + bonus;
 
             case Skills.Acrobatics:
             case Skills.SleightOfHand:
-                return this.getAttributeTotal(Attribute.Dexterity) + bonus;
+                return this.getAttributeTotal(Attribute.DEX) + bonus;
 
             case Skills.Nature:
             case Skills.Religion:
             case Skills.Medicine:
             case Skills.Stealth: // Should this be wisdom?
             case Skills.Survival:
-                return this.getAttributeTotal(Attribute.Wisdom) + bonus;
+                return this.getAttributeTotal(Attribute.WIS) + bonus;
 
             case Skills.Arcana:
             case Skills.History:
             case Skills.Investigation:
             case Skills.Culture:
-                return this.getAttributeTotal(Attribute.Intelligence) + bonus;
+                return this.getAttributeTotal(Attribute.INT) + bonus;
 
             case Skills.Deception:
             case Skills.Intimidation:
             case Skills.Performance:
             case Skills.Persuasion:
             case Skills.Insight:
-                return this.getAttributeTotal(Attribute.Charisma) + bonus;
+                return this.getAttributeTotal(Attribute.CHAR) + bonus;
         }
     }
 

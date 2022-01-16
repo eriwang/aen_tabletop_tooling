@@ -1,17 +1,19 @@
-import { Attack, calculateDamage, calculateToHit } from 'attack_calculator';
+import { calculateDamage, calculateToHit } from 'attack_calculator';
 import { AttackType, Attribute, DamageType } from 'base_game_enums';
 import { Character } from 'character';
 import { enumerateEnumValues } from 'utils';
 
 import { when } from 'jest-when';
+import { WeaponData } from 'weapon';
 
-let attack: Attack;
+let attack: WeaponData;
 let attacker: Character;
 let defender: Character;
 
 function resetValues() {
     attack = {
-        attribute: Attribute.Dexterity,
+        name: 'name',
+        attribute: Attribute.DEX,
         attackType: AttackType.Strike,
         damageType: DamageType.Piercing,
         baseDamage: 0,

@@ -7,7 +7,7 @@ export function getCharacterRepr() : CharacterData {
     const weapons: WeaponData[] = [
         {
             name: 'weapon1',
-            attribute: Attribute.Strength,
+            attribute: Attribute.STR,
             attackType: AttackType.Strike,
             damageType: DamageType.Bludgeoning,
             baseDamage: 1,
@@ -17,7 +17,7 @@ export function getCharacterRepr() : CharacterData {
         },
         {
             name: 'weapon2',
-            attribute: Attribute.Intelligence,
+            attribute: Attribute.INT,
             attackType: AttackType.Curse,
             damageType: DamageType.Necrotic,
             baseDamage: 5,

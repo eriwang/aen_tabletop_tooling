@@ -1,5 +1,5 @@
 import { ArmorData, armorSchema } from 'armor';
-import { Attribute, DamageType, getAbbrevFromAttr, Skills } from 'base_game_enums';
+import { Attribute, DamageType, Skills } from 'base_game_enums';
 import { CharacterData } from 'character';
 import { profileDataConverter } from 'firestore_utils/data_converters';
 import { Profile } from 'profile';
@@ -26,7 +26,7 @@ async function loadArmor(armor: string) : Promise<ArmorData> {
         }
         armorData = {} as ArmorData;
         armorData.resistanceToFlat = noArmor;
-        armorData.resistanceToPercent = noArmor; 
+        armorData.resistanceToPercent = noArmor;
     }
     else {
         try {
@@ -37,7 +37,7 @@ async function loadArmor(armor: string) : Promise<ArmorData> {
             throw `Armor "${armor}" was not found`;
         }
     }
-    
+
     return armorData;
 
 }
@@ -91,12 +91,10 @@ async function loadAbilities(abilities: string[]) : Promise<AbilityData[]> {
 
 }
 
-// Calcuates final attributes from profile
 function calculateAttributes(profileData: Profile) : any {
     const attributes: any = {};
     for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
-        attributes[getAbbrevFromAttr(attribute)] =
-            profileData.getAttributeTotal(attribute);
+        attributes[attribute] = profileData.getAttributeTotal(attribute);
     }
 
     return attributes;
@@ -121,7 +119,6 @@ response: {
     characterData
 }
 */
-
 export default functions.https.onRequest(async (request, response) =>{
 
     const profile: string = request.body.profile as string;

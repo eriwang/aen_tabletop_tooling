@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 
-import { AttackType, Attribute, DamageType, getAbbrevFromAttr } from 'base_game_enums';
+import { AttackType, Attribute, DamageType } from 'base_game_enums';
 import { WeaponData, weaponSchema } from 'weapon';
 import { abilitySchema } from 'ability';
 import { ResistanceStat } from 'armor';
@@ -87,7 +87,7 @@ export class Character {
     }
 
     getAttributeStat(attr: Attribute) : number {
-        return (this.data.attributes as any)[getAbbrevFromAttr(attr)];
+        return this.data.attributes[attr];
     }
 
     getResistanceStat(dmgType: DamageType) : ResistanceStat {
@@ -102,13 +102,13 @@ export class Character {
         let statSum: number;
         switch (atkType) {
             case AttackType.Strike:  // fortitude
-                statSum = this.getAttributeStat(Attribute.Constitution) + this.getAttributeStat(Attribute.Strength);
+                statSum = this.getAttributeStat(Attribute.CON) + this.getAttributeStat(Attribute.STR);
                 break;
             case AttackType.Projectile:  // reflex
-                statSum = this.getAttributeStat(Attribute.Dexterity) + this.getAttributeStat(Attribute.Wisdom);
+                statSum = this.getAttributeStat(Attribute.DEX) + this.getAttributeStat(Attribute.WIS);
                 break;
             case AttackType.Curse:  // willpower
-                statSum = this.getAttributeStat(Attribute.Intelligence) + this.getAttributeStat(Attribute.Charisma);
+                statSum = this.getAttributeStat(Attribute.INT) + this.getAttributeStat(Attribute.CHAR);
                 break;
 
             default:
