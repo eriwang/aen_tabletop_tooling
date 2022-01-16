@@ -71,7 +71,7 @@ export const characterSchema = yup.object().shape({
     level: yup.number().required(),
     initiative: yup.number().required(),
     cooldowns: yup.string().required(),
-    statues: yup.string().required(),
+    statuses: yup.string().required(),
     armor: yup.string().required(),
     race: yup.string().required(),
     class: yup.string().required(),

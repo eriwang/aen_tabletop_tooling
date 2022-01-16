@@ -4,7 +4,6 @@ import * as yup from 'yup';
 import { Character, CharacterData, characterSchema } from 'character';
 import { Unit, UnitData, unitSchema } from 'unit';
 import { Profile, ProfileData, profileSchema } from 'profile';
-import { Armor, ArmorData, armorSchema } from 'armor';
 import { WeaponData } from 'weapon';
 
 // To create a data converter, you must have a Class, a yup schema, and a yup-generated "ClassData" interface

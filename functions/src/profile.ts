@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { Attribute, DamageType, Skills } from 'base_game_enums';
+import { Attribute, DamageType, getAbbrevFromAttr, Skills } from 'base_game_enums';
 
 
 export const profileSchema = yup.object().shape({
@@ -58,11 +58,11 @@ export class Profile {
 
     
     getAttributeDiff(attr: Attribute) : number {
-        return this.data.attributeBonuses[attr] + this.data.level - 1;
+        return (this.data.attributeBonuses as any)[getAbbrevFromAttr(attr)] + this.data.level - 1;
     }
 
     getAttributeTotal(attr: Attribute) : number{
-        return this.data.attributeBonuses[attr] + this.data.level + this.data.unitAttributes[attr] - 1;
+        return (this.data.attributeBonuses as any)[getAbbrevFromAttr(attr)] + this.data.level + (this.data.unitAttributes as any)[getAbbrevFromAttr(attr)] - 1;
     }
 
     getClass(): string {
@@ -91,7 +91,7 @@ export class Profile {
     }
 
     getSkillBonus(skill: Skills): number {
-        return this.data.skillToPoints[skill];
+        return (this.data.skillProficiency as any)[Skills[skill]];
     }
 
     getSkillTotal(skill: Skills) : number {
