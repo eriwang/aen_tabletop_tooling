@@ -27,7 +27,7 @@ class BasicStats extends Component<BasicStatsProps, {}> {
                     </tr>
                     <tr>
                         <td>Initiative</td>
-                        <td><EditableStat initialValue={this.props.characterDetails.initiative} onChange={this.props.onInitiativeChange} type="number" /></td>
+                        <td><EditableStat initialValue={this.props.characterDetails.initiative} onSubmit={this.props.onInitiativeChange} type="number" /></td>
                     </tr>
                     <tr>
                         <td>Movement</td>
@@ -35,7 +35,7 @@ class BasicStats extends Component<BasicStatsProps, {}> {
                     </tr>
                     <tr>
                         <td>Current HP</td>
-                        <td><EditableStat initialValue={this.props.characterDetails.currentHp} onChange={this.props.onHpChange} type="number" /></td>
+                        <td><EditableStat initialValue={this.props.characterDetails.currentHp} onSubmit={this.props.onHpChange} type="number" /></td>
                     </tr>
                     <tr>
                         <td>Total HP</td>
@@ -43,7 +43,7 @@ class BasicStats extends Component<BasicStatsProps, {}> {
                     </tr>
                     <tr>
                         <td>Current FP</td>
-                        <td><EditableStat initialValue={this.props.characterDetails.currentFp} onChange={this.props.onFpChange} type="number" /></td>
+                        <td><EditableStat initialValue={this.props.characterDetails.currentFp} onSubmit={this.props.onFpChange} type="number" /></td>
                     </tr>
                     <tr>
                         <td>Total FP</td>

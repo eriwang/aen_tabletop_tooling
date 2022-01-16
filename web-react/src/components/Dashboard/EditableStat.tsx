@@ -3,7 +3,7 @@ import { ChangeEvent, Component, FormEvent } from "react";
 interface EditableStatProps {
     initialValue: any;
     type: string;
-    onChange: ((newValue: string) => any);
+    onSubmit: ((newValue: string) => any);
 }
 
 interface EditableStatState {
@@ -19,7 +19,7 @@ class EditableStat extends Component<EditableStatProps, EditableStatState> {
     }
 
     onSubmit = (event: FormEvent) => {
-        this.onChange(this.state.value);
+        this.props.onSubmit(this.state.value);
         event.preventDefault();
     }
 
