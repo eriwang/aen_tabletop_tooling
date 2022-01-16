@@ -1,9 +1,6 @@
 import * as yup from 'yup';
 
-import { Unit } from 'unit';
 import { AttackType, Attribute, DamageType, getAbbrevFromAttr } from 'base_game_enums';
-import { Profile } from 'profile';
-import { enumerateEnumValues } from 'utils';
 import { WeaponData, weaponSchema } from 'weapon';
 import { abilitySchema } from 'ability';
 import { ResistanceStat } from 'armor';
@@ -75,6 +72,7 @@ export const characterSchema = yup.object().shape({
     armor: yup.string().required(),
     race: yup.string().required(),
     class: yup.string().required(),
+    movement: yup.number().required(),
     weapons: yup.array(weaponSchema).required(),
     abilities: yup.array(abilitySchema).required(),
 });

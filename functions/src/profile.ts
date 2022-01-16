@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { Attribute, DamageType, getAbbrevFromAttr, Skills } from 'base_game_enums';
+import { Attribute, getAbbrevFromAttr, Skills } from 'base_game_enums';
 
 
 export const profileSchema = yup.object().shape({
@@ -50,6 +50,7 @@ export const profileSchema = yup.object().shape({
 export interface ProfileData extends yup.InferType<typeof profileSchema> {}
 
 export class Profile {
+    
     data: ProfileData;
 
     constructor(data: ProfileData) {
@@ -61,8 +62,9 @@ export class Profile {
         return (this.data.attributeBonuses as any)[getAbbrevFromAttr(attr)] + this.data.level - 1;
     }
 
-    getAttributeTotal(attr: Attribute) : number{
-        return (this.data.attributeBonuses as any)[getAbbrevFromAttr(attr)] + this.data.level + (this.data.unitAttributes as any)[getAbbrevFromAttr(attr)] - 1;
+    getAttributeTotal(attr: Attribute) : number {
+        return (this.data.attributeBonuses as any)[getAbbrevFromAttr(attr)] + this.data.level
+             + (this.data.unitAttributes as any)[getAbbrevFromAttr(attr)] - 1;
     }
 
     getClass(): string {
@@ -75,11 +77,15 @@ export class Profile {
     
     getArmor() : string {
 
-        if (this.data.armor === undefined){
-            return "Naked";
+        if (this.data.armor === undefined) {
+            return 'Naked';
         }
 
         return this.data.armor;
+    }
+
+    getLevel() {
+        return this.data.level;
     }
 
     getWeapons(): string[] {
@@ -91,7 +97,12 @@ export class Profile {
     }
 
     getSkillBonus(skill: Skills): number {
-        return (this.data.skillProficiency as any)[Skills[skill]];
+        if ((this.data.skillProficiency as any)[Skills[skill]]) {
+            return (this.data.skillProficiency as any)[Skills[skill]];
+        }
+        else {
+            return 0;
+        }
     }
 
     getSkillTotal(skill: Skills) : number {
@@ -120,7 +131,7 @@ export class Profile {
             case Skills.History:
             case Skills.Investigation:
             case Skills.Culture:
-                 return this.getAttributeTotal(Attribute.Intelligence) + bonus;
+                return this.getAttributeTotal(Attribute.Intelligence) + bonus;
 
             case Skills.Deception:
             case Skills.Intimidation:

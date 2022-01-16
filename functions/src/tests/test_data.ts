@@ -29,19 +29,19 @@ export function getCharacterRepr() : CharacterData {
 
     const abilites: AbilityData[] = [
         {
-            name: "Splash",
-            category: "Basic",
+            name: 'Splash',
+            category: 'Basic',
             cooldown: 0,
-            description: "Splash failed",
+            description: 'Splash failed',
             fpCost: 10,
             isAttack: true,
-            attribute: "STR",
+            attribute: 'STR',
             baseDamage: 0,
             damageMultiplier: 0,
             hitDC: 1000,
             range: 5,
-            attackType: "Strike",
-            damageType: "Bludgeoning",
+            attackType: 'Strike',
+            damageType: 'Bludgeoning',
         }
     ];
 
@@ -107,11 +107,12 @@ export function getCharacterRepr() : CharacterData {
         currentFp: 40,
         level: 1,
         initiative: 0,
-        cooldowns: "",
-        statuses: "",
-        armor: "Naked",
-        race: "Human",
-        class: "Bandit",
+        cooldowns: ' ',
+        statuses: ' ',
+        armor: 'Naked',
+        race: 'Human',
+        class: 'Bandit',
+        movement: 30,
         weapons: weapons,
         abilities: abilites,
     };

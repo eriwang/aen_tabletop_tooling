@@ -1,14 +1,6 @@
-import { Unit } from 'unit';
-import { AttackType, Attribute, DamageType } from 'base_game_enums';
+import { Attribute, DamageType } from 'base_game_enums';
 import { Character } from 'character';
-import { Profile } from 'profile';
 import { getCharacterRepr } from 'tests/test_data';
-
-import { when } from 'jest-when';
-
-const mockUnit = { getAttribute: jest.fn(), getHpPerCon: jest.fn().mockReturnValue(10)} as any as Unit;
-const mockArmor = { getResistance: jest.fn() };
-const mockProfile = { getAttributeDiff: jest.fn(), getArmor: jest.fn() } as any as Profile;
 
 test('getAttributeStat', () => {
     expect(new Character(getCharacterRepr()).getAttributeStat(Attribute.Dexterity)).toBe(3);
