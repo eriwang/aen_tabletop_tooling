@@ -6,9 +6,10 @@ import { Profile } from 'profile';
 import { Armor, ArmorData, ResistanceStat } from 'armor';
 import { enumerateEnumValues } from 'utils';
 import { WeaponData, weaponSchema } from 'weapon';
+import { abilitySchema } from 'ability';
 
 export const characterSchema = yup.object().shape({
-    attributeToStat: yup.object().shape({
+    attributes: yup.object().shape({
         CON: yup.number().required(),
         STR: yup.number().required(),
         DEX: yup.number().required(),
@@ -42,9 +43,37 @@ export const characterSchema = yup.object().shape({
         Necrotic: yup.number().required(),
         Psychic: yup.number().required(),
     }),
+    skills: yup.object().shape({
+        Acrobatics: yup.number().required(),
+        Arcana: yup.number().required(),
+        Athletics: yup.number().required(),
+        Culture: yup.number().required(),
+        Deception: yup.number().required(),
+        Endurance: yup.number().required(),
+        History: yup.number().required(),
+        Insight: yup.number().required(),
+        Intimidation: yup.number().required(),
+        Investigation: yup.number().required(),
+        Medicine: yup.number().required(),
+        Nature: yup.number().required(),
+        Performance: yup.number().required(),
+        Persuasion: yup.number().required(),
+        Religion: yup.number().required(),
+        SleightOfHand: yup.number().required(),
+        Stealth: yup.number().required(),
+        Survival: yup.number().required(),
+    }),
     maxHp: yup.number().required(),
     currentHp: yup.number().required(),
+    level: yup.number().required(),
+    initiative: yup.number().required(),
+    cooldowns: yup.string().required(),
+    statues: yup.string().required(),
+    armor: yup.string().required(),
+    race: yup.string().required(),
+    class: yup.string().required(),
     weapons: yup.array(weaponSchema).required(),
+    abilities: yup.array(abilitySchema).required(),
 });
 
 export interface CharacterData extends yup.InferType<typeof characterSchema> {}
@@ -103,42 +132,4 @@ export class Character {
     getWeapons() : WeaponData[] {
         return this.data.weapons;
     }
-
-    // as of writing, unused and untested
-    // getSkillTotal(skill: Skills) : number {
-    //     let multiplier: number = 4;
-    //     let bonus: number = this.profile.getSkillBonus(skill) * multiplier;
-
-    //     switch (skill) {
-    //         case Skills.Endurance:
-    //             return this.unit.get(Attribute.Constitution) + bonus;
-
-    //         case Skills.Athletics:
-    //             return this.unit.get(Attribute.Strength) + bonus;
-
-    //         case Skills.Acrobatics:
-    //         case Skills.SleightOfHand:
-    //             return this.unit.get(Attribute.Dexterity) + bonus;
-
-    //         case Skills.Nature:
-    //         case Skills.Religion:
-    //         case Skills.Medicine:
-    //         case Skills.Stealth: // Should this be wisdom?
-    //         case Skills.Survival:
-    //             return this.unit.get(Attribute.Wisdom) + bonus;
-
-    //         case Skills.Arcana:
-    //         case Skills.History:
-    //         case Skills.Investigation:
-    //         case Skills.Culture:
-    //             return this.unit.get(Attribute.Intelligence) + bonus;
-
-    //         case Skills.Deception:
-    //         case Skills.Intimidation:
-    //         case Skills.Performance:
-    //         case Skills.Persuasion:
-    //         case Skills.Insight:
-    //             return this.unit.get(Attribute.Charisma) + bonus;
-    //     }
-    // }
 }
