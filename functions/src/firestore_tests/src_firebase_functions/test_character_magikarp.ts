@@ -83,7 +83,7 @@ export const karp : ProfileData = {
         INT: 27,
         CHAR: 1,
     },
-    unitAttributes: {
+    baseAttributes: {
         CON: 20,
         STR: 10,
         DEX: 55,
@@ -99,6 +99,18 @@ export const karp : ProfileData = {
         Nature: 1,
         Performance: 1,
         Survival: -1,
+
+        Arcana: 0,
+        Culture: 0,
+        Deception: 0,
+        History: 0,
+        Insight: 0,
+        Investigation: 0,
+        Medicine: 0,
+        Persuasion: 0,
+        Religion: 0,
+        SleightOfHand: 0,
+        Stealth: 0,
     },
     armor: 'Water',
     level: 100,

@@ -1,6 +1,6 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
-import { flail, splash, water, fish, pokemon, karp, magikarp} 
+import { flail, splash, water, fish, pokemon, karp, magikarp}
     from 'firestore_tests/src_firebase_functions/test_character_magikarp';
 import { initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules-unit-testing';
 import loadCharacter from 'src_firebase_functions/load_character';
@@ -18,7 +18,7 @@ let testEnv: RulesTestEnvironment;
 
 const testResponse = {send: jest.fn()} as any as functions.Response;
 
-beforeAll(async() => {
+beforeAll(async () => {
     admin.initializeApp();
     testEnv = await initializeTestEnvironment({});
     await testEnv.clearFirestore();
@@ -31,15 +31,13 @@ beforeAll(async() => {
     abilitiesCollection = admin.firestore().collection('Abilities');
 });
 
-beforeEach(async () =>{
-
+beforeEach(async () => {
     await profilesCollection.doc('Magikarp').set(karp);
     await armorsCollection.doc('Water').set(water);
     await weaponsCollection.doc('Flail').set(flail);
     await racesCollection.doc('Fish').set(fish);
     await classesCollection.doc('Pokemon').set(pokemon);
     await abilitiesCollection.doc('Splash').set(splash);
-
 });
 
 afterAll(async () => {
