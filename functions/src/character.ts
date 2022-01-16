@@ -9,6 +9,7 @@ import { WeaponData, weaponSchema } from 'weapon';
 import { abilitySchema } from 'ability';
 
 export const characterSchema = yup.object().shape({
+    name: yup.string().required(),
     attributes: yup.object().shape({
         CON: yup.number().required(),
         STR: yup.number().required(),
@@ -65,6 +66,8 @@ export const characterSchema = yup.object().shape({
     }),
     maxHp: yup.number().required(),
     currentHp: yup.number().required(),
+    maxFP: yup.number().required(),
+    currentFP: yup.number().required(),
     level: yup.number().required(),
     initiative: yup.number().required(),
     cooldowns: yup.string().required(),

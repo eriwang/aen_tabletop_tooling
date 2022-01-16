@@ -4,6 +4,7 @@ import { DamageType } from 'base_game_enums';
 import { enumerateEnumValues, getNonNull } from 'utils';
 
 export const armorSchema = yup.object().shape({
+    name: yup.string().required(),
     resistanceToFlatStat: yup.object().shape({
         Slashing: yup.number().required(),
         Bludgeoning: yup.number().required(),

@@ -135,12 +135,15 @@ export default functions.https.onRequest(async (request, response) =>{
 
     // For simplicity, set current HP to max HP every time we build a character
     const maxHp = attributes['CON'] * classData.hpPerCon;
+    const maxFP = attributes['INT'] * classData.fpPerInt;
     const characterData: CharacterData = {
         attributes: attributes,
         resistanceToFlatStat: armorData!.resistanceToFlatStat,
         resistanceToPercentStat: armorData!.resistanceToPercentStat,
         maxHp: maxHp,
         currentHp: maxHp,
+        maxFP: maxFP,
+        currentFP: maxFP,
         initiative: 0,
         cooldowns: "",
         statues: "",
