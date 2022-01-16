@@ -1,19 +1,16 @@
 import { ChangeEvent, Component, FormEvent } from "react";
-import Firebase, { withFirebase } from "../Firebase";
 
 interface EditableStatProps {
-    character: string;
-    statName: string;
-    prettyName: string;
     initialValue: any;
-    firebase: Firebase;
+    type: string;
+    onChange: ((newValue: string) => any);
 }
 
 interface EditableStatState {
     value: any;
 }
 
-class EditableStatBase extends Component<EditableStatProps, EditableStatState> {
+class EditableStat extends Component<EditableStatProps, EditableStatState> {
     constructor(props: any) {
         super(props);
 
@@ -22,16 +19,7 @@ class EditableStatBase extends Component<EditableStatProps, EditableStatState> {
     }
 
     onSubmit = (event: FormEvent) => {
-        this.props.firebase.updateCharacterData(
-            this.props.character,
-            this.props.statName,
-            this.state.value
-        )
-            .then(() => {
-                console.log("Updated character value successfully");
-            })
-            .catch(error => console.log(error));
-
+        this.onChange(this.state.value);
         event.preventDefault();
     }
 
@@ -47,15 +35,12 @@ class EditableStatBase extends Component<EditableStatProps, EditableStatState> {
         return (
             <div>
                 <form onSubmit={this.onSubmit}>
-                    <p><strong>{this.props.prettyName}</strong></p>
-                    <input name="value" value={value || '?'} onChange={this.onChange} type="text" placeholder={this.props.statName} />
+                    <input name="value" value={value || '?'} onChange={this.onChange} type={this.props.type} />
                     <button type="submit">Update</button>
                 </form>
             </div>
         )
     }
 }
-
-const EditableStat = withFirebase(EditableStatBase);
 
 export default EditableStat

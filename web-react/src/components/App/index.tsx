@@ -15,7 +15,7 @@ import NotFoundPage from '../NotFound';
 import * as ROUTES from '../../constants/routes';
 import AttackPage from '../Attack';
 
-class App extends React.Component<{},{}> {
+class App extends Component<{},{}> {
     render() {
         return (
             <BrowserRouter>

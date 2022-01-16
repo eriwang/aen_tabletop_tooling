@@ -1,8 +1,7 @@
 import { User } from "firebase/auth";
-import { collection, getDocs } from "firebase/firestore";
-import React, { ChangeEvent, Component, useContext, FormEvent } from "react";
-import Firebase, { FirebaseContext, withFirebase } from "../Firebase";
-import { AuthUserContext, withUser } from "../Session";
+import React, { ChangeEvent, Component, FormEvent } from "react";
+import Firebase, { withFirebase } from "../Firebase";
+import { withUser } from "../Session";
 
 const AccountPage = () => (
     <div>

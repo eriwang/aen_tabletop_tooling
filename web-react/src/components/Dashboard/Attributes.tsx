@@ -5,19 +5,44 @@ interface AttributesProps {
 }
 
 class Attributes extends Component<AttributesProps, {}> {
-    constructor(props: any) {
-        super(props);
-    }
-
     render() {
+        if(!this.props.attributes) {
+            return <div>Attributes loading...</div>
+        }
         return (
             <div>
-                <p><strong>CON: </strong>{this.props.attributes?.CON}</p>
-                <p><strong>STR: </strong>{this.props.attributes?.STR}</p>
-                <p><strong>DEX: </strong>{this.props.attributes?.DEX}</p>
-                <p><strong>WIS: </strong>{this.props.attributes?.WIS}</p>
-                <p><strong>INT: </strong>{this.props.attributes?.INT}</p>
-                <p><strong>CHAR: </strong>{this.props.attributes?.CHAR}</p>
+                <table>
+                    <thead>
+                    <tr><th colSpan={2}>Attributes</th></tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <td>CON</td>
+                        <td>{this.props.attributes?.CON}</td>
+                    </tr>
+                    <tr>
+                        <td>STR</td>
+                        <td>{this.props.attributes?.STR}</td>
+                    </tr>
+                    <tr>
+                        <td>DEX</td>
+                        <td>{this.props.attributes?.DEX}</td>
+                    </tr>
+                    <tr>
+                        <td>WIS</td>
+                        <td>{this.props.attributes?.WIS}</td>
+                    </tr>
+                    <tr>
+                        <td>INT</td>
+                        <td>{this.props.attributes?.INT}</td>
+                    </tr>
+                    <tr>
+                        <td>CHAR</td>
+                        <td>{this.props.attributes?.CHAR}</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         )
     }

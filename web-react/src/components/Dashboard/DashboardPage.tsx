@@ -1,7 +1,7 @@
 import { User } from "firebase/auth";
 import { DocumentData, DocumentSnapshot, Unsubscribe } from "firebase/firestore";
 import React, { Component } from "react";
-import { Attributes, EditableStat, Weapons } from ".";
+import { Attributes, BasicStats, Weapons } from ".";
 import Firebase, { withFirebase } from "../Firebase";
 import { withUser } from "../Session";
 
@@ -82,14 +82,33 @@ class CharacterSheetBase extends Component<CharacterSheetProps, CharacterSheetSt
             .catch(error => console.log(error));
     }
 
+    updateValue = (property: string) => (newValue: string) => {
+        this.props.firebase.updateCharacterData(
+            this.state.characterId!, 
+            property, 
+            isNaN(+newValue) ? newValue : +newValue
+        );
+    }
+
     render() {
         console.log("Character Id: " + this.state.characterId);
         return (
             <div>
                 <h2>Character sheet for {this.state.characterDetails?.name}</h2>
                 <Attributes attributes={this.state.characterDetails?.attributeToStat} />
-                {this.state.characterDetails && <EditableStat character={this.state.characterId} statName="currentHp" prettyName="Current HP" initialValue={this.state.characterDetails?.currentHp} />}
-                {this.state.characterDetails && this.state.characterId && <Weapons weaponList={this.state.characterDetails.weapons} characterId={this.state.characterId} charactersList={this.state.charactersList} />}
+                <BasicStats 
+                    characterDetails={this.state.characterDetails} 
+                    onInitiativeChange={this.updateValue("initiative")}
+                    onHpChange={this.updateValue("currentHp")}
+                    onFpChange={this.updateValue("currentFp")}/>
+                {
+                    this.state.characterDetails && 
+                    this.state.characterId && 
+                    <Weapons 
+                        weaponList={this.state.characterDetails.weapons} 
+                        characterId={this.state.characterId} 
+                        charactersList={this.state.charactersList} />
+                }
                 <button onClick={this.findCharacterDetails}>Refresh</button>
             </div>
         )

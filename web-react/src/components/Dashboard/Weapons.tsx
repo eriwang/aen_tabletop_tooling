@@ -48,16 +48,9 @@ class Weapons extends Component<WeaponsProps, WeaponsState> {
             <div>
                 <table>
                     <thead>
+                    <tr><th colSpan={2}>Basic Attack</th></tr>
                     <tr>
-                        <th colSpan={2}>
-                            Basic Attack
-                        </th>
-                    </tr>
-
-                    <tr>
-                        <th>
-                            Weapon
-                        </th>
+                        <th>Weapon</th>
                         <th>
                             <form onSubmit={this.onSubmit}>
                                 <select name="currentWeapon" value={currentWeapon} placeholder="Weapon" onChange={this.onChange}>
@@ -73,52 +66,28 @@ class Weapons extends Component<WeaponsProps, WeaponsState> {
                     {currentWeapon !== "" &&
                     <tbody>
                     <tr>
-                        <td>
-                            Range
-                        </td>
-                        <td>
-                            {weaponMap.get(currentWeapon).range}
-                        </td>
+                        <td>Range</td>
+                        <td>{weaponMap.get(currentWeapon).range}</td>
                     </tr>
                     <tr>
-                        <td>
-                            Primary Attribute
-                        </td>
-                        <td>
-                            {weaponMap.get(currentWeapon).attribute}
-                        </td>
+                        <td>Primary Attribute</td>
+                        <td>{weaponMap.get(currentWeapon).attribute}</td>
                     </tr>
-                    <tr>
-                        <td>
-                            Attack Type
-                        </td>
-                        <td>
-                            {weaponMap.get(currentWeapon).attackType}
-                        </td>
+                    <tr className="blue">
+                        <td>Attack Type</td>
+                        <td>{weaponMap.get(currentWeapon).attackType}</td>
                     </tr>
-                    <tr>
-                        <td>
-                            To Hit (+ Roll, vs Defenses)
-                        </td>
-                        <td>
-                            ceiling({weaponMap.get(currentWeapon).attribute} * {weaponMap.get(currentWeapon).toHitMultiplier}) - {weaponMap.get(currentWeapon).difficultyClass}
-                        </td>
+                    <tr className="blue">
+                        <td>To Hit <span className="subtext">(+ Roll, vs Defenses)</span></td>
+                        <td>ceiling({weaponMap.get(currentWeapon).attribute} * {weaponMap.get(currentWeapon).toHitMultiplier}) - {weaponMap.get(currentWeapon).difficultyClass}</td>
                     </tr>
-                    <tr>
-                        <td>
-                            Damage (- Resistances)
-                        </td>
-                        <td>
-                            ceiling({weaponMap.get(currentWeapon).attribute} * {weaponMap.get(currentWeapon).damageMultiplier}) + {weaponMap.get(currentWeapon).baseDamage}
-                        </td>
+                    <tr className="orange">
+                        <td>Damage <span className="subtext">(- Resistances)</span></td>
+                        <td>ceiling({weaponMap.get(currentWeapon).attribute} * {weaponMap.get(currentWeapon).damageMultiplier}) + {weaponMap.get(currentWeapon).baseDamage}</td>
                     </tr>
-                    <tr>
-                        <td>
-                            Damage Type
-                        </td>
-                        <td>
-                            {weaponMap.get(currentWeapon).damageType}
-                        </td>
+                    <tr className="orange">
+                        <td>Damage Type</td>
+                        <td>{weaponMap.get(currentWeapon).damageType}</td>
                     </tr>
                     </tbody>
                     }
@@ -215,7 +184,7 @@ class AttackCalculatorBase extends Component<AttackCalculatorProps, AttackCalcul
                     <input name="roll" value={roll} onChange={this.onChange} type="number" min="0" placeholder="Dice Roll"/>
                     <button type="submit">Attack</button>
                     </form>
-                    {this.state.loading && <p>Loading...</p>}
+                    {loading && <p>Loading...</p>}
                     {
                         result && 
                         <div>

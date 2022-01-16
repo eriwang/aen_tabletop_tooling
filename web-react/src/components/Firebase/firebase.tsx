@@ -7,7 +7,9 @@ import {
     sendPasswordResetEmail, 
     updatePassword, 
     signOut, 
-    User 
+    User, 
+    setPersistence,
+    browserLocalPersistence
 } from 'firebase/auth';
 import {
     getFirestore,
@@ -52,7 +54,9 @@ class Firebase {
         createUserWithEmailAndPassword(this.auth, email, password);
 
     doSignInWithEmailAndPassword = (email: string, password: string) =>
-        signInWithEmailAndPassword(this.auth, email, password);
+        setPersistence(this.auth, browserLocalPersistence)
+            .then(() => {return signInWithEmailAndPassword(this.auth, email, password)})
+            .catch(error => console.error(error));
 
     doSignOut = () =>
         signOut(this.auth);
