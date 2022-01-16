@@ -1,4 +1,4 @@
-import { collection, getDocs, setDoc, getFirestore } from 'firebase/firestore';
+import { collection, getDocs, setDoc, getFirestore, doc } from 'firebase/firestore';
 
 import { abilitySchema, AbilityData } from 'ability';
 import { AbilityCategory } from 'base_game_enums';
@@ -56,7 +56,5 @@ run(async () => {
         abilityData.push(docAbilityData);
     });
 
-    abilityData.forEach((d) => {
-        console.log(d);
-    });
+    await Promise.all(abilityData.map((d) => setDoc(doc(db, 'Abilities', d.name), d)));
 });
