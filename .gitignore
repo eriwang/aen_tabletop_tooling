@@ -1,6 +1,5 @@
-# Clasp Files
-.clasp.json
-appsscript.json
+# Firestore Tooling files
+.firestore_tool_token.json
 
 # Node/ Yarn files
 dist/

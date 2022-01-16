@@ -132,6 +132,14 @@ export class Character {
         this.data.currentHp = hp;
     }
 
+    getCurrentFp() : number {
+        return this.data.currentFp;
+    }
+
+    setCurrentFp(fp: number) {
+        this.data.currentFp = fp;
+    }
+
     getWeapons() : WeaponData[] {
         return this.data.weapons;
     }

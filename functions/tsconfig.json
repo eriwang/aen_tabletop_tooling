@@ -16,6 +16,7 @@
         "esModuleInterop": true,
         "downlevelIteration": true,
         "strictNullChecks": true,
-        "strictFunctionTypes": false
+        "strictFunctionTypes": false,
+        "skipLibCheck": true
     }
 }

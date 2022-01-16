@@ -15,8 +15,7 @@ function createDataConverter<Type extends {data: TypeData}, TypeData>
             return t.data;
         },
         fromFirestore: (snapshot: QueryDocumentSnapshot) : Type => {
-            schema.validateSync(snapshot.data());
-            return new t(snapshot.data() as any as TypeData);
+            return new t(schema.validateSync(snapshot.data()) as any as TypeData);
         },
     };
 }
