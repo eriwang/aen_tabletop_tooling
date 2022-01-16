@@ -15,8 +15,8 @@ function rowToDoc(row: any) : ArmorData {
 
     const doc: ArmorData = {
         name: row.Name,
-        resistanceToFlatStat: resistanceToFlatStat,
-        resistanceToPercentStat: resistanceToPercentStat,
+        resistanceToFlat: resistanceToFlatStat,
+        resistanceToPercent: resistanceToPercentStat,
     };
     return armorSchema.validateSync(doc);
 }

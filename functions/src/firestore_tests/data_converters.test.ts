@@ -42,7 +42,7 @@ describe('example data converter', () => {
     });
 
     test('fromFirestore invalid', async () => {
-        delete (testCharacterData.attributeToStat as any).CON;
+        delete (testCharacterData.attributes as any).CON;
         await testCollection.doc('charFromFirestoreInvalid').set(testCharacterData);
         const testDoc = await testCollection
             .doc('charFromFirestoreInvalid')
