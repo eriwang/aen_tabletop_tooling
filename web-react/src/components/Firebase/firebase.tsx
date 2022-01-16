@@ -118,6 +118,18 @@ class Firebase {
         return onSnapshot(doc(this.db, "Character", id), callback);
     }
 
+    addCharactersListener = (callbacks: Map<string, (doc: DocumentSnapshot<DocumentData>) => any>) => {
+        return onSnapshot(collection(this.db, "Character"), snapshot => {
+            snapshot.docChanges().forEach(change => {
+                callbacks.forEach((callbackFn, changeType) => {
+                    if(change.type === changeType) {
+                        callbacks.get(changeType)!(change.doc)
+                    }
+                })
+            })
+        })
+    }
+
     // units = () => collection(this.db, 'Units');
 
     // units = () => {
