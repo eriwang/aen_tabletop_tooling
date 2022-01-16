@@ -57,12 +57,12 @@ export class Profile {
     }
 
     
-    getAttributeStatDiff(attr: Attribute) : number {
-        return this.data.attributeToStatDiff[attr] + this.data.level - 1;
+    getAttributeDiff(attr: Attribute) : number {
+        return this.data.attributeBonuses[attr] + this.data.level - 1;
     }
 
-    getAttributeStatTotal(attr: Attribute) : number{
-        return this.data.attributeToStatDiff[attr] + this.data.level + this.data.unitStats[attr] - 1;
+    getAttributeTotal(attr: Attribute) : number{
+        return this.data.attributeBonuses[attr] + this.data.level + this.data.unitAttributes[attr] - 1;
     }
 
     getClass(): string {
@@ -100,34 +100,34 @@ export class Profile {
 
         switch (skill) {
             case Skills.Endurance:
-                return this.getAttributeStatTotal(Attribute.Constitution) + bonus;
+                return this.getAttributeTotal(Attribute.Constitution) + bonus;
 
             case Skills.Athletics:
-                return this.getAttributeStatTotal(Attribute.Strength) + bonus;
+                return this.getAttributeTotal(Attribute.Strength) + bonus;
 
             case Skills.Acrobatics:
             case Skills.SleightOfHand:
-                return this.getAttributeStatTotal(Attribute.Dexterity) + bonus;
+                return this.getAttributeTotal(Attribute.Dexterity) + bonus;
 
             case Skills.Nature:
             case Skills.Religion:
             case Skills.Medicine:
             case Skills.Stealth: // Should this be wisdom?
             case Skills.Survival:
-                return this.getAttributeStatTotal(Attribute.Wisdom) + bonus;
+                return this.getAttributeTotal(Attribute.Wisdom) + bonus;
 
             case Skills.Arcana:
             case Skills.History:
             case Skills.Investigation:
             case Skills.Culture:
-                 return this.getAttributeStatTotal(Attribute.Intelligence) + bonus;
+                 return this.getAttributeTotal(Attribute.Intelligence) + bonus;
 
             case Skills.Deception:
             case Skills.Intimidation:
             case Skills.Performance:
             case Skills.Persuasion:
             case Skills.Insight:
-                return this.getAttributeStatTotal(Attribute.Charisma) + bonus;
+                return this.getAttributeTotal(Attribute.Charisma) + bonus;
         }
     }
 

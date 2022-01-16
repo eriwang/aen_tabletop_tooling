@@ -33,8 +33,8 @@ async function loadArmor(armor: string) : Promise<ArmorData> {
             noArmor[element] = 0;
         }
         armorData = {} as ArmorData;
-        armorData.resistanceToFlatStat = noArmor;
-        armorData.resistanceToPercentStat = noArmor; 
+        armorData.resistanceToFlat = noArmor;
+        armorData.resistanceToPercent = noArmor; 
     }
     else{
         let data = getNonNull(getNonNull(await armorsCollection.doc(armor).get()).data());
@@ -87,7 +87,7 @@ function calculateAttributes(profileData: Profile) : any{
     const attributes: any = {};
     for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
         attributes[getAbbrevFromAttr(attribute)] =
-            profileData.getAttributeStatTotal(attribute);
+            profileData.getAttributeTotal(attribute);
     }
 
     return attributes;
@@ -138,8 +138,8 @@ export default functions.https.onRequest(async (request, response) =>{
     const maxFP = attributes['INT'] * classData.fpPerInt;
     const characterData: CharacterData = {
         attributes: attributes,
-        resistanceToFlatStat: armorData!.resistanceToFlatStat,
-        resistanceToPercentStat: armorData!.resistanceToPercentStat,
+        resistanceToFlat: armorData!.resistanceToFlat,
+        resistanceToPercent: armorData!.resistanceToPercent,
         maxHp: maxHp,
         currentHp: maxHp,
         maxFP: maxFP,

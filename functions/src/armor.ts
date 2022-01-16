@@ -1,11 +1,8 @@
 import * as yup from 'yup';
 
-import { DamageType } from 'base_game_enums';
-import { enumerateEnumValues, getNonNull } from 'utils';
-
 export const armorSchema = yup.object().shape({
     name: yup.string().required(),
-    resistanceToFlatStat: yup.object().shape({
+    resistanceToFlat: yup.object().shape({
         Slashing: yup.number().required(),
         Bludgeoning: yup.number().required(),
         Piercing: yup.number().required(),
@@ -18,7 +15,7 @@ export const armorSchema = yup.object().shape({
         Necrotic: yup.number().required(),
         Psychic: yup.number().required(),
     }),
-    resistanceToPercentStat: yup.object().shape({
+    resistanceToPercent: yup.object().shape({
         Slashing: yup.number().required(),
         Bludgeoning: yup.number().required(),
         Piercing: yup.number().required(),
@@ -38,16 +35,4 @@ export interface ArmorData extends yup.InferType<typeof armorSchema> {}
 export interface ResistanceStat {
     percent: number;
     flat: number;
-}
-
-export class Armor {
-    data: ArmorData;
-
-    constructor(data: ArmorData) {
-        this.data = data;
-    }
-
-    getResistance(damageType: DamageType) : ResistanceStat {
-        return this.data[damageType];
-    }
 }

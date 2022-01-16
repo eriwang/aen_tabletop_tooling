@@ -27,7 +27,7 @@ export function getCharacterRepr() : CharacterData {
     ];
 
     return {
-        attributeToStat: {
+        attributes: {
             CON: 1,
             STR: 2,
             DEX: 3,
@@ -35,7 +35,7 @@ export function getCharacterRepr() : CharacterData {
             INT: 5,
             CHAR: 6,
         },
-        resistanceToFlatStat: {
+        resistanceToFlat: {
             Slashing: 1,
             Bludgeoning: 2,
             Piercing: 3,
@@ -48,7 +48,7 @@ export function getCharacterRepr() : CharacterData {
             Necrotic: 10,
             Psychic: 11,
         },
-        resistanceToPercentStat: {
+        resistanceToPercent: {
             Slashing: 10,
             Bludgeoning: 20,
             Piercing: 30,

@@ -3,10 +3,10 @@ import * as yup from 'yup';
 import { Unit } from 'unit';
 import { AttackType, Attribute, DamageType, getAbbrevFromAttr } from 'base_game_enums';
 import { Profile } from 'profile';
-import { Armor, ArmorData, ResistanceStat } from 'armor';
 import { enumerateEnumValues } from 'utils';
 import { WeaponData, weaponSchema } from 'weapon';
 import { abilitySchema } from 'ability';
+import { ResistanceStat } from 'armor';
 
 export const characterSchema = yup.object().shape({
     name: yup.string().required(),
@@ -18,7 +18,7 @@ export const characterSchema = yup.object().shape({
         INT: yup.number().required(),
         CHAR: yup.number().required(),
     }),
-    resistanceToFlatStat: yup.object().shape({
+    resistanceToFlat: yup.object().shape({
         Slashing: yup.number().required(),
         Bludgeoning: yup.number().required(),
         Piercing: yup.number().required(),
@@ -31,7 +31,7 @@ export const characterSchema = yup.object().shape({
         Necrotic: yup.number().required(),
         Psychic: yup.number().required(),
     }),
-    resistanceToPercentStat: yup.object().shape({
+    resistanceToPercent: yup.object().shape({
         Slashing: yup.number().required(),
         Bludgeoning: yup.number().required(),
         Piercing: yup.number().required(),
@@ -66,8 +66,8 @@ export const characterSchema = yup.object().shape({
     }),
     maxHp: yup.number().required(),
     currentHp: yup.number().required(),
-    maxFP: yup.number().required(),
-    currentFP: yup.number().required(),
+    maxFp: yup.number().required(),
+    currentFp: yup.number().required(),
     level: yup.number().required(),
     initiative: yup.number().required(),
     cooldowns: yup.string().required(),
@@ -89,14 +89,14 @@ export class Character {
     }
 
     getAttributeStat(attr: Attribute) : number {
-        return (this.data.attributeToStat as any)[getAbbrevFromAttr(attr)];
+        return (this.data.attributes as any)[getAbbrevFromAttr(attr)];
     }
 
     getResistanceStat(dmgType: DamageType) : ResistanceStat {
         const damageTypeStr = DamageType[dmgType];
         return {
-            percent: (this.data.resistanceToPercentStat as any)[damageTypeStr],
-            flat: (this.data.resistanceToFlatStat as any)[damageTypeStr],
+            percent: (this.data.resistanceToPercent as any)[damageTypeStr],
+            flat: (this.data.resistanceToFlat as any)[damageTypeStr],
         };
     }
 

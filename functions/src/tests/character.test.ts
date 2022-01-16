@@ -2,14 +2,13 @@ import { Unit } from 'unit';
 import { AttackType, Attribute, DamageType } from 'base_game_enums';
 import { Character } from 'character';
 import { Profile } from 'profile';
-import { Armor, ResistanceStat } from 'armor';
 import { getCharacterRepr } from 'tests/test_data';
 
 import { when } from 'jest-when';
 
 const mockUnit = { getAttribute: jest.fn(), getHpPerCon: jest.fn().mockReturnValue(10)} as any as Unit;
 const mockArmor = { getResistance: jest.fn() };
-const mockProfile = { getAttributeStatDiff: jest.fn(), getArmor: jest.fn() } as any as Profile;
+const mockProfile = { getAttributeDiff: jest.fn(), getArmor: jest.fn() } as any as Profile;
 
 test('getAttributeStat', () => {
     expect(new Character(getCharacterRepr()).getAttributeStat(Attribute.Dexterity)).toBe(3);
@@ -38,7 +37,7 @@ describe('getEvasiveStat', () => {
         for (const [attr, value] of Object.entries(attrToValue)) {
             // when looping through a js object, attr is a string, we parse out the int version of it for the enum
             when(mockUnit.getAttribute).calledWith(parseInt(attr)).mockReturnValue(value);
-            when(mockProfile.getAttributeStatDiff).calledWith(parseInt(attr)).mockReturnValue(1);
+            when(mockProfile.getAttributeDiff).calledWith(parseInt(attr)).mockReturnValue(1);
         }
 
         const character = Character.build(mockUnit, mockProfile);
