@@ -2,7 +2,7 @@ import { DocumentData, QueryDocumentSnapshot, FirestoreDataConverter} from 'fire
 import * as yup from 'yup';
 
 import { Character, CharacterData, characterSchema } from 'character';
-import { Unit, UnitData, unitSchema } from 'unit';
+import { Profile, ProfileData, profileSchema } from 'profile';
 
 // To create a data converter, you must have a Class, a yup schema, and a yup-generated "ClassData" interface
 function createDataConverter<Type extends {data: TypeData}, TypeData>
@@ -18,4 +18,4 @@ function createDataConverter<Type extends {data: TypeData}, TypeData>
 }
 
 export const characterDataConverter = createDataConverter<Character, CharacterData>(Character, characterSchema);
-export const unitDataConverter = createDataConverter<Unit, UnitData>(Unit, unitSchema);
+export const profileDataConverter = createDataConverter<Profile, ProfileData>(Profile, profileSchema);

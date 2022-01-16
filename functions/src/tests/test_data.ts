@@ -1,3 +1,4 @@
+import { AbilityData } from 'ability';
 import { AttackType, Attribute, DamageType } from 'base_game_enums';
 import { CharacterData } from 'character';
 import { WeaponData } from 'weapon';
@@ -26,9 +27,27 @@ export function getCharacterRepr() : CharacterData {
         },
     ];
 
+    const abilites: AbilityData[] = [
+        {
+            name: 'Splash',
+            category: 'Basic',
+            cooldown: 0,
+            description: 'Splash failed',
+            fpCost: 10,
+            isAttack: true,
+            attribute: 'STR',
+            baseDamage: 0,
+            damageMultiplier: 0,
+            hitDC: 1000,
+            range: 5,
+            attackType: 'Strike',
+            damageType: 'Bludgeoning',
+        }
+    ];
+
     return {
         name: 'nevin_pls',
-        attributeToStat: {
+        attributes: {
             CON: 1,
             STR: 2,
             DEX: 3,
@@ -36,7 +55,7 @@ export function getCharacterRepr() : CharacterData {
             INT: 5,
             CHAR: 6,
         },
-        resistanceToFlatStat: {
+        resistanceToFlat: {
             Slashing: 1,
             Bludgeoning: 2,
             Piercing: 3,
@@ -49,7 +68,7 @@ export function getCharacterRepr() : CharacterData {
             Necrotic: 10,
             Psychic: 11,
         },
-        resistanceToPercentStat: {
+        resistanceToPercent: {
             Slashing: 10,
             Bludgeoning: 20,
             Piercing: 30,
@@ -62,11 +81,40 @@ export function getCharacterRepr() : CharacterData {
             Necrotic: 100,
             Psychic: 110,
         },
+        skills: {
+            Acrobatics: 1,
+            Arcana: 2,
+            Athletics: 3,
+            Culture: 4,
+            Deception: 5,
+            Endurance: 6,
+            History: 7,
+            Insight: 8,
+            Intimidation: 9,
+            Investigation: 10,
+            Medicine: 11,
+            Nature: 12,
+            Performance: 13,
+            Persuasion: 14,
+            Religion: 15,
+            SleightOfHand: 16,
+            Stealth: 17,
+            Survival: 18,
+        },
         maxHp: 100,
         currentHp: 90,
         maxFp: 50,
         currentFp: 40,
+        level: 1,
+        initiative: 0,
+        cooldowns: ' ',
+        statuses: ' ',
+        armor: 'Naked',
+        race: 'Human',
+        class: 'Bandit',
+        movement: 30,
         weapons: weapons,
+        abilities: abilites,
     };
 }
 

@@ -10,3 +10,4 @@ node_modules/
 
 # firebase files
 .firebase
+serviceAccountKey.json

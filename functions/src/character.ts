@@ -1,15 +1,13 @@
 import * as yup from 'yup';
 
-import { Unit } from 'unit';
 import { AttackType, Attribute, DamageType, getAbbrevFromAttr } from 'base_game_enums';
-import { Profile } from 'profile';
-import { ResistanceStat } from 'armor';
-import { enumerateEnumValues } from 'utils';
 import { WeaponData, weaponSchema } from 'weapon';
+import { abilitySchema } from 'ability';
+import { ResistanceStat } from 'armor';
 
 export const characterSchema = yup.object().shape({
     name: yup.string().required(),
-    attributeToStat: yup.object().shape({
+    attributes: yup.object().shape({
         CON: yup.number().required(),
         STR: yup.number().required(),
         DEX: yup.number().required(),
@@ -17,7 +15,7 @@ export const characterSchema = yup.object().shape({
         INT: yup.number().required(),
         CHAR: yup.number().required(),
     }),
-    resistanceToFlatStat: yup.object().shape({
+    resistanceToFlat: yup.object().shape({
         Slashing: yup.number().required(),
         Bludgeoning: yup.number().required(),
         Piercing: yup.number().required(),
@@ -30,7 +28,7 @@ export const characterSchema = yup.object().shape({
         Necrotic: yup.number().required(),
         Psychic: yup.number().required(),
     }),
-    resistanceToPercentStat: yup.object().shape({
+    resistanceToPercent: yup.object().shape({
         Slashing: yup.number().required(),
         Bludgeoning: yup.number().required(),
         Piercing: yup.number().required(),
@@ -42,12 +40,41 @@ export const characterSchema = yup.object().shape({
         Radiant: yup.number().required(),
         Necrotic: yup.number().required(),
         Psychic: yup.number().required(),
+    }),
+    skills: yup.object().shape({
+        Acrobatics: yup.number().required(),
+        Arcana: yup.number().required(),
+        Athletics: yup.number().required(),
+        Culture: yup.number().required(),
+        Deception: yup.number().required(),
+        Endurance: yup.number().required(),
+        History: yup.number().required(),
+        Insight: yup.number().required(),
+        Intimidation: yup.number().required(),
+        Investigation: yup.number().required(),
+        Medicine: yup.number().required(),
+        Nature: yup.number().required(),
+        Performance: yup.number().required(),
+        Persuasion: yup.number().required(),
+        Religion: yup.number().required(),
+        SleightOfHand: yup.number().required(),
+        Stealth: yup.number().required(),
+        Survival: yup.number().required(),
     }),
     maxHp: yup.number().required(),
     currentHp: yup.number().required(),
     maxFp: yup.number().required(),
     currentFp: yup.number().required(),
+    level: yup.number().required(),
+    initiative: yup.number().required(),
+    cooldowns: yup.string().required(),
+    statuses: yup.string().required(),
+    armor: yup.string().required(),
+    race: yup.string().required(),
+    class: yup.string().required(),
+    movement: yup.number().required(),
     weapons: yup.array(weaponSchema).required(),
+    abilities: yup.array(abilitySchema).required(),
 });
 
 export interface CharacterData extends yup.InferType<typeof characterSchema> {}
@@ -59,44 +86,15 @@ export class Character {
         this.data = data;
     }
 
-    static build(unit: Unit, prof: Profile) : Character {
-        const attributeToStat: any = {};
-        for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
-            attributeToStat[getAbbrevFromAttr(attribute)] =
-                unit.getAttribute(attribute) + prof.getAttributeStatDiff(attribute);
-        }
-
-        const resistanceToFlatStat: any = {};
-        const resistanceToPercentStat: any = {};
-        for (const damageType of enumerateEnumValues<DamageType>(DamageType)) {
-            const resStat = prof.getArmor().getResistance(damageType);
-            const damageTypeStr = DamageType[damageType];
-            resistanceToFlatStat[damageTypeStr] = resStat.flat;
-            resistanceToPercentStat[damageTypeStr] = resStat.percent;
-        }
-
-        // For simplicity, set current HP to max HP every time we build a character
-        const maxHp = attributeToStat['CON'] * unit.getHpPerCon();
-        const data = {
-            attributeToStat: attributeToStat,
-            resistanceToFlatStat: resistanceToFlatStat,
-            resistanceToPercentStat: resistanceToPercentStat,
-            maxHp: maxHp,
-            currentHp: maxHp,
-        };
-
-        return new Character(data as any as CharacterData);
-    }
-
     getAttributeStat(attr: Attribute) : number {
-        return (this.data.attributeToStat as any)[getAbbrevFromAttr(attr)];
+        return (this.data.attributes as any)[getAbbrevFromAttr(attr)];
     }
 
     getResistanceStat(dmgType: DamageType) : ResistanceStat {
         const damageTypeStr = DamageType[dmgType];
         return {
-            percent: (this.data.resistanceToPercentStat as any)[damageTypeStr],
-            flat: (this.data.resistanceToFlatStat as any)[damageTypeStr],
+            percent: (this.data.resistanceToPercent as any)[damageTypeStr],
+            flat: (this.data.resistanceToFlat as any)[damageTypeStr],
         };
     }
 
@@ -143,42 +141,4 @@ export class Character {
     getWeapons() : WeaponData[] {
         return this.data.weapons;
     }
-
-    // as of writing, unused and untested
-    // getSkillTotal(skill: Skills) : number {
-    //     let multiplier: number = 4;
-    //     let bonus: number = this.profile.getSkillBonus(skill) * multiplier;
-
-    //     switch (skill) {
-    //         case Skills.Endurance:
-    //             return this.unit.get(Attribute.Constitution) + bonus;
-
-    //         case Skills.Athletics:
-    //             return this.unit.get(Attribute.Strength) + bonus;
-
-    //         case Skills.Acrobatics:
-    //         case Skills.SleightOfHand:
-    //             return this.unit.get(Attribute.Dexterity) + bonus;
-
-    //         case Skills.Nature:
-    //         case Skills.Religion:
-    //         case Skills.Medicine:
-    //         case Skills.Stealth: // Should this be wisdom?
-    //         case Skills.Survival:
-    //             return this.unit.get(Attribute.Wisdom) + bonus;
-
-    //         case Skills.Arcana:
-    //         case Skills.History:
-    //         case Skills.Investigation:
-    //         case Skills.Culture:
-    //             return this.unit.get(Attribute.Intelligence) + bonus;
-
-    //         case Skills.Deception:
-    //         case Skills.Intimidation:
-    //         case Skills.Performance:
-    //         case Skills.Persuasion:
-    //         case Skills.Insight:
-    //             return this.unit.get(Attribute.Charisma) + bonus;
-    //     }
-    // }
 }
