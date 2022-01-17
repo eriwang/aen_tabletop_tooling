@@ -1,13 +1,13 @@
 import { initializeApp } from 'firebase/app';
 import {
-    getAuth, 
-    onAuthStateChanged, 
-    createUserWithEmailAndPassword, 
-    signInWithEmailAndPassword, 
-    sendPasswordResetEmail, 
-    updatePassword, 
-    signOut, 
-    User, 
+    getAuth,
+    onAuthStateChanged,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    sendPasswordResetEmail,
+    updatePassword,
+    signOut,
+    User,
     setPersistence,
     browserLocalPersistence
 } from 'firebase/auth';
@@ -114,9 +114,9 @@ class Firebase {
         })
     }
 
-    updateCharacterData = (id: string, property: string, newValue: any) => 
+    updateCharacterData = (id: string, property: string, newValue: any) =>
         updateDoc(this.character(id), {[property]: isNaN(+newValue) ? newValue : +newValue});
-    
+
 
     addCharacterListener = (id: string, callback: (doc: DocumentSnapshot<DocumentData>) => any) => {
         return onSnapshot(this.character(id), callback);
@@ -147,7 +147,7 @@ class Firebase {
             httpsCallable(this.fn, 'calculateAttack')({
                 attackerId: attackerId,
                 defenderId: defenderId,
-                weaponName: weaponName,
+                attackName: weaponName,
                 roll: roll
             })
                 .then(result => {

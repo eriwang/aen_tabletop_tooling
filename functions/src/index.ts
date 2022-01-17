@@ -9,6 +9,10 @@ TypeScript transpiler will dump everything directly in the same directory.
 import ModuleAlias from 'module-alias';
 ModuleAlias.addPath(__dirname);
 
+import * as admin from 'firebase-admin';
+
 import calculateAttack from 'src_firebase_functions/calculate_attack';
+
+admin.initializeApp();
 
 export { calculateAttack };
