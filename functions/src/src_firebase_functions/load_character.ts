@@ -29,13 +29,8 @@ async function loadArmor(armor: string) : Promise<ArmorData> {
         armorData.resistanceToPercent = noArmor;
     }
     else {
-        try {
-            let data = getNonNull(getNonNull(await armorsCollection.doc(armor).get()).data());
-            armorData = armorSchema.validateSync(data);
-        }
-        catch {
-            throw `Armor "${armor}" was not found`;
-        }
+        let data = getNonNull(getNonNull(await armorsCollection.doc(armor).get()).data());
+        armorData = armorSchema.validateSync(data);
     }
 
     return armorData;
@@ -54,13 +49,8 @@ async function loadWeapons(weapons: string[]) : Promise<WeaponData[]> {
     });
 
     (await Promise.all(resultmap)).forEach(element => {
-        try {
-            let data = getNonNull(element.data());
-            weaponData.push(weaponSchema.validateSync(data));
-        }
-        catch {
-            throw 'Weapon was not found';
-        }
+        let data = getNonNull(element.data());
+        weaponData.push(weaponSchema.validateSync(data));
     });
 
     return weaponData;
@@ -78,13 +68,8 @@ async function loadAbilities(abilities: string[]) : Promise<AbilityData[]> {
     });
 
     (await Promise.all(resultmap)).forEach(element => {
-        try {
-            let data = getNonNull(element.data());
-            abilityData.push(abilitySchema.validateSync(data));
-        }
-        catch {
-            throw 'Ability was not found';
-        }
+        let data = getNonNull(element.data());
+        abilityData.push(abilitySchema.validateSync(data));
     });
 
     return abilityData;

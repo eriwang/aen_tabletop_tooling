@@ -1,4 +1,3 @@
-import { AttackType, Attribute, DamageType, } from 'base_game_enums';
 import { Character } from 'character';
 import { WeaponData } from 'weapon';
 
@@ -6,16 +5,6 @@ interface ToHitResults {
     doesAttackHit: boolean;
     attackerToHit: number;
     defenderEvade: number;
-}
-
-export interface Attack {
-    attribute: Attribute;
-    attackType: AttackType;
-    damageType: DamageType;
-    baseDamage: number;
-    toHitMultiplier: number;
-    damageMultiplier: number;
-    difficultyClass: number;
 }
 
 /*
@@ -31,7 +20,7 @@ export function calculateToHit(roll: number, attacker: Character, defender: Char
         attacker.getAttributeStat(attack.attribute) *
         attack.toHitMultiplier
     );
-    const attackerToHit = attackerToHitScalingFactor - attack.difficultyClass + roll;
+    const attackerToHit = attackerToHitScalingFactor - attack.hitDC + roll;
     const defenderEvade = defender.getEvasiveStatForAttackType(attack.attackType);
 
     return {

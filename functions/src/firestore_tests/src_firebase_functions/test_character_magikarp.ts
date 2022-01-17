@@ -15,7 +15,8 @@ export const flail : WeaponData = {
     baseDamage: 1,
     toHitMultiplier: 2,
     damageMultiplier: 3,
-    difficultyClass: 4,
+    hitDC: 4,
+    range: 0,
 };
 
 export const splash: AbilityData = {
@@ -25,6 +26,7 @@ export const splash: AbilityData = {
     description: 'Splash failed',
     fpCost: 10,
     isAttack: true,
+    toHitMultiplier: 1,
     attribute: 'STR',
     baseDamage: 0,
     damageMultiplier: 0,

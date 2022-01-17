@@ -9,7 +9,8 @@ export const weaponSchema = yup.object().shape({
     baseDamage: yup.number().required(),
     toHitMultiplier: yup.number().required(),
     damageMultiplier: yup.number().required(),
-    difficultyClass: yup.number().required(),
+    hitDC: yup.number().required(),
+    range: yup.number().required(),
 });
 
 export interface WeaponData extends yup.InferType<typeof weaponSchema> {}

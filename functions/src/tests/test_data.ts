@@ -13,7 +13,8 @@ export function getCharacterRepr() : CharacterData {
             baseDamage: 1,
             toHitMultiplier: 2,
             damageMultiplier: 3,
-            difficultyClass: 4,
+            hitDC: 4,
+            range: 0,
         },
         {
             name: 'weapon2',
@@ -23,11 +24,12 @@ export function getCharacterRepr() : CharacterData {
             baseDamage: 5,
             toHitMultiplier: 6,
             damageMultiplier: 7,
-            difficultyClass: 8,
+            hitDC: 8,
+            range: 90,
         },
     ];
 
-    const abilites: AbilityData[] = [
+    const abilities: AbilityData[] = [
         {
             name: 'Splash',
             category: 'Basic',
@@ -38,6 +40,7 @@ export function getCharacterRepr() : CharacterData {
             attribute: 'STR',
             baseDamage: 0,
             damageMultiplier: 0,
+            toHitMultiplier: 1,
             hitDC: 1000,
             range: 5,
             attackType: 'Strike',
@@ -114,7 +117,7 @@ export function getCharacterRepr() : CharacterData {
         class: 'Bandit',
         movement: 30,
         weapons: weapons,
-        abilities: abilites,
+        abilities: abilities,
     };
 }
 

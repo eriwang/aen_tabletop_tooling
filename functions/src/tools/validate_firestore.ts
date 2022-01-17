@@ -32,7 +32,7 @@ run(async () => {
     const COLLECTION_AND_SCHEMAS: [string, Schema][] = [
         ['Abilities', abilitySchema],
         ['Armors', armorSchema],
-        ['Character', characterSchema],
+        ['Characters', characterSchema],
         ['Classes', classSchema],
         ['Profiles', profileSchema],
         ['Races', raceSchema],
