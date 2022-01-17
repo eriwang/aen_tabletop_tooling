@@ -94,9 +94,9 @@ class Firebase {
 
     // *** Character API *** //
 
-    characters = () => collection(this.db, 'Character');
+    characters = () => collection(this.db, 'Characters');
 
-    character = (id: string) => doc(collection(this.db, 'Character'), id);
+    character = (id: string) => doc(collection(this.db, 'Characters'), id);
 
     getCharactersData = () => {
         return new Promise<QuerySnapshot<DocumentData> | undefined>((resolve, reject) => {
@@ -119,15 +119,15 @@ class Firebase {
     
 
     addCharacterListener = (id: string, callback: (doc: DocumentSnapshot<DocumentData>) => any) => {
-        return onSnapshot(doc(this.db, "Character", id), callback);
+        return onSnapshot(this.character(id), callback);
     }
 
     addCharactersListener = (callbacks: Map<string, (doc: DocumentSnapshot<DocumentData>) => any>) => {
-        return onSnapshot(collection(this.db, "Character"), snapshot => {
+        return onSnapshot(this.characters(), snapshot => {
             snapshot.docChanges().forEach(change => {
                 callbacks.forEach((callbackFn, changeType) => {
                     if(change.type === changeType) {
-                        callbacks.get(changeType)!(change.doc)
+                        callbackFn(change.doc)
                     }
                 })
             })

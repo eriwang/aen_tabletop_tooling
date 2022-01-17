@@ -56,7 +56,7 @@ class Abilities extends Component<AbilitiesProps, AbilitiesState> {
         let abilityOptions = this.props.abilityList ? this.props.abilityList
             .map((ability, index) => (
                 <div key={index}>
-                    <input style={{height: "150px"}} type="radio" value={ability.name} id={ability.name} name="currentAbility" onChange={this.onChange} />
+                    <input style={{height: "150px"}} type="radio" value={ability.name} id={ability.name} name="currentAbility" onChange={this.onChange} defaultChecked={index === 0} />
                     <label htmlFor={ability.name}>{ability.name}</label>
                 </div>
             )) : <div></div>;
@@ -74,12 +74,13 @@ class Abilities extends Component<AbilitiesProps, AbilitiesState> {
                         <tr>
                             <td rowSpan={0}>
                                 <div style={{overflowY: "scroll", height: "225px"}}>
-                                <form>
+                                <form onSubmit={this.onSubmit}>
+                                    <button type="submit">Use</button>
                                     {abilityOptions}
                                 </form>
                                 </div>
                             </td>
-                            <td colSpan={2} className="small">{abilityMap.get(currentAbility).category}: {abilityMap.get(currentAbility).description}</td>
+                            <td colSpan={2} className="small">{abilityMap.get(currentAbility).category}: <i>{abilityMap.get(currentAbility).description}</i></td>
                         </tr>
                         <tr>
                             <td>Cooldown</td>
@@ -103,7 +104,7 @@ class Abilities extends Component<AbilitiesProps, AbilitiesState> {
                         </tr>
                         <tr className="blue">
                             <td>To Hit <span className="subtext">(+ Roll, vs Defenses)</span></td>
-                            <td>ceiling({abilityMap.get(currentAbility).attribute} * {abilityMap.get(currentAbility).toHitMultiplier}) - {abilityMap.get(currentAbility).difficultyClass}</td>
+                            <td>ceiling({abilityMap.get(currentAbility).attribute} * {abilityMap.get(currentAbility).toHitMultiplier}) - {abilityMap.get(currentAbility).hitDC}</td>
                         </tr>
                         <tr className="orange">
                             <td>Damage <span className="subtext">(- Resistances)</span></td>

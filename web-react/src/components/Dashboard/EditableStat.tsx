@@ -14,7 +14,7 @@ class EditableStat extends Component<EditableStatProps, EditableStatState> {
     constructor(props: any) {
         super(props);
 
-        console.log(this.props.initialValue);
+        //console.log(this.props.initialValue);
         this.state = {value: this.props.initialValue}
     }
 
@@ -35,7 +35,7 @@ class EditableStat extends Component<EditableStatProps, EditableStatState> {
         return (
             <div>
                 <form onSubmit={this.onSubmit}>
-                    <input name="value" value={value || '?'} onChange={this.onChange} type={this.props.type} />
+                    <input name="value" value={value} onChange={this.onChange} type={this.props.type} />
                     <button type="submit">Update</button>
                 </form>
             </div>

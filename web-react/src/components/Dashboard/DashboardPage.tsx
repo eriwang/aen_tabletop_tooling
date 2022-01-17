@@ -95,7 +95,8 @@ class CharacterSheetBase extends Component<CharacterSheetProps, CharacterSheetSt
         return (
             <div>
                 <h2>Character sheet for {this.state.characterDetails?.name}</h2>
-                <Attributes attributes={this.state.characterDetails?.attributeToStat} />
+                <h3>{this.state.characterDetails?.race} {this.state.characterDetails?.class}</h3>
+                <Attributes attributes={this.state.characterDetails?.attributes} />
                 <BasicStats 
                     characterDetails={this.state.characterDetails} 
                     onInitiativeChange={this.updateValue("initiative")}
