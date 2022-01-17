@@ -30,6 +30,7 @@
       "react-app",
       "react-app/jest"
     ],
+    "rules": {"linebreak-style": ["error", "unix"]},
     "ignorePatterns": ["**/dist/**", "**/build/**"]
   },
   "browserslist": {
