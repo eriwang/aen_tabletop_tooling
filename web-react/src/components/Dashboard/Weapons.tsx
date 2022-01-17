@@ -23,7 +23,11 @@ class Weapons extends Component<WeaponsProps, WeaponsState> {
         this.props.weaponList.forEach(weapon => {
             weaponMap.set(weapon.name, weapon);
         });
-        this.state = {weaponMap: weaponMap, currentWeapon: "", showCalculator: false};
+        this.state = {
+            weaponMap: weaponMap, 
+            currentWeapon: this.props.weaponList.length > 0 ? this.props.weaponList[0].name : "", 
+            showCalculator: false
+        };
     }
 
     onChange = (event: ChangeEvent) => {
@@ -58,7 +62,7 @@ class Weapons extends Component<WeaponsProps, WeaponsState> {
                         <th>
                             <form onSubmit={this.onSubmit}>
                                 <select name="currentWeapon" value={currentWeapon} placeholder="Weapon" onChange={this.onChange}>
-                                    <option value={""} key="Not selected"></option>
+                                    <option value={""} key="Not selected">Select a weapon</option>
                                     {weaponOptions}
                                 </select>
                                 <button type="submit">Use</button>

@@ -146,7 +146,7 @@ class CharacterSelectionBase extends Component<CharacterSelectionProps, Characte
                 <p><strong>Character:</strong></p>
                 <form onSubmit={this.onSubmit}>
                     <select name="character" value={character} placeholder="Character" onChange={this.onChange}>
-                        <option value={""} key="Not selected"></option>
+                        <option value={""} key="Not selected">Select a Character</option>
                         {characterOptions}
                     </select>
                     <button type="submit">Select</button>
