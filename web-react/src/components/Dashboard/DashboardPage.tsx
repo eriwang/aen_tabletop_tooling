@@ -1,7 +1,7 @@
 import { User } from "firebase/auth";
 import { DocumentData, DocumentSnapshot, Unsubscribe } from "firebase/firestore";
 import React, { Component } from "react";
-import { Abilities, Attributes, BasicStats, Weapons } from ".";
+import { Abilities, Armors, Attributes, BasicStats, Defenses, EditableField, Skills, Weapons } from ".";
 import Firebase, { withFirebase } from "../Firebase";
 import { withUser } from "../Session";
 
@@ -96,29 +96,65 @@ class CharacterSheetBase extends Component<CharacterSheetProps, CharacterSheetSt
             <div>
                 <h2>Character sheet for {this.state.characterDetails?.name}</h2>
                 <h3>{this.state.characterDetails?.race} {this.state.characterDetails?.class}</h3>
-                <Attributes attributes={this.state.characterDetails?.attributes} />
-                <BasicStats 
-                    characterDetails={this.state.characterDetails} 
-                    onInitiativeChange={this.updateValue("initiative")}
-                    onHpChange={this.updateValue("currentHp")}
-                    onFpChange={this.updateValue("currentFp")}/>
-                {
-                    this.state.characterDetails && 
-                    this.state.characterId && 
-                    <Weapons 
-                        weaponList={this.state.characterDetails.weapons} 
-                        characterId={this.state.characterId} 
-                        charactersList={this.state.charactersList} />
-                }
-                {
-                    this.state.characterDetails && 
-                    this.state.characterId && 
-                    <Abilities 
-                        abilityList={this.state.characterDetails.abilities} 
-                        characterId={this.state.characterId} 
-                        charactersList={this.state.charactersList} />
-                }
                 <button onClick={this.findCharacterDetails}>Refresh</button>
+                <hr />
+                <div className="charSheet">
+                    <Attributes attributes={this.state.characterDetails?.attributes} />
+                    <BasicStats 
+                        characterDetails={this.state.characterDetails} 
+                        onInitiativeChange={this.updateValue("initiative")}
+                        onHpChange={this.updateValue("currentHp")}
+                        onFpChange={this.updateValue("currentFp")}/>
+                    {
+                        this.state.characterDetails && 
+                        this.state.characterId && 
+                        <Weapons 
+                            weaponList={this.state.characterDetails.weapons} 
+                            characterId={this.state.characterId} 
+                            charactersList={this.state.charactersList} />
+                    }
+                    {
+                        this.state.characterDetails && 
+                        this.state.characterId && 
+                        <Abilities 
+                            abilityList={this.state.characterDetails.abilities} 
+                            characterId={this.state.characterId} 
+                            charactersList={this.state.charactersList} />
+                    }
+                    {
+                        this.state.characterDetails &&
+                        <div>
+                        <div>
+                            <p><strong>Cooldowns</strong></p>
+                            <EditableField 
+                                initialValue={this.state.characterDetails.cooldowns} 
+                                onSubmit={this.updateValue("cooldowns")} />
+                        </div>
+                        <div>
+                            <p><strong>Statuses</strong></p>
+                            <EditableField 
+                                initialValue={this.state.characterDetails.statuses} 
+                                onSubmit={this.updateValue("statuses")} />
+                        </div>
+                        </div>
+                    }
+                    {
+                        this.state.characterDetails &&
+                        <Armors 
+                            armorName={this.state.characterDetails.armor} 
+                            resistances={this.state.characterDetails.resistanceToFlat} />
+                    }
+                    {
+                        this.state.characterDetails &&
+                        <Defenses 
+                            attributes={this.state.characterDetails.attributes} />
+                    }
+                    {
+                        this.state.characterDetails &&
+                        <Skills 
+                            skills={this.state.characterDetails.skills} />
+                    }
+                </div>
             </div>
         )
     }

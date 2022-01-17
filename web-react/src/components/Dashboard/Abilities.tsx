@@ -75,8 +75,9 @@ class Abilities extends Component<AbilitiesProps, AbilitiesState> {
                             <td rowSpan={0}>
                                 <div style={{overflowY: "scroll", height: "225px"}}>
                                 <form onSubmit={this.onSubmit}>
-                                    <button type="submit">Use</button>
                                     {abilityOptions}
+                                    <hr />
+                                    <button type="submit">Use</button>
                                 </form>
                                 </div>
                             </td>

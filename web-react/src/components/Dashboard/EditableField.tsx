@@ -1,16 +1,15 @@
 import { ChangeEvent, Component, FormEvent } from "react";
 
-interface EditableStatProps {
+interface EditableFieldProps {
     initialValue: any;
-    type: string;
     onSubmit: ((newValue: string) => any);
 }
 
-interface EditableStatState {
+interface EditableFieldState {
     value: any;
 }
 
-class EditableStat extends Component<EditableStatProps, EditableStatState> {
+class EditableField extends Component<EditableFieldProps, EditableFieldState> {
     constructor(props: any) {
         super(props);
 
@@ -18,7 +17,7 @@ class EditableStat extends Component<EditableStatProps, EditableStatState> {
         this.state = {value: this.props.initialValue}
     }
 
-    componentDidUpdate = (prevProps: EditableStatProps, prevState: EditableStatState) => {
+    componentDidUpdate = (prevProps: EditableFieldProps, prevState: EditableFieldState) => {
         if(this.state.value !== this.props.initialValue) {
             this.setState({value: this.props.initialValue});
         }
@@ -31,7 +30,7 @@ class EditableStat extends Component<EditableStatProps, EditableStatState> {
 
     onChange = (event: ChangeEvent) => {
         const target = event.target as HTMLTextAreaElement;
-        const newState = { [target.name]: target.value } as Pick<EditableStatState, "value">
+        const newState = { [target.name]: target.value } as Pick<EditableFieldState, "value">
         this.setState(newState);
     }
 
@@ -41,7 +40,7 @@ class EditableStat extends Component<EditableStatProps, EditableStatState> {
         return (
             <div>
                 <form onSubmit={this.onSubmit}>
-                    <input name="value" value={value} onChange={this.onChange} type={this.props.type} />
+                    <textarea name="value" value={value} rows={8} onChange={this.onChange} />
                     <button type="submit">Update</button>
                 </form>
             </div>
@@ -49,4 +48,4 @@ class EditableStat extends Component<EditableStatProps, EditableStatState> {
     }
 }
 
-export default EditableStat
+export default EditableField
