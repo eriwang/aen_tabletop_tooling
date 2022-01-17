@@ -4,7 +4,7 @@
       "yarn lint",
       "yarn --cwd $Env:RESOURCE_DIR build"
     ],
-    "source": "functions"
+    "source": "functions/dist"
   },
   "hosting": {
     "public": "web-react/build",
