@@ -1,8 +1,8 @@
 {
   "functions": {
     "predeploy": [
-      "yarn run lint",
-      "yarn --cwd $Env:RESOURCE_DIR run build"
+      "yarn lint",
+      "yarn --cwd $Env:RESOURCE_DIR build"
     ],
     "source": "functions"
   },
