@@ -18,13 +18,14 @@ response: {
     damage: number,
 }
  */
+
 export default functions.https.onCall(async (data) => {
     const attackerId = data.attackerId as string;
     const defenderId = data.defenderId as string;
     const weaponName = data.weaponName as string;
     const roll = parseInt(data.roll as string);
 
-    const charCollection = admin.firestore().collection('Character');
+    const charCollection = admin.firestore().collection('Characters');
     const [attackerDoc, defenderDoc] = await admin.firestore().getAll(
         charCollection.doc(attackerId), charCollection.doc(defenderId)
     );
