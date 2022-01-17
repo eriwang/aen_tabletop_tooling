@@ -23,7 +23,7 @@ beforeAll(async () => {
     admin.initializeApp();
     testEnv = await initializeTestEnvironment({});
     await testEnv.clearFirestore();
-    testCollection = admin.firestore().collection('character');
+    testCollection = admin.firestore().collection('Characters');
 });
 
 beforeEach(() => {
