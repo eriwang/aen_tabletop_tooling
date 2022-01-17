@@ -2,7 +2,6 @@ import { ChangeEvent, Component, FormEvent } from "react";
 
 interface EditableStatProps {
     initialValue: any;
-    type: string;
     onSubmit: ((newValue: string) => any);
 }
 
@@ -19,7 +18,7 @@ class EditableStat extends Component<EditableStatProps, EditableStatState> {
     }
 
     componentDidUpdate = (prevProps: EditableStatProps, prevState: EditableStatState) => {
-        if(this.state.value !== this.props.initialValue) {
+        if(prevProps.initialValue !== this.props.initialValue) {
             this.setState({value: this.props.initialValue});
         }
     }
@@ -41,7 +40,7 @@ class EditableStat extends Component<EditableStatProps, EditableStatState> {
         return (
             <div>
                 <form onSubmit={this.onSubmit}>
-                    <input name="value" value={value} onChange={this.onChange} type={this.props.type} />
+                    <input name="value" value={value} onChange={this.onChange} type="number" />
                     <button type="submit">Update</button>
                 </form>
             </div>
