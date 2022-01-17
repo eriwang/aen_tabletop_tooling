@@ -1,66 +1,17 @@
 import * as yup from 'yup';
 
-import { AttackType, Attribute, DamageType, getAbbrevFromAttr } from 'base_game_enums';
+import { AttackType, Attribute, DamageType } from 'base_game_enums';
 import { WeaponData, weaponSchema } from 'weapon';
 import { abilitySchema } from 'ability';
 import { ResistanceStat } from 'armor';
+import { attributesSchema, resistancesSchema, skillsSchema } from 'schemas';
 
 export const characterSchema = yup.object().shape({
     name: yup.string().required(),
-    attributes: yup.object().shape({
-        CON: yup.number().required(),
-        STR: yup.number().required(),
-        DEX: yup.number().required(),
-        WIS: yup.number().required(),
-        INT: yup.number().required(),
-        CHAR: yup.number().required(),
-    }),
-    resistanceToFlat: yup.object().shape({
-        Slashing: yup.number().required(),
-        Bludgeoning: yup.number().required(),
-        Piercing: yup.number().required(),
-        Fire: yup.number().required(),
-        Water: yup.number().required(),
-        Air: yup.number().required(),
-        Earth: yup.number().required(),
-        Poison: yup.number().required(),
-        Radiant: yup.number().required(),
-        Necrotic: yup.number().required(),
-        Psychic: yup.number().required(),
-    }),
-    resistanceToPercent: yup.object().shape({
-        Slashing: yup.number().required(),
-        Bludgeoning: yup.number().required(),
-        Piercing: yup.number().required(),
-        Fire: yup.number().required(),
-        Water: yup.number().required(),
-        Air: yup.number().required(),
-        Earth: yup.number().required(),
-        Poison: yup.number().required(),
-        Radiant: yup.number().required(),
-        Necrotic: yup.number().required(),
-        Psychic: yup.number().required(),
-    }),
-    skills: yup.object().shape({
-        Acrobatics: yup.number().required(),
-        Arcana: yup.number().required(),
-        Athletics: yup.number().required(),
-        Culture: yup.number().required(),
-        Deception: yup.number().required(),
-        Endurance: yup.number().required(),
-        History: yup.number().required(),
-        Insight: yup.number().required(),
-        Intimidation: yup.number().required(),
-        Investigation: yup.number().required(),
-        Medicine: yup.number().required(),
-        Nature: yup.number().required(),
-        Performance: yup.number().required(),
-        Persuasion: yup.number().required(),
-        Religion: yup.number().required(),
-        SleightOfHand: yup.number().required(),
-        Stealth: yup.number().required(),
-        Survival: yup.number().required(),
-    }),
+    attributes: attributesSchema,
+    resistanceToFlat: resistancesSchema,
+    resistanceToPercent: resistancesSchema,
+    skills: skillsSchema,
     maxHp: yup.number().required(),
     currentHp: yup.number().required(),
     maxFp: yup.number().required(),
@@ -87,7 +38,7 @@ export class Character {
     }
 
     getAttributeStat(attr: Attribute) : number {
-        return (this.data.attributes as any)[getAbbrevFromAttr(attr)];
+        return this.data.attributes[attr];
     }
 
     getResistanceStat(dmgType: DamageType) : ResistanceStat {
@@ -102,13 +53,13 @@ export class Character {
         let statSum: number;
         switch (atkType) {
             case AttackType.Strike:  // fortitude
-                statSum = this.getAttributeStat(Attribute.Constitution) + this.getAttributeStat(Attribute.Strength);
+                statSum = this.getAttributeStat(Attribute.CON) + this.getAttributeStat(Attribute.STR);
                 break;
             case AttackType.Projectile:  // reflex
-                statSum = this.getAttributeStat(Attribute.Dexterity) + this.getAttributeStat(Attribute.Wisdom);
+                statSum = this.getAttributeStat(Attribute.DEX) + this.getAttributeStat(Attribute.WIS);
                 break;
             case AttackType.Curse:  // willpower
-                statSum = this.getAttributeStat(Attribute.Intelligence) + this.getAttributeStat(Attribute.Charisma);
+                statSum = this.getAttributeStat(Attribute.INT) + this.getAttributeStat(Attribute.CHAR);
                 break;
 
             default:

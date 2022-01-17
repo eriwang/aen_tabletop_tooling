@@ -6,7 +6,7 @@ export function enumerateEnumValues<EnumClass>(enumClass: any) : EnumClass[] {
 
 export function getNonNull<T>(value: T | null | undefined) : T {
     if (value === null || value === undefined) {
-        throw `Expected nonNull value, but receieved ${value}`;
+        throw new Error(`Expected nonNull value, but receieved ${value}`);
     }
     return value!;
 }

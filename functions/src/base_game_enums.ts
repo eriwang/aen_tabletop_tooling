@@ -1,98 +1,58 @@
 // Note, the name for this file is pretty arbitrary, it could be named better
 export enum Attribute {
-    Constitution,
-    Strength,
-    Dexterity,
-    Wisdom,
-    Intelligence,
-    Charisma,
-}
-
-export function getAbbrevFromAttr(attr: Attribute) : string {
-    switch (attr) {
-        case Attribute.Constitution:
-            return 'CON';
-        case Attribute.Strength:
-            return 'STR';
-        case Attribute.Dexterity:
-            return 'DEX';
-        case Attribute.Wisdom:
-            return 'WIS';
-        case Attribute.Intelligence:
-            return 'INT';
-        case Attribute.Charisma:
-            return 'CHAR';
-
-        default:
-            throw `Unknown attribute ${attr}`;
-    }
-}
-
-export function getAttrFromAbbrev(abbrev: string) : Attribute {
-    switch (abbrev) {
-        case 'CON':
-            return Attribute.Constitution;
-        case 'STR':
-            return Attribute.Strength;
-        case 'DEX':
-            return Attribute.Dexterity;
-        case 'WIS':
-            return Attribute.Wisdom;
-        case 'INT':
-            return Attribute.Intelligence;
-        case 'CHAR':
-            return Attribute.Charisma;
-
-        default:
-            throw `Unknown abbrev ${abbrev}`;
-    }
+    CON = 'CON',
+    STR = 'STR',
+    DEX = 'DEX',
+    WIS = 'WIS',
+    INT = 'INT',
+    CHAR = 'CHAR',
 }
 
 export enum AttackType {
-    Strike,
-    Projectile,
-    Curse,
+    Strike = 'Strike',
+    Projectile = 'Projectile',
+    Curse = 'Curse',
 }
 
 export enum EvasiveStatType {
-    Fortitude,
-    Reflex,
-    Willpower,
+    Fortitude = 'Fortitude',
+    Reflex = 'Reflex',
+    Willpower = 'Willpower',
 }
 
 export enum DamageType {
-    Slashing,
-    Bludgeoning,
-    Piercing,
-    Fire,
-    Water,
-    Air,
-    Earth,
-    Poison,
-    Radiant,
-    Necrotic,
-    Psychic,
+    Slashing = 'Slashing',
+    Bludgeoning = 'Bludgeoning',
+    Piercing = 'Piercing',
+    Fire = 'Fire',
+    Water = 'Water',
+    Air = 'Air',
+    Earth = 'Earth',
+    Poison = 'Poison',
+    Radiant = 'Radiant',
+    Necrotic = 'Necrotic',
+    Psychic = 'Psychic',
 }
 
 export enum Skills {
-    Endurance,
-    Athletics,
-    Acrobatics,
-    SleightOfHand,
-    Nature,
-    Religion,
-    Medicine,
-    Stealth,
-    Survival,
-    Arcana,
-    History,
-    Investigation,
-    Culture,
-    Deception,
-    Intimidation,
-    Performance,
-    Persuasion,
-    Insight,
+    Endurance = 'Endurance',
+    Athletics = 'Athletics',
+    Acrobatics = 'Acrobatics',
+    SleightOfHand = 'SleightOfHand',
+    Nature = 'Nature',
+    Religion = 'Religion',
+    Medicine = 'Medicine',
+    Stealth = 'Stealth',
+    Survival = 'Survival',
+    Arcana = 'Arcana',
+    History = 'History',
+    Investigation = 'Investigation',
+    Culture = 'Culture',
+    Deception = 'Deception',
+    Intimidation = 'Intimidation',
+    Performance = 'Performance',
+    Persuasion = 'Persuasion',
+    Insight = 'Insight',
 }
 
 export enum AbilityCategory {
