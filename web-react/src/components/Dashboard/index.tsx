@@ -4,6 +4,7 @@ import AttackCalculator from "./AttackCalculator";
 import Attributes from "./Attributes";
 import BasicStats from "./BasicStats";
 import DashboardPage from "./DashboardPage";
+import Defenses from "./Defenses";
 import EditableField from "./EditableField";
 import EditableStat from "./EditableStat";
 import Weapons from "./Weapons";
@@ -18,5 +19,6 @@ export {
     AttackCalculator, 
     Abilities,
     EditableField,
-    Armors
+    Armors,
+    Defenses
  }
