@@ -1,0 +1,90 @@
+body {
+  margin: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Josefin Sans', 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.cover {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  background-color: rgba(1, 1, 1, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background-color: white;
+  padding: 5%;
+}
+
+/** Font Classes **/
+
+.subtext {
+  color: grey;
+  font-size: 12px;
+  vertical-align: bottom;
+}
+
+.small {
+  font-size: 12px;
+}
+
+/** Table Styles **/
+
+table {
+  border: 4px solid black;
+  border-collapse: collapse;
+  background-color: #f3f3f3;
+}
+
+thead > tr {
+  border: 2px solid black;
+  background-color: #d9d9d9;
+}
+
+td, th {
+  border: 1px solid black;
+  padding: 4px 12px;
+}
+
+/** Form Styles **/
+
+button, input, select, option {
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+input[type="radio"] {
+  display: none;
+}
+
+input[type="radio"]+label{
+  padding: 5px 10px;
+  display: block;
+}
+
+input[type="radio"]:checked+label {
+  background-color: #d9d2e9;
+}
+
+/** Color Classes **/
+
+.blue {
+  background-color: #cfe2f3;
+}
+
+.orange {
+  background-color: #fce5cd;
+}

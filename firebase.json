@@ -2,9 +2,23 @@
   "functions": {
     "predeploy": [
       "yarn run lint",
-      "yarn --cwd \"$RESOURCE_DIR\" run build"
+      "yarn --cwd $Env:RESOURCE_DIR run build"
     ],
     "source": "functions"
+  },
+  "hosting": {
+    "public": "web-react/build",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
   },
   "firestore": {
     "rules": "firestore.rules",

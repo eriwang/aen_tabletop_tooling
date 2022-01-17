@@ -18,22 +18,23 @@ response: {
     damage: number,
 }
  */
-export default functions.https.onRequest(async (request, response) => {
-    const attackerId = request.query.attackerId as string;
-    const defenderId = request.query.defenderId as string;
-    const weaponName = request.query.weaponName as string;
-    const roll = parseInt(request.query.roll as string);
 
-    const charCollection = admin.firestore().collection('character');
+export default functions.https.onCall(async (data) => {
+    const attackerId = data.attackerId as string;
+    const defenderId = data.defenderId as string;
+    const weaponName = data.weaponName as string;
+    const roll = parseInt(data.roll as string);
+
+    const charCollection = admin.firestore().collection('Characters');
     const [attackerDoc, defenderDoc] = await admin.firestore().getAll(
         charCollection.doc(attackerId), charCollection.doc(defenderId)
     );
 
     if (attackerDoc.data() === undefined) {
-        throw `Could not find attacker with id ${attackerId}`;
+        throw new functions.https.HttpsError('invalid-argument', `Could not find attacker with id ${attackerId}`);
     }
     if (defenderDoc.data() === undefined) {
-        throw `Could not find defender with id ${attackerId}`;
+        throw new functions.https.HttpsError('invalid-argument', `Could not find defender with id ${defenderId}`);
     }
 
     const attacker = characterDataConverter.fromFirestore(attackerDoc as admin.firestore.QueryDocumentSnapshot);
@@ -48,16 +49,19 @@ export default functions.https.onRequest(async (request, response) => {
     }
 
     if (weapon === null) {
-        throw `Could not find weapon on attacker with name ${weaponName}`;
+        throw new functions.https.HttpsError(
+            'invalid-argument', 
+            `Could not find weapon on attacker with name ${weaponName}`
+        );
     }
 
     const toHitResult = calculateToHit(roll, attacker, defender, weapon);
     const damage = calculateDamage(attacker, defender, weapon);
 
-    response.send({
+    return {
         doesAttackHit: toHitResult.doesAttackHit,
         attackerToHit: toHitResult.attackerToHit,
         defenderEvade: toHitResult.defenderEvade,
         damage: damage,
-    });
+    };
 });
