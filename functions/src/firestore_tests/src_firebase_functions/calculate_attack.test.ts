@@ -1,7 +1,6 @@
 import calculateAttack from 'src_firebase_functions/calculate_attack';
 
 import * as admin from 'firebase-admin';
-import * as functions from 'firebase-functions';
 import test from 'firebase-functions-test';
 import { initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules-unit-testing';
 
@@ -17,7 +16,6 @@ let testWeapon: WeaponData;
 let testData: {
     [key: string]: string | number,
 };
-const testResponse = { send: jest.fn() } as any as functions.Response;
 
 const wrapped = test().wrap(calculateAttack);
 
