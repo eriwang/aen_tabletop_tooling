@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 
 import { AttackType, Attribute, DamageType } from 'base_game_enums';
-import { WeaponData, weaponSchema } from 'weapon';
+import { weaponSchema } from 'weapon';
 import { abilitySchema } from 'ability';
 import { ResistanceStat } from 'armor';
 import { attributesSchema, resistancesSchema, skillsSchema } from 'schemas';
@@ -87,9 +87,5 @@ export class Character {
 
     setCurrentFp(fp: number) {
         this.data.currentFp = fp;
-    }
-
-    getWeapons() : WeaponData[] {
-        return this.data.weapons;
     }
 }
