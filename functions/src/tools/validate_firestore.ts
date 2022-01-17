@@ -4,6 +4,7 @@ import { Schema } from 'yup';
 import { abilitySchema } from 'ability';
 import { armorSchema } from 'armor';
 import { characterSchema } from 'character';
+import { classSchema } from 'class';
 import { profileSchema } from 'profile';
 import { raceSchema } from 'race';
 import { weaponSchema } from 'weapon';
@@ -32,6 +33,7 @@ run(async () => {
         ['Abilities', abilitySchema],
         ['Armors', armorSchema],
         ['Character', characterSchema],
+        ['Classes', classSchema],
         ['Profiles', profileSchema],
         ['Races', raceSchema],
         ['Weapons', weaponSchema],
@@ -49,11 +51,11 @@ run(async () => {
         return;
     }
 
-    console.error('\n\n===SUMMARY===\n');
+    console.error('\n===SUMMARY===\n');
 
     collectionErrorCounts.forEach((collectionErrorCount) => {
         console.error(`Collection "${collectionErrorCount[0]}" has ${collectionErrorCount[1]} errors.`);
     });
 
-    console.error('\n');
+    console.error('');
 });

@@ -69,6 +69,7 @@ export const fish : RaceData = {
 };
 
 export const pokemon : ClassData = {
+    name: 'Pokemon',
     hpPerCon: 1,
     fpPerInt: 1,
 };
