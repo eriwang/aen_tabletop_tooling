@@ -51,17 +51,17 @@ afterAll(async () => {
 
 it('attacker does not exist', async () => {
     await testCollection.doc('attacker').delete();
-    await expect(wrapped(testData)).rejects.toMatch('Could not find attacker');
+    await expect(wrapped(testData)).rejects.toThrow('Could not find attacker');
 });
 
 it('defender does not exist', async () => {
     await testCollection.doc('defender').delete();
-    await expect(wrapped(testData)).rejects.toMatch('Could not find defender');
+    await expect(wrapped(testData)).rejects.toThrow('Could not find defender');
 });
 
 it('weaponId does not exist on attacker', async () => {
     testData.attackerId = 'defender';
-    await expect(wrapped(testData)).rejects.toMatch('Could not find weapon');
+    await expect(wrapped(testData)).rejects.toThrow('Could not find weapon');
 });
 
 it('calls downstream and sends correct response', async () => {
