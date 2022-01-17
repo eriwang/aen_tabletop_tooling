@@ -3,6 +3,8 @@ import { collection, getDocs, setDoc, getFirestore, doc, QueryDocumentSnapshot, 
 
 import { ClassData, classSchema } from 'class';
 import { run } from 'tools/firestore_tool';
+import { abilitySchema } from 'ability';
+import { weaponSchema } from 'weapon';
 
 /*
 To use this script, modify code at the top of this file to suit your use case, then run using
@@ -12,19 +14,23 @@ For simplicity in this side project, we'll just keep on changing this file whene
 aren't too concerned about what schemas used to look like.
 A better practice might be to have dedicated migration scripts for each migration to track what changed.
 */
-const SOURCE_COLLECTION_NAME = 'Classes';
-const DEST_COLLECTION_NAME = 'Classes';
-const DEST_SCHEMA = classSchema;
+const SOURCE_COLLECTION_NAME = 'Weapons';
+const DEST_COLLECTION_NAME = 'Weapons';
+const DEST_SCHEMA = weaponSchema;
 
 function convertDocToTarget(doc: QueryDocumentSnapshot<DocumentData>) : any {
     const data = doc.data();
-    const destData: ClassData = {
-        name: doc.id,
-        hpPerCon: data['HP/CON'],
-        fpPerInt: (data['FP/CON']) ? data['FP/CON'] : data['FP/INT'],  // there's a typo in the db
-    };
+    data.hitDC = data.difficultyClass;
+    data.range = 0;
+    delete data.difficultyClass;
 
-    return DEST_SCHEMA.validateSync(destData);
+    // const destData: ClassData = {
+    //     name: doc.id,
+    //     hpPerCon: data['HP/CON'],
+    //     fpPerInt: (data['FP/CON']) ? data['FP/CON'] : data['FP/INT'],  // there's a typo in the db
+    // };
+
+    return DEST_SCHEMA.validateSync(data);
 }
 
 /*
