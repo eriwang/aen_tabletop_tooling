@@ -1,7 +1,7 @@
 import { User } from "firebase/auth";
 import { DocumentData, DocumentSnapshot, Unsubscribe } from "firebase/firestore";
 import React, { Component } from "react";
-import { Abilities, Armors, Attributes, BasicStats, Defenses, EditableField, Weapons } from ".";
+import { Abilities, Armors, Attributes, BasicStats, Defenses, EditableField, Skills, Weapons } from ".";
 import Firebase, { withFirebase } from "../Firebase";
 import { withUser } from "../Session";
 
@@ -148,6 +148,11 @@ class CharacterSheetBase extends Component<CharacterSheetProps, CharacterSheetSt
                         this.state.characterDetails &&
                         <Defenses 
                             attributes={this.state.characterDetails.attributes} />
+                    }
+                    {
+                        this.state.characterDetails &&
+                        <Skills 
+                            skills={this.state.characterDetails.skills} />
                     }
                 </div>
             </div>

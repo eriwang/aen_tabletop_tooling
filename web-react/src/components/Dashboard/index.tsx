@@ -7,6 +7,7 @@ import DashboardPage from "./DashboardPage";
 import Defenses from "./Defenses";
 import EditableField from "./EditableField";
 import EditableStat from "./EditableStat";
+import Skills from "./Skills";
 import Weapons from "./Weapons";
 
 export default DashboardPage
@@ -20,5 +21,6 @@ export {
     Abilities,
     EditableField,
     Armors,
-    Defenses
+    Defenses,
+    Skills
  }

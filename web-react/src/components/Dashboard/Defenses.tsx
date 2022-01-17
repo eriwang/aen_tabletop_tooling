@@ -1,4 +1,4 @@
-import { ChangeEvent, Component, FormEvent } from "react";
+import { Component } from "react";
 
 interface DefensesProps {
     attributes: {[key: string]: number}
