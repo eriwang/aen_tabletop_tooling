@@ -1,9 +1,7 @@
 import { collection, getDocs, setDoc, getFirestore, doc, QueryDocumentSnapshot, DocumentData }
     from 'firebase/firestore';
 
-import { ClassData, classSchema } from 'class';
 import { run } from 'tools/firestore_tool';
-import { abilitySchema } from 'ability';
 import { weaponSchema } from 'weapon';
 
 /*
