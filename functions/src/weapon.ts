@@ -1,10 +1,11 @@
+import { AttackType, Attribute, DamageType } from 'base_game_enums';
 import * as yup from 'yup';
 
 export const weaponSchema = yup.object().shape({
     name: yup.string().required(),
-    attribute: yup.number().required(),  // TODO: string transformed to enum
-    attackType: yup.number().required(),  // TODO: string transformed to enum
-    damageType: yup.number().required(),  // TODO: string transformed to enum
+    attribute: yup.string().oneOf(Object.values(Attribute)).required(),
+    attackType: yup.string().oneOf(Object.values(AttackType)).required(),
+    damageType: yup.string().oneOf(Object.values(DamageType)).required(),
     baseDamage: yup.number().required(),
     toHitMultiplier: yup.number().required(),
     damageMultiplier: yup.number().required(),
