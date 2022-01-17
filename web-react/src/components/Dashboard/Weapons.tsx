@@ -83,7 +83,7 @@ class Weapons extends Component<WeaponsProps, WeaponsState> {
                     </tr>
                     <tr className="blue">
                         <td>To Hit <span className="subtext">(+ Roll, vs Defenses)</span></td>
-                        <td>ceiling({weaponMap.get(currentWeapon).attribute} * {weaponMap.get(currentWeapon).toHitMultiplier}) - {weaponMap.get(currentWeapon).difficultyClass}</td>
+                        <td>ceiling({weaponMap.get(currentWeapon).attribute} * {weaponMap.get(currentWeapon).toHitMultiplier}) - {weaponMap.get(currentWeapon).hitDC}</td>
                     </tr>
                     <tr className="orange">
                         <td>Damage <span className="subtext">(- Resistances)</span></td>

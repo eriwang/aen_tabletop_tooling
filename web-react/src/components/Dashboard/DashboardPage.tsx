@@ -1,7 +1,7 @@
 import { User } from "firebase/auth";
 import { DocumentData, DocumentSnapshot, Unsubscribe } from "firebase/firestore";
 import React, { Component } from "react";
-import { Abilities, Attributes, BasicStats, Weapons } from ".";
+import { Abilities, Armors, Attributes, BasicStats, EditableField, Weapons } from ".";
 import Firebase, { withFirebase } from "../Firebase";
 import { withUser } from "../Session";
 
@@ -117,6 +117,29 @@ class CharacterSheetBase extends Component<CharacterSheetProps, CharacterSheetSt
                         abilityList={this.state.characterDetails.abilities} 
                         characterId={this.state.characterId} 
                         charactersList={this.state.charactersList} />
+                }
+                {
+                    this.state.characterDetails &&
+                    <div>
+                    <div>
+                        <p><strong>Cooldowns</strong></p>
+                        <EditableField 
+                            initialValue={this.state.characterDetails.cooldowns} 
+                            onSubmit={this.updateValue("cooldowns")} />
+                    </div>
+                    <div>
+                        <p><strong>Statuses</strong></p>
+                        <EditableField 
+                            initialValue={this.state.characterDetails.statuses} 
+                            onSubmit={this.updateValue("statuses")} />
+                    </div>
+                    </div>
+                }
+                {
+                    this.state.characterDetails &&
+                    <Armors 
+                        armorName={this.state.characterDetails.armor} 
+                        resistances={this.state.characterDetails.resistanceToFlat} />
                 }
                 <button onClick={this.findCharacterDetails}>Refresh</button>
             </div>
