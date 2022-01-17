@@ -26,6 +26,7 @@ export const splash: AbilityData = {
     description: 'Splash failed',
     fpCost: 10,
     isAttack: true,
+    toHitMultiplier: 1,
     attribute: 'STR',
     baseDamage: 0,
     damageMultiplier: 0,
