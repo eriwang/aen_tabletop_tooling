@@ -19,7 +19,8 @@ function resetValues() {
         baseDamage: 0,
         toHitMultiplier: 1,
         damageMultiplier: 1,
-        difficultyClass: 0,
+        hitDC: 0,
+        range: 0,
     };
 
     attacker = {
@@ -89,7 +90,7 @@ describe('toHit and evade calculation is correct', () => {
     });
 
     test('weapDifficultyClass changes attackerToHit', () => {
-        attack.difficultyClass = 2;
+        attack.hitDC = 2;
         expect(calculateToHit(5, attacker, defender, attack).attackerToHit).toBe(3);  // 5 - 2
     });
 

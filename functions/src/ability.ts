@@ -1,9 +1,13 @@
 import * as yup from 'yup';
 
-const requireWhenIsAttack = {
-    is: true,
-    then: (schema: any) => schema.required()
-};
+function requireIfAndOnlyIfIsAttack(schema: yup.Schema) : yup.Schema {
+    return schema.when('isAttack', {
+        is: true,
+        then: (schema: any) => schema.required(),
+        otherwise: (schema: any) => schema.test(
+            'does-not-exist', '${path} exists but should not', (value: any) => value === undefined)
+    });
+}
 
 /*
 Aside from the classifications of "Basic", "Passive", and "Ultimate", there are three more classifications of
@@ -24,13 +28,14 @@ export const abilitySchema = yup.object().shape({
     fpCost: yup.number().required(),
     isAttack: yup.boolean().required(),
 
-    attribute: yup.string().when('isAttack', requireWhenIsAttack),
-    baseDamage: yup.number().when('isAttack', requireWhenIsAttack),
-    damageMultiplier: yup.number().when('isAttack', requireWhenIsAttack),
-    hitDC: yup.number().when('isAttack', requireWhenIsAttack),
-    range: yup.number().when('isAttack', requireWhenIsAttack),
-    attackType: yup.string().when('isAttack', requireWhenIsAttack),
-    damageType: yup.string().when('isAttack', requireWhenIsAttack),
+    attribute: requireIfAndOnlyIfIsAttack(yup.string()),
+    baseDamage: requireIfAndOnlyIfIsAttack(yup.number()),
+    damageMultiplier: requireIfAndOnlyIfIsAttack(yup.number()),
+    toHitMultiplier: requireIfAndOnlyIfIsAttack(yup.number()),
+    hitDC: requireIfAndOnlyIfIsAttack(yup.number()),
+    range: requireIfAndOnlyIfIsAttack(yup.number()),
+    attackType: requireIfAndOnlyIfIsAttack(yup.string()),
+    damageType: requireIfAndOnlyIfIsAttack(yup.string()),
 });
 
 export interface AbilityData extends yup.InferType<typeof abilitySchema> {}
