@@ -3,8 +3,6 @@ import { Component } from "react";
 import { CharacterSheet, GameMasterSheet } from ".";
 import Firebase, { withFirebase } from "../Firebase";
 import { withUser } from "../Session";
-import { SignInLink } from "../SignIn";
-import { SignUpLink } from "../SignUp";
 
 interface DashboardProps {
     firebase: Firebase;

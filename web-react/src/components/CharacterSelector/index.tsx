@@ -1,6 +1,6 @@
 import { Unsubscribe } from "firebase/auth";
 import { DocumentData, DocumentSnapshot } from "firebase/firestore";
-import { ChangeEvent, Component, FormEvent } from "react";
+import { ChangeEvent, Component } from "react";
 import Firebase, { withFirebase } from "../Firebase";
 
 

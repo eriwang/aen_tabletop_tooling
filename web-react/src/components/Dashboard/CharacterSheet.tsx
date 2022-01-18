@@ -1,5 +1,5 @@
 import { User } from "firebase/auth";
-import { DocumentData, DocumentSnapshot, Unsubscribe } from "firebase/firestore";
+import { Unsubscribe } from "firebase/firestore";
 import React, { Component } from "react";
 import { Abilities, Armors, Attributes, BasicStats, Defenses, EditableField, Skills, Weapons } from ".";
 import Firebase, { withFirebase } from "../Firebase";

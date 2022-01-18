@@ -1,4 +1,3 @@
-import { DocumentData, DocumentSnapshot, Unsubscribe } from "firebase/firestore";
 import { ChangeEvent, Component, FormEvent } from "react";
 import CharacterSelector from "../CharacterSelector";
 import Firebase, { withFirebase } from "../Firebase";

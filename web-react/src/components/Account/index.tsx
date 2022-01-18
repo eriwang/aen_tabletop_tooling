@@ -1,5 +1,5 @@
 import { User } from "firebase/auth";
-import React, { ChangeEvent, Component, FormEvent } from "react";
+import React, { Component } from "react";
 import CharacterSelector from "../CharacterSelector";
 import Firebase, { withFirebase } from "../Firebase";
 import { withUser } from "../Session";
