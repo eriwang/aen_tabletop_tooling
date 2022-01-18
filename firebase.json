@@ -7,12 +7,7 @@
     "source": "functions/dist"
   },
   "hosting": {
-    "public": "web-react/build",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "public": "web-react/dist",
     "rewrites": [
       {
         "source": "**",
