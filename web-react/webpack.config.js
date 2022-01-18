@@ -7,6 +7,12 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 module.exports = {
     target: 'web',
     entry: './src/index.tsx',
+    devServer: {
+        historyApiFallback: true,  // plays nicer with react routing
+        client: {
+            overlay: false,
+        },
+    },
     resolve: {
         extensions: ['.tsx', '.jsx', '.ts', '.js'],
         modules: [path.join(__dirname, 'src'), 'node_modules'],
@@ -45,7 +51,7 @@ module.exports = {
                     ignore: ['**/*.html']
                 }
             }]
-        })
+        }),
     ],
     output: {
         filename: 'index.js',
