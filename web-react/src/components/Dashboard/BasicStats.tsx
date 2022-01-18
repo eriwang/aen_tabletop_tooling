@@ -10,9 +10,6 @@ interface BasicStatsProps {
 
 class BasicStats extends Component<BasicStatsProps, {}> {
     render() {
-        if(!this.props.characterDetails) {
-            return <div>Basic stats loading...</div>
-        }
         return (
             <div>
                 <table>

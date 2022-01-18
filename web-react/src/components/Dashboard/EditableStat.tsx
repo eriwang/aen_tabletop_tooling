@@ -36,12 +36,13 @@ class EditableStat extends Component<EditableStatProps, EditableStatState> {
 
     render() {
         const {value} = this.state;
+        const hasNotChanged = this.state.value === this.props.initialValue;
 
         return (
             <div>
                 <form onSubmit={this.onSubmit}>
                     <input name="value" value={value} onChange={this.onChange} type="number" />
-                    <button type="submit">Update</button>
+                    <button type="submit" disabled={hasNotChanged}>Update</button>
                 </form>
             </div>
         )

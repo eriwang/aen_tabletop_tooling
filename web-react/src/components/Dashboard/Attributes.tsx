@@ -6,9 +6,6 @@ interface AttributesProps {
 
 class Attributes extends Component<AttributesProps, {}> {
     render() {
-        if(!this.props.attributes) {
-            return <div>Attributes loading...</div>
-        }
         return (
             <div>
                 <table>
