@@ -1,6 +1,7 @@
 import { ChangeEvent, Component, FormEvent } from "react";
 import CharacterSelector from "../CharacterSelector";
 import Firebase, { withFirebase } from "../Firebase";
+import LoadingIndicator from "../Loading";
 
 interface AttackCalculatorProps {
     firebase: Firebase;
@@ -86,7 +87,7 @@ class AttackCalculatorBase extends Component<AttackCalculatorProps, AttackCalcul
                 <input name="roll" value={roll} onChange={this.onChange} type="number" min="0" placeholder="Dice Roll" id="rollEntry" />
                 <button type="submit">Attack</button>
                 </form>
-                {loading && <p>Loading...</p>}
+                {<LoadingIndicator showSpinner={loading}/>}
                 {
                     result && 
                     <div>

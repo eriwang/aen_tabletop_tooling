@@ -30,12 +30,14 @@ class CharacterSelectorBase extends Component<CharacterSelectorProps, CharacterS
         const characterListCallbacks = {
             added: (doc: DocumentSnapshot<DocumentData>) => {
                 let {charactersList} = this.state;
+                // console.log("added");
                 const newCharacterDetails = doc.data();
                 charactersList[doc.id] = newCharacterDetails!.name;
                 this.setState({charactersList: charactersList});
             },
             removed: (doc: DocumentSnapshot<DocumentData>) => {
                 let {charactersList} = this.state;
+                // console.log("removed");
                 delete charactersList[doc.id];
                 this.setState({charactersList: charactersList});
             }
@@ -44,13 +46,16 @@ class CharacterSelectorBase extends Component<CharacterSelectorProps, CharacterS
     }
 
     componentWillUnmount() {
-        console.log("Cleaning up CharacterSelector listener");
+        // console.log("Cleaning up CharacterSelector listener");
         this.characterListListener();
     }
 
     componentDidUpdate = (prevProps: CharacterSelectorProps) => {
-        console.log("CharacterSelector updated");
-        if(this.props.initialValue !== prevProps.initialValue) {
+        //console.log("CharacterSelector updated");
+        if(
+            this.props.initialValue !== prevProps.initialValue &&
+            this.props.initialValue !== this.state.currentCharacter
+        ) {
             this.setState({currentCharacter: this.props.initialValue})
         }
     }
