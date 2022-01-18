@@ -4,11 +4,10 @@ import { AttackCalculator } from ".";
 interface WeaponsProps {
     weaponList: any[];
     characterId: string;
-    charactersList: Map<string, string>;
 }
 
 interface WeaponsState {
-    weaponMap: Map<string, any>;
+    weaponMap: {[key: string]: any};
     currentWeapon: string;
     showCalculator: boolean;
 }
@@ -17,11 +16,9 @@ class Weapons extends Component<WeaponsProps, WeaponsState> {
     constructor(props: any) {
         super(props);
 
-        console.log(this.props.charactersList);
-
-        const weaponMap: Map<string, any> = new Map();
+        const weaponMap: {[key: string]: any} = {};
         this.props.weaponList.forEach(weapon => {
-            weaponMap.set(weapon.name, weapon);
+            weaponMap[weapon.name] = weapon;
         });
         this.state = {
             weaponMap: weaponMap, 
@@ -75,27 +72,27 @@ class Weapons extends Component<WeaponsProps, WeaponsState> {
                     <tbody>
                     <tr>
                         <td>Range</td>
-                        <td>{weaponMap.get(currentWeapon).range}</td>
+                        <td>{weaponMap[currentWeapon].range}</td>
                     </tr>
                     <tr>
                         <td>Primary Attribute</td>
-                        <td>{weaponMap.get(currentWeapon).attribute}</td>
+                        <td>{weaponMap[currentWeapon].attribute}</td>
                     </tr>
                     <tr className="blue">
                         <td>Attack Type</td>
-                        <td>{weaponMap.get(currentWeapon).attackType}</td>
+                        <td>{weaponMap[currentWeapon].attackType}</td>
                     </tr>
                     <tr className="blue">
                         <td>To Hit <span className="subtext">(+ Roll, vs Defenses)</span></td>
-                        <td>ceiling({weaponMap.get(currentWeapon).attribute} * {weaponMap.get(currentWeapon).toHitMultiplier}) - {weaponMap.get(currentWeapon).hitDC}</td>
+                        <td>ceiling({weaponMap[currentWeapon].attribute} * {weaponMap[currentWeapon].toHitMultiplier}) - {weaponMap[currentWeapon].hitDC}</td>
                     </tr>
                     <tr className="orange">
                         <td>Damage <span className="subtext">(- Resistances)</span></td>
-                        <td>ceiling({weaponMap.get(currentWeapon).attribute} * {weaponMap.get(currentWeapon).damageMultiplier}) + {weaponMap.get(currentWeapon).baseDamage}</td>
+                        <td>ceiling({weaponMap[currentWeapon].attribute} * {weaponMap[currentWeapon].damageMultiplier}) + {weaponMap[currentWeapon].baseDamage}</td>
                     </tr>
                     <tr className="orange">
                         <td>Damage Type</td>
-                        <td>{weaponMap.get(currentWeapon).damageType}</td>
+                        <td>{weaponMap[currentWeapon].damageType}</td>
                     </tr>
                     </tbody>
                     }
@@ -104,8 +101,7 @@ class Weapons extends Component<WeaponsProps, WeaponsState> {
                     showCalculator && 
                     <AttackCalculator 
                         attackerId={this.props.characterId} 
-                        attackName={currentWeapon} 
-                        charactersList={this.props.charactersList}
+                        attackName={currentWeapon}
                         onClose={this.closeCalculator} />
                 }
             </div>

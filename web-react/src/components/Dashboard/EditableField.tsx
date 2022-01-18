@@ -41,6 +41,7 @@ class EditableField extends Component<EditableFieldProps, EditableFieldState> {
             <div>
                 <form onSubmit={this.onSubmit}>
                     <textarea name="value" value={value} rows={8} onChange={this.onChange} />
+                    <br />
                     <button type="submit">Update</button>
                 </form>
             </div>
