@@ -1,18 +1,13 @@
 {
   "functions": {
     "predeploy": [
-      "yarn run lint",
-      "yarn --cwd $Env:RESOURCE_DIR run build"
+      "yarn lint",
+      "yarn --cwd $Env:RESOURCE_DIR build"
     ],
-    "source": "functions"
+    "source": "functions/dist"
   },
   "hosting": {
-    "public": "web-react/build",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "public": "web-react/dist",
     "rewrites": [
       {
         "source": "**",

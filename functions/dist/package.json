@@ -1,0 +1,12 @@
+{
+    "name": "functions-dist",
+    "engines": {
+        "node": "14"
+    },
+    "dependencies": {
+        "firebase-admin": "^9.4.1",
+        "firebase-functions": "^3.13.0"
+    },
+    "main": "index.js",
+    "private": true
+}
