@@ -16,7 +16,7 @@
     "deploy": "yarn firebase deploy --only functions",
     "logs": "yarn firebase functions:log",
     "web-deploy": "yarn --cwd web-react build && firebase deploy --only hosting",
-    "web-test": "yarn --cwd web-react start"
+    "web-test": "yarn workspace web-react start"
   },
   "dependencies": {
     "firebase": "^9.6.1",
@@ -36,7 +36,9 @@
   },
   "workspaces": [
     "functions",
-    "web-react"
+    "web-react",
+    "aen_shared"
   ],
-  "packageManager": "yarn@3.1.1"
+  "packageManager": "yarn@3.1.1",
+  "private": true
 }
