@@ -1,3 +1,6 @@
+import * as admin from 'firebase-admin';
+import * as functions from 'firebase-functions';
+
 import { ArmorData, armorSchema } from 'armor';
 import { Attribute, DamageType, Skills } from 'base_game_enums';
 import { CharacterData } from 'character';
@@ -6,11 +9,9 @@ import { Profile } from 'profile';
 import { classSchema } from 'class';
 import { enumerateEnumValues, getNonNull } from 'utils';
 import { WeaponData, weaponSchema } from 'weapon';
-
-import * as admin from 'firebase-admin';
-import * as functions from 'firebase-functions';
 import { raceSchema } from 'race';
 import { AbilityData, abilitySchema } from 'ability';
+import { AttributesData, SkillsData } from 'schemas';
 
 // Loads armor resistances
 // If the armor is "Naked", sets all resistances to 0.
@@ -76,7 +77,7 @@ async function loadAbilities(abilities: string[]) : Promise<AbilityData[]> {
 
 }
 
-function calculateAttributes(profileData: Profile) : any {
+function calculateAttributes(profileData: Profile) : AttributesData {
     const attributes: any = {};
     for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
         attributes[attribute] = profileData.getAttributeTotal(attribute);
@@ -85,9 +86,8 @@ function calculateAttributes(profileData: Profile) : any {
     return attributes;
 }
 
-function calculateSkills(profileData: Profile) : any {
+function calculateSkills(profileData: Profile) : SkillsData {
     const skills: any = {};
-
     for (const skill of enumerateEnumValues<Skills>(Skills)) {
         skills[Skills[skill]] = profileData.getSkillTotal(skill);
     }
@@ -137,17 +137,16 @@ async function createCharacter(profileName: string) : Promise<string> {
     const abilityData = await loadAbilities(profile.getAbilities());
 
     const attributes = calculateAttributes(profile);
-    const skills = calculateSkills(profile);
 
     // For simplicity, set current HP to max HP every time we build a character
-    const maxHp = attributes['CON'] * classData.hpPerCon;
-    const maxFP = attributes['INT'] * classData.fpPerInt;
+    const maxHp = attributes.CON * classData.hpPerCon;
+    const maxFP = attributes.INT * classData.fpPerInt;
     const characterData: CharacterData = {
         name: profileName,
         attributes: attributes,
         resistanceToFlat: armorData!.resistanceToFlat,
         resistanceToPercent: armorData!.resistanceToPercent,
-        skills: skills,
+        skills: calculateSkills(profile),
         maxHp: maxHp,
         currentHp: maxHp,
         maxFp: maxFP,
@@ -171,5 +170,4 @@ async function createCharacter(profileName: string) : Promise<string> {
     await profilesCollection.doc(profileName).withConverter(profileDataConverter).set(profile);
 
     return characterId.id;
-
 }
