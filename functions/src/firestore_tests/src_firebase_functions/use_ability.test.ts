@@ -1,5 +1,6 @@
 import useAbility, { BEAR_CLAW_WEAPON_ID, BEAR_HIDE_ARMOR_ID } from 'src_firebase_functions/use_ability';
 
+const deepcopy = require('deepcopy');
 import * as admin from 'firebase-admin';
 import fftest from 'firebase-functions-test';
 import { initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules-unit-testing';
@@ -7,12 +8,11 @@ import { initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules
 import { AbilityData } from 'ability';
 import { AbilityCategory, AttackType, Attribute, DamageType } from 'base_game_enums';
 import { Character, CharacterData } from 'character';
+import { flail, water, fish, pokemon, karp, magikarp } from './test_character_magikarp';
 import { getCharacterRepr } from 'tests/test_data';
 import { characterClassLoader } from 'firestore_utils/data_loaders';
 import { WeaponData } from 'weapon';
 import { ArmorData } from 'armor';
-import { ClassData } from 'class';
-import { ProfileData } from 'profile';
 
 let charCollection: admin.firestore.CollectionReference;
 let testEnv: RulesTestEnvironment;
@@ -40,20 +40,21 @@ describe('Validation', () => {
 describe('Abilities', () => {
     describe('Ursine Form', () => {
         function getCharacterReprWithUrsineForm() : CharacterData {
-            const ursineForm: AbilityData = {
-                name: 'Ursine Form',
-                category: AbilityCategory.Passive,
-                cooldown: 0,
-                description: 'Don\'t worry about it',
-                fpCost: 10,
-                isAttack: false
-            };
-
-            const char = getCharacterRepr();
+            const char = deepcopy(magikarp);
+            char.currentHp = char.maxHp - 10;
+            char.currentFp = char.maxFp - 15;
             char.abilities = [ursineForm];
-
             return char;
         }
+
+        const ursineForm: AbilityData = {
+            name: 'Ursine Form',
+            category: AbilityCategory.Passive,
+            cooldown: 0,
+            description: 'Don\'t worry about it',
+            fpCost: 10,
+            isAttack: false
+        };
 
         const bearClaw: WeaponData = {
             name: 'Bear Claw',
@@ -97,18 +98,18 @@ describe('Abilities', () => {
             },
         };
 
-        // TODO: need profile
-
-        const druidClass: ClassData = {
-            name: 'Druid',
-            fpPerInt: 7,
-            hpPerCon: 6,
-        };
-
         beforeAll(async () => {
-            await admin.firestore().collection('Armor').doc(BEAR_HIDE_ARMOR_ID).set(bearHide);
-            await admin.firestore().collection('Classes').doc();
+            karp.abilities = ['Ursine Form'];
+
+            await admin.firestore().collection('Abilities').doc('Ursine Form').set(ursineForm);
+            await admin.firestore().collection('Armors').doc(BEAR_HIDE_ARMOR_ID).set(bearHide);
+            await admin.firestore().collection('Armors').doc(karp.armor).set(water);
             await admin.firestore().collection('Weapons').doc(BEAR_CLAW_WEAPON_ID).set(bearClaw);
+            await admin.firestore().collection('Weapons').doc(karp.weapons[0]).set(flail);
+
+            await admin.firestore().collection('Classes').doc(karp.class).set(pokemon);
+            await admin.firestore().collection('Races').doc(karp.race).set(fish);
+            await admin.firestore().collection('Profiles').doc(magikarp.name).set(fish);
         });
 
         test('Change to Ursine Form', async () => {
@@ -141,16 +142,22 @@ describe('Abilities', () => {
                 });
 
             // Max HP is recalculated using new CON * hpPerCon, and current HP is adjusted
+            // * 1 is for hpPerCon and fpPerInt, which is not ideal
+            expect(bearChar.getMaxHp()).toBe(bearChar.getAttributeStat(Attribute.WIS) * 1);
+            expect(bearChar.getCurrentHp()).toBe(bearChar.getAttributeStat(Attribute.WIS) * 1 - 10);
 
-            // Max FP is recalculated using new
+            // Max FP is recalculated using new INT * fpPerCon, and current FP is adjusted
+            expect(bearChar.data.maxFp).toBe(bearChar.getAttributeStat(Attribute.STR) * 1);
+            expect(bearChar.data.currentFp).toBe(bearChar.getAttributeStat(Attribute.STR) * 1 - 15);
         });
 
         test('Change back to Human Form', async () => {
             const bearChar = new Character(getCharacterReprWithUrsineForm());
             bearChar.data.internalMetadata.abilitiesInUse = ['Ursine Form'];
-
-            // HP TODO:
-            // FP TODO:
+            bearChar.data.maxHp = 1000;
+            bearChar.data.currentHp = bearChar.data.maxHp - 100;
+            bearChar.data.maxFp = 500;
+            bearChar.data.currentFp = bearChar.data.maxFp - 50;
 
             // Hack the other data to be something different: the important part is that it gets reset later
             bearChar.data.attributes.CON = 420;
@@ -158,6 +165,20 @@ describe('Abilities', () => {
             bearChar.data.weapons = [bearClaw];
             bearChar.data.resistanceToFlat.Bludgeoning = 1337;
             bearChar.data.resistanceToPercent.Bludgeoning = 1337;
+
+            await charCollection.doc('druid').set(bearChar.data);
+
+            await useAbilityWrapped({characterId: 'druid', abilityName: 'Ursine Form'});
+
+            const humanChar = await characterClassLoader.loadSingle('druid');
+            expect(humanChar.data.currentHp).toBe(humanChar.data.maxHp - 100);
+            expect(humanChar.data.currentFp).toBe(humanChar.data.maxFp - 50);
+
+            // Reset the currentHp and currentFp back since we've checked them, makes the strict equal easier
+            humanChar.data.currentHp = getCharacterReprWithUrsineForm().currentHp;
+            humanChar.data.currentFp = getCharacterReprWithUrsineForm().currentFp;
+
+            expect(humanChar.data).toStrictEqual(getCharacterReprWithUrsineForm());
         });
     });
 
