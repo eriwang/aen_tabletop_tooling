@@ -17,7 +17,7 @@ let testWeapon: WeaponData;
 let testAbility: AbilityData;
 let testData: any;
 
-const wrapped = fftest().wrap(calculateAttack);
+const calculateAttackWrapped = fftest().wrap(calculateAttack);
 
 beforeAll(async () => {
     admin.initializeApp();
@@ -55,12 +55,12 @@ afterAll(async () => {
 
 test('attacker does not exist', async () => {
     await testCollection.doc('attacker').delete();
-    await expect(wrapped(testData)).rejects.toThrow('Could not find id "attacker"');
+    await expect(calculateAttackWrapped(testData)).rejects.toThrow('Could not find id "attacker"');
 });
 
 test('defender does not exist', async () => {
     await testCollection.doc('defender').delete();
-    await expect(wrapped(testData)).rejects.toThrow('Could not find id "defender"');
+    await expect(calculateAttackWrapped(testData)).rejects.toThrow('Could not find id "defender"');
 });
 
 test('attack name does not exist on attacker', async () => {
@@ -68,7 +68,7 @@ test('attack name does not exist on attacker', async () => {
     attackerNoWeapons.weapons = [];
     await testCollection.doc('attacker').set(attackerNoWeapons);
 
-    await expect(wrapped(testData)).rejects.toThrow('Could not find weapon or ability');
+    await expect(calculateAttackWrapped(testData)).rejects.toThrow('Could not find weapon or ability');
 });
 
 describe('calls downstream for weapon and sends correct response', () => {
@@ -78,7 +78,7 @@ describe('calls downstream for weapon and sends correct response', () => {
         .mockImplementation(() => 3);
 
     test('weapon', async () => {
-        const result = await wrapped(testData);
+        const result = await calculateAttackWrapped(testData);
 
         expect(mockCalculateToHit).toHaveBeenCalledWith(
             5,
@@ -101,7 +101,7 @@ describe('calls downstream for weapon and sends correct response', () => {
 
     test('ability', async () => {
         testData['attackName'] = testAbility.name;
-        const result = await wrapped(testData);
+        const result = await calculateAttackWrapped(testData);
 
         expect(mockCalculateToHit).toHaveBeenCalledWith(
             5,

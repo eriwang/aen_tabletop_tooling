@@ -120,6 +120,11 @@ export function getCharacterRepr() : CharacterData {
         movement: 30,
         weapons: getWeaponsRepr(),
         abilities: abilities,
+
+        internalMetadata: {
+            profileId: ' ',
+            abilitiesInUse: [],
+        }
     };
 }
 

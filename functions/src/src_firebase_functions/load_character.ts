@@ -10,19 +10,19 @@ import { abilityDataLoader, armorDataLoader, classDataLoader, profileClassLoader
     from 'firestore_utils/data_loaders';
 import { profileDataConverter } from 'firestore_utils/data_converters';
 
-function calculateAttributes(profileData: Profile) : AttributesData {
+function calculateAttributes(profile: Profile) : AttributesData {
     const attributes: any = {};
     for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
-        attributes[attribute] = profileData.getAttributeTotal(attribute);
+        attributes[attribute] = profile.getAttributeTotal(attribute);
     }
 
     return attributes;
 }
 
-function calculateSkills(profileData: Profile) : SkillsData {
+function calculateSkills(profile: Profile) : SkillsData {
     const skills: any = {};
     for (const skill of enumerateEnumValues<Skills>(Skills)) {
-        skills[Skills[skill]] = profileData.getSkillTotal(skill);
+        skills[Skills[skill]] = profile.getSkillTotal(skill);
     }
 
     return skills;
@@ -82,6 +82,11 @@ async function createCharacter(profileName: string) : Promise<string> {
         movement: raceData.movement,
         weapons: weaponData,
         abilities: abilityData,
+
+        internalMetadata: {
+            profileId: profileName,
+            abilitiesInUse: [],
+        }
     };
 
     const characterId = await admin.firestore().collection('Characters').add(characterData);
