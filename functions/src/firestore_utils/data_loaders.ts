@@ -23,16 +23,29 @@ function createDataLoader<TypeData>(collectionName: string, schema: yup.ObjectSc
             const firestoreSnapshot = await collection().doc(id).get();
             const data = getNonNull(firestoreSnapshot.data(),
                 `Could not find id "${id}" in collection "${collectionName}"`);
-            return schema.validateSync(data) as any as TypeData;
+            try {
+                return schema.validateSync(data) as any as TypeData;
+            }
+            catch (error: any) {
+                console.error(error.errors);
+                throw new Error(`Data id "${id}" in collection "${collectionName}" fails validations`);
+            }
         },
 
         loadMultiple: async (ids: string[]) => {
             const firestoreSnapshots = await Promise.all(ids.map(id => collection().doc(id).get()));
             return firestoreSnapshots
-                .map((snapshot) =>
-                    getNonNull(snapshot.data(),
-                        `Could not find id "${snapshot.id}" in collection "${collectionName}"`))
-                .map((data) => schema.validateSync(data) as any as TypeData);
+                .map((snapshot) => {
+                    const data = getNonNull(
+                        snapshot.data(), `Could not find id "${snapshot.id}" in collection "${collectionName}"`);
+                    try {
+                        return schema.validateSync(data) as any as TypeData;
+                    }
+                    catch (error: any) {
+                        console.error(error.errors);
+                        throw new Error(`Data id "${snapshot.id}" in collection "${collectionName}" fails validations`);
+                    }
+                });
         },
     };
 }

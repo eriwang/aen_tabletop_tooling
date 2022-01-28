@@ -31,8 +31,22 @@ describe('Validation', () => {
         expect(() => useAbilityWrapped({characterId: 'DNE', abilityName: 'DNE'})).rejects.toThrow();
     });
 
-    test('Ability does not exist', async () => {
+    test('Ability not on character', async () => {
         await charCollection.doc('char').set(getCharacterRepr());
+        expect(() => useAbilityWrapped({characterId: 'char', abilityName: 'DNE'})).rejects.toThrow();
+    });
+
+    test('Ability appears multiple times', async () => {
+        const char = getCharacterRepr();
+        char.abilities.push(char.abilities[0]);
+        await charCollection.doc('char').set(char);
+        expect(() => useAbilityWrapped({characterId: 'char', abilityName: char.abilities[0].name})).rejects.toThrow();
+    });
+
+    test('Ability unsupported', async () => {
+        const char = getCharacterRepr();
+        char.abilities[0].name = 'DNE';
+        await charCollection.doc('char').set(char);
         expect(() => useAbilityWrapped({characterId: 'char', abilityName: 'DNE'})).rejects.toThrow();
     });
 });
@@ -109,7 +123,7 @@ describe('Abilities', () => {
 
             await admin.firestore().collection('Classes').doc(karp.class).set(pokemon);
             await admin.firestore().collection('Races').doc(karp.race).set(fish);
-            await admin.firestore().collection('Profiles').doc(magikarp.name).set(fish);
+            await admin.firestore().collection('Profiles').doc(magikarp.name).set(karp);
         });
 
         test('Change to Ursine Form', async () => {
@@ -117,7 +131,6 @@ describe('Abilities', () => {
             await charCollection.doc('druid').set(origChar.data);
 
             await useAbilityWrapped({characterId: 'druid', abilityName: 'Ursine Form'});
-
             const bearChar = await characterClassLoader.loadSingle('druid');
 
             // Swapped CON/WIS and STR/INT
@@ -143,12 +156,12 @@ describe('Abilities', () => {
 
             // Max HP is recalculated using new CON * hpPerCon, and current HP is adjusted
             // * 1 is for hpPerCon and fpPerInt, which is not ideal
-            expect(bearChar.getMaxHp()).toBe(bearChar.getAttributeStat(Attribute.WIS) * 1);
-            expect(bearChar.getCurrentHp()).toBe(bearChar.getAttributeStat(Attribute.WIS) * 1 - 10);
+            expect(bearChar.getMaxHp()).toBe(origChar.getAttributeStat(Attribute.WIS) * 1);
+            expect(bearChar.getCurrentHp()).toBe(origChar.getAttributeStat(Attribute.WIS) * 1 - 10);
 
             // Max FP is recalculated using new INT * fpPerCon, and current FP is adjusted
-            expect(bearChar.data.maxFp).toBe(bearChar.getAttributeStat(Attribute.STR) * 1);
-            expect(bearChar.data.currentFp).toBe(bearChar.getAttributeStat(Attribute.STR) * 1 - 15);
+            expect(bearChar.data.maxFp).toBe(origChar.getAttributeStat(Attribute.STR) * 1);
+            expect(bearChar.data.currentFp).toBe(origChar.getAttributeStat(Attribute.STR) * 1 - 15);
         });
 
         test('Change back to Human Form', async () => {
