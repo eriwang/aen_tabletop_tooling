@@ -25,6 +25,17 @@ export class Profile {
         this.data = data;
     }
 
+    getCharacterId() : string {
+
+        if (this.data.characterId) {
+            return this.data.characterId;
+        }
+        else {
+            return '';
+        }
+
+    }
+
     setCharacterId(characterId : string) {
         this.data.characterId = characterId;
     }

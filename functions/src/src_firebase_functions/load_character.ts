@@ -164,12 +164,17 @@ async function createCharacter(profileName: string) : Promise<string> {
         abilities: abilityData,
     };
 
-    const characterId = await charactersCollection.add(characterData);
+    let characterId = profile.getCharacterId();
 
-    profile.setCharacterId(characterId.id);
+    if (!characterId) {
+        characterId = (await charactersCollection.add(characterData)).id;
+        profile.setCharacterId(characterId);
+        await profilesCollection.doc(profileName).withConverter(profileDataConverter).set(profile);
+    }
+    else {
+        await charactersCollection.doc(characterId).set(characterData);
+    }
 
-    await profilesCollection.doc(profileName).withConverter(profileDataConverter).set(profile);
-
-    return characterId.id;
+    return characterId;
 
 }
