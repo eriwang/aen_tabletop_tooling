@@ -10,7 +10,7 @@ import { abilityDataLoader, armorDataLoader, classDataLoader, profileClassLoader
     from 'firestore_utils/data_loaders';
 import { profileDataConverter } from 'firestore_utils/data_converters';
 
-function calculateAttributes(profile: Profile) : AttributesData {
+export function calculateAttributes(profile: Profile) : AttributesData {
     const attributes: any = {};
     for (const attribute of enumerateEnumValues<Attribute>(Attribute)) {
         attributes[attribute] = profile.getAttributeTotal(attribute);
@@ -19,7 +19,7 @@ function calculateAttributes(profile: Profile) : AttributesData {
     return attributes;
 }
 
-function calculateSkills(profile: Profile) : SkillsData {
+export function calculateSkills(profile: Profile) : SkillsData {
     const skills: any = {};
     for (const skill of enumerateEnumValues<Skills>(Skills)) {
         skills[Skills[skill]] = profile.getSkillTotal(skill);

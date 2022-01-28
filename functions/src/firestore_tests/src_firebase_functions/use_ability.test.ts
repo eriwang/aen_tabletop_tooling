@@ -162,6 +162,8 @@ describe('Abilities', () => {
             // Max FP is recalculated using new INT * fpPerCon, and current FP is adjusted
             expect(bearChar.data.maxFp).toBe(origChar.getAttributeStat(Attribute.STR) * 1);
             expect(bearChar.data.currentFp).toBe(origChar.getAttributeStat(Attribute.STR) * 1 - 15);
+
+            expect(bearChar.data.internalMetadata.abilitiesInUse).toStrictEqual(['Ursine Form']);
         });
 
         test('Change back to Human Form', async () => {

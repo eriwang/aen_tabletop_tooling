@@ -1,12 +1,14 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 
-import { Character } from 'character';
-import { armorDataLoader, characterClassLoader, classDataLoader, profileClassLoader, weaponDataLoader }
+import { Character, CharacterData } from 'character';
+import { abilityDataLoader, armorDataLoader, characterClassLoader, classDataLoader, profileClassLoader, raceDataLoader,
+    weaponDataLoader }
     from 'firestore_utils/data_loaders';
 import { AbilityData } from 'ability';
 import { getNonNull } from 'utils';
 import { Attribute } from 'base_game_enums';
+import { calculateAttributes, calculateSkills } from './load_character';
 
 interface UseAbilityArgs {
     characterId: string;
@@ -67,11 +69,58 @@ async function useUrsineFormToBear(char: Character, charId: string) {
     bearChar.data.maxFp = fpPerInt * bearChar.getAttributeStat(Attribute.INT);
     bearChar.data.currentFp = bearChar.data.maxFp - fpDiff;
 
+    bearChar.data.internalMetadata.abilitiesInUse = ['Ursine Form'];
+
     await admin.firestore().collection('Characters').doc(charId).set(bearChar.data);
 }
 
+// TODO: This is quite literally a copy + paste + modify of load_character and is disgusting tech debt that can be fixed
+//       by just making the code more modular and having both pull the same code then doing operations afterwards
 async function useUrsineFormFromBear(char: Character, charId: string) {
+    const profile = await profileClassLoader.loadSingle(char.data.internalMetadata.profileId);
 
+    const classData = await classDataLoader.loadSingle(profile.getClass());
+    const raceData = await raceDataLoader.loadSingle(profile.getRace());
+    const armorData = await armorDataLoader.loadSingle(profile.getArmor());
+    const weaponData = await weaponDataLoader.loadMultiple(profile.getWeapons());
+    const abilityData = await abilityDataLoader.loadMultiple(profile.getAbilities());
+
+    const attributes = calculateAttributes(profile);
+
+    const maxHp = attributes.CON * classData.hpPerCon;
+    const maxFp = attributes.INT * classData.fpPerInt;
+
+    const hpDiff = char.data.maxHp - char.data.currentHp;
+    const fpDiff = char.data.maxFp - char.data.currentFp;
+
+    const characterData: CharacterData = {
+        name: char.data.name,
+        attributes: attributes,
+        resistanceToFlat: armorData!.resistanceToFlat,
+        resistanceToPercent: armorData!.resistanceToPercent,
+        skills: calculateSkills(profile),
+        maxHp: maxHp,
+        currentHp: maxHp - hpDiff,
+        maxFp: maxFp,
+        currentFp: maxFp - fpDiff,
+        level: profile.getLevel(),
+        initiative: 0,
+        cooldowns: ' ',
+        statuses: ' ',
+        armor: profile.getArmor(),
+        race: profile.getRace(),
+        class: profile.getClass(),
+        movement: raceData.movement,
+        weapons: weaponData,
+        abilities: abilityData,
+
+        internalMetadata: {
+            profileId: char.data.internalMetadata.profileId,
+            abilitiesInUse: [],
+        }
+    };
+
+    await admin.firestore().collection('Characters').doc(charId).set(characterData);
 }
 
 async function useUrsineForm(char: Character, charId: string) {
