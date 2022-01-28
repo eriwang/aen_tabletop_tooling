@@ -1,9 +1,8 @@
-import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 
 import { calculateDamage, calculateToHit } from 'attack_calculator';
-import { characterDataConverter } from 'firestore_utils/data_converters';
 import { getNonNull } from 'utils';
+import { characterClassLoader } from 'firestore_utils/data_loaders';
 
 function getAttack<T extends {name: string}>(name: string, attackType: string, attackList: T[]) : T | null {
     let attack = null;
@@ -45,20 +44,7 @@ export default functions.https.onCall(async (data) => {
     const attackName = data.attackName as string;
     const roll = parseInt(data.roll as string);
 
-    const charCollection = admin.firestore().collection('Characters');
-    const [attackerDoc, defenderDoc] = await admin.firestore().getAll(
-        charCollection.doc(attackerId), charCollection.doc(defenderId)
-    );
-
-    if (attackerDoc.data() === undefined) {
-        throw new functions.https.HttpsError('invalid-argument', `Could not find attacker with id ${attackerId}`);
-    }
-    if (defenderDoc.data() === undefined) {
-        throw new functions.https.HttpsError('invalid-argument', `Could not find defender with id ${defenderId}`);
-    }
-
-    const attacker = characterDataConverter.fromFirestore(attackerDoc as admin.firestore.QueryDocumentSnapshot);
-    const defender = characterDataConverter.fromFirestore(defenderDoc as admin.firestore.QueryDocumentSnapshot);
+    const [attacker, defender] = await characterClassLoader.loadMultiple([attackerId, defenderId]);
 
     const weapon = getAttack(attackName, 'weapon', attacker.data.weapons);
     const ability = getAttack(attackName, 'ability', attacker.data.abilities);

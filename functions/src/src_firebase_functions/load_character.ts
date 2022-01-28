@@ -8,10 +8,10 @@ import { profileDataConverter } from 'firestore_utils/data_converters';
 import { Profile } from 'profile';
 import { classSchema } from 'class';
 import { enumerateEnumValues, getNonNull } from 'utils';
-import { WeaponData, weaponSchema } from 'weapon';
 import { raceSchema } from 'race';
 import { AbilityData, abilitySchema } from 'ability';
 import { AttributesData, SkillsData } from 'schemas';
+import { weaponDataLoader } from 'firestore_utils/data_loaders';
 
 // Loads armor resistances
 // If the armor is "Naked", sets all resistances to 0.
@@ -36,25 +36,6 @@ async function loadArmor(armor: string) : Promise<ArmorData> {
 
     return armorData;
 
-}
-
-// Given a list of weapons from the profile
-// Loads the weapons' data and returns an array with the data
-async function loadWeapons(weapons: string[]) : Promise<WeaponData[]> {
-    let resultmap: any[] = [];
-    let weaponData: WeaponData[] = [] as WeaponData[];
-    const weaponsCollection = admin.firestore().collection('Weapons');
-
-    weapons.forEach(element => {
-        resultmap.push(getNonNull(weaponsCollection.doc(element).get()));
-    });
-
-    (await Promise.all(resultmap)).forEach(element => {
-        let data = getNonNull(element.data());
-        weaponData.push(weaponSchema.validateSync(data));
-    });
-
-    return weaponData;
 }
 
 // Given a list of abilities from the profile
@@ -133,7 +114,7 @@ async function createCharacter(profileName: string) : Promise<string> {
     );
 
     const armorData = await loadArmor(profile.getArmor());
-    const weaponData = await loadWeapons(profile.getWeapons());
+    const weaponData = await weaponDataLoader.loadMultiple(profile.getWeapons());
     const abilityData = await loadAbilities(profile.getAbilities());
 
     const attributes = calculateAttributes(profile);

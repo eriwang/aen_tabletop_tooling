@@ -55,12 +55,12 @@ afterAll(async () => {
 
 test('attacker does not exist', async () => {
     await testCollection.doc('attacker').delete();
-    await expect(wrapped(testData)).rejects.toThrow('Could not find attacker');
+    await expect(wrapped(testData)).rejects.toThrow('Could not find id "attacker"');
 });
 
 test('defender does not exist', async () => {
     await testCollection.doc('defender').delete();
-    await expect(wrapped(testData)).rejects.toThrow('Could not find defender');
+    await expect(wrapped(testData)).rejects.toThrow('Could not find id "defender"');
 });
 
 test('attack name does not exist on attacker', async () => {
