@@ -3,8 +3,8 @@ import { AttackType, Attribute, DamageType } from 'base_game_enums';
 import { CharacterData } from 'character';
 import { WeaponData } from 'weapon';
 
-export function getCharacterRepr() : CharacterData {
-    const weapons: WeaponData[] = [
+export function getWeaponsRepr() : WeaponData[] {
+    return [
         {
             name: 'weapon1',
             attribute: Attribute.STR,
@@ -28,7 +28,9 @@ export function getCharacterRepr() : CharacterData {
             range: 90,
         },
     ];
+}
 
+export function getCharacterRepr() : CharacterData {
     const abilities: AbilityData[] = [
         {
             name: 'Splash',
@@ -116,7 +118,7 @@ export function getCharacterRepr() : CharacterData {
         race: 'Human',
         class: 'Bandit',
         movement: 30,
-        weapons: weapons,
+        weapons: getWeaponsRepr(),
         abilities: abilities,
     };
 }
