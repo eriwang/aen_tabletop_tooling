@@ -1,14 +1,14 @@
 import * as admin from 'firebase-admin';
 import * as yup from 'yup';
 
-import { getNonNull } from 'utils';
-import { weaponSchema } from 'weapon';
-import { Character, characterSchema } from 'character';
 import { abilitySchema } from 'ability';
 import { armorSchema } from 'armor';
-import { raceSchema } from 'race';
 import { classSchema } from 'class';
+import { Character, characterSchema } from 'character';
 import { Profile, profileSchema } from 'profile';
+import { raceSchema } from 'race';
+import { getNonNull } from 'utils';
+import { weaponSchema } from 'weapon';
 
 interface DataLoader<TypeData> {
     loadSingle: (id: string) => Promise<TypeData>;

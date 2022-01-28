@@ -4,6 +4,7 @@
     "node": "14"
   },
   "scripts": {
+    "build": "yarn webpack",
     "run-tool": "yarn ts-node -r tsconfig-paths/register"
   },
   "main": "dist/index.js",
