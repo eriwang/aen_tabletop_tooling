@@ -101,12 +101,21 @@ request.body: {
 }
 
 response: {
-    characterData
+    characterId: string,
 }
 */
-export default functions.https.onRequest(async (request, response) =>{
+export default functions.https.onCall(async (data) => {
 
-    const profileName: string = request.body.profile as string;
+    const profileName: string = data.profile as string;
+
+    const characterId = await createCharacter(profileName);
+
+    return {
+        characterId: characterId,
+    };
+});
+
+async function createCharacter(profileName: string) : Promise<string> {
     const profilesCollection = admin.firestore().collection('Profiles');
     const charactersCollection = admin.firestore().collection('Characters');
     const racesCollection = admin.firestore().collection('Races');
@@ -155,8 +164,12 @@ export default functions.https.onRequest(async (request, response) =>{
         abilities: abilityData,
     };
 
-    await charactersCollection.doc(profileName).set(characterData);
+    const characterId = await charactersCollection.add(characterData);
 
-    response.send(characterData);
+    profile.setCharacterId(characterId.id);
 
-});
+    await profilesCollection.doc(profileName).withConverter(profileDataConverter).set(profile);
+
+    return characterId.id;
+
+}
