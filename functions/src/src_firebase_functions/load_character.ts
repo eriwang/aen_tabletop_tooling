@@ -101,16 +101,18 @@ request.body: {
 }
 
 response: {
-    characterId
+    characterId: string,
 }
 */
-export default functions.https.onRequest(async (request, response) =>{
+export default functions.https.onCall(async (data) => {
 
-    const profileName: string = request.body.profile as string;
+    const profileName: string = data.profile as string;
 
     const characterId = await createCharacter(profileName);
 
-    response.send(characterId);
+    return {
+        characterId: characterId,
+    };
 });
 
 async function createCharacter(profileName: string) : Promise<string> {
@@ -166,7 +168,7 @@ async function createCharacter(profileName: string) : Promise<string> {
 
     profile.setCharacterId(characterId.id);
 
-    await profilesCollection.doc(profileName).set(profile);
+    await profilesCollection.doc(profileName).withConverter(profileDataConverter).set(profile);
 
     return characterId.id;
 
