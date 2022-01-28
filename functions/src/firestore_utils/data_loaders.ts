@@ -4,6 +4,11 @@ import * as yup from 'yup';
 import { getNonNull } from 'utils';
 import { weaponSchema } from 'weapon';
 import { Character, characterSchema } from 'character';
+import { abilitySchema } from 'ability';
+import { armorSchema } from 'armor';
+import { raceSchema } from 'race';
+import { classSchema } from 'class';
+import { Profile, profileSchema } from 'profile';
 
 interface DataLoader<TypeData> {
     loadSingle: (id: string) => Promise<TypeData>;
@@ -41,6 +46,11 @@ function createClassLoader<Type, TypeData>
     };
 }
 
+export const abilityDataLoader = createDataLoader('Abilities', abilitySchema);
+export const armorDataLoader = createDataLoader('Armors', armorSchema);
+export const classDataLoader = createDataLoader('Classes', classSchema);
+export const raceDataLoader = createDataLoader('Races', raceSchema);
 export const weaponDataLoader = createDataLoader('Weapons', weaponSchema);
 
 export const characterClassLoader = createClassLoader('Characters', characterSchema, Character);
+export const profileClassLoader = createClassLoader('Profiles', profileSchema, Profile);

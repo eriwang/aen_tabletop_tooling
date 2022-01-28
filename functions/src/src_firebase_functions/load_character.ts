@@ -1,62 +1,14 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 
-import { ArmorData, armorSchema } from 'armor';
-import { Attribute, DamageType, Skills } from 'base_game_enums';
+import { Attribute, Skills } from 'base_game_enums';
 import { CharacterData } from 'character';
-import { profileDataConverter } from 'firestore_utils/data_converters';
 import { Profile } from 'profile';
-import { classSchema } from 'class';
-import { enumerateEnumValues, getNonNull } from 'utils';
-import { raceSchema } from 'race';
-import { AbilityData, abilitySchema } from 'ability';
+import { enumerateEnumValues } from 'utils';
 import { AttributesData, SkillsData } from 'schemas';
-import { weaponDataLoader } from 'firestore_utils/data_loaders';
-
-// Loads armor resistances
-// If the armor is "Naked", sets all resistances to 0.
-// Profile.getArmor() will return "Naked" if the armor is undefined.
-async function loadArmor(armor: string) : Promise<ArmorData> {
-    let armorData: ArmorData;
-    const armorsCollection = admin.firestore().collection('Armors');
-
-    if (armor === 'Naked') {
-        const noArmor: any = {};
-        for (const element of enumerateEnumValues<DamageType>(DamageType)) {
-            noArmor[element] = 0;
-        }
-        armorData = {} as ArmorData;
-        armorData.resistanceToFlat = noArmor;
-        armorData.resistanceToPercent = noArmor;
-    }
-    else {
-        let data = getNonNull(getNonNull(await armorsCollection.doc(armor).get()).data());
-        armorData = armorSchema.validateSync(data);
-    }
-
-    return armorData;
-
-}
-
-// Given a list of abilities from the profile
-// Loads the abilities' data and returns an array with the data
-async function loadAbilities(abilities: string[]) : Promise<AbilityData[]> {
-    let resultmap: any[] = [];
-    let abilityData: AbilityData[] = [] as AbilityData[];
-    const abilitiesCollection = admin.firestore().collection('Abilities');
-
-    abilities.forEach(element => {
-        resultmap.push(getNonNull(abilitiesCollection.doc(element).get()));
-    });
-
-    (await Promise.all(resultmap)).forEach(element => {
-        let data = getNonNull(element.data());
-        abilityData.push(abilitySchema.validateSync(data));
-    });
-
-    return abilityData;
-
-}
+import { abilityDataLoader, armorDataLoader, classDataLoader, profileClassLoader, raceDataLoader, weaponDataLoader }
+    from 'firestore_utils/data_loaders';
+import { profileDataConverter } from 'firestore_utils/data_converters';
 
 function calculateAttributes(profileData: Profile) : AttributesData {
     const attributes: any = {};
@@ -97,25 +49,13 @@ export default functions.https.onCall(async (data) => {
 });
 
 async function createCharacter(profileName: string) : Promise<string> {
-    const profilesCollection = admin.firestore().collection('Profiles');
-    const charactersCollection = admin.firestore().collection('Characters');
-    const racesCollection = admin.firestore().collection('Races');
-    const classesCollection = admin.firestore().collection('Classes');
+    const profile = await profileClassLoader.loadSingle(profileName);
 
-    const profile = getNonNull(getNonNull(
-        await profilesCollection.doc(profileName).withConverter(profileDataConverter).get()
-    ).data());
-
-    const classData = classSchema.validateSync(
-        getNonNull(getNonNull(await classesCollection.doc(profile.getClass()).get()).data())
-    );
-    const raceData = raceSchema.validateSync(
-        getNonNull(getNonNull(await racesCollection.doc(profile.getRace()).get()).data())
-    );
-
-    const armorData = await loadArmor(profile.getArmor());
+    const classData = await classDataLoader.loadSingle(profile.getClass());
+    const raceData = await raceDataLoader.loadSingle(profile.getRace());
+    const armorData = await armorDataLoader.loadSingle(profile.getArmor());
     const weaponData = await weaponDataLoader.loadMultiple(profile.getWeapons());
-    const abilityData = await loadAbilities(profile.getAbilities());
+    const abilityData = await abilityDataLoader.loadMultiple(profile.getAbilities());
 
     const attributes = calculateAttributes(profile);
 
@@ -144,11 +84,11 @@ async function createCharacter(profileName: string) : Promise<string> {
         abilities: abilityData,
     };
 
-    const characterId = await charactersCollection.add(characterData);
+    const characterId = await admin.firestore().collection('Characters').add(characterData);
 
     profile.setCharacterId(characterId.id);
 
-    await profilesCollection.doc(profileName).withConverter(profileDataConverter).set(profile);
+    await admin.firestore().collection('Profiles').doc(profileName).withConverter(profileDataConverter).set(profile);
 
     return characterId.id;
 }
