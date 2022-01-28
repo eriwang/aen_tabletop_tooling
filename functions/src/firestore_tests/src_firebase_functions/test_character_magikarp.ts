@@ -192,7 +192,10 @@ export const magikarpLvl100 : CharacterData = {
     movement: 80,
     weapons: [flail],
     abilities: [splash],
-
+    internalMetadata: {
+        profileId: 'Magikarp',
+        abilitiesInUse: [],
+    }
 };
 
 export const magikarpLvl1 : CharacterData = {
@@ -265,4 +268,8 @@ export const magikarpLvl1 : CharacterData = {
     movement: 80,
     weapons: [flail],
     abilities: [splash],
+    internalMetadata: {
+        profileId: 'Magikarp',
+        abilitiesInUse: [],
+    }
 };
