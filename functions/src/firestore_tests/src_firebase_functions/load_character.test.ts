@@ -1,7 +1,8 @@
 import * as admin from 'firebase-admin';
+import { initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules-unit-testing';
+
 import { flail, splash, water, fish, pokemon, karp, magikarp}
     from 'firestore_tests/src_firebase_functions/test_character_magikarp';
-import { initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules-unit-testing';
 import loadCharacter from 'src_firebase_functions/load_character';
 import { getNonNull } from 'utils';
 import { characterDataConverter, profileDataConverter } from 'firestore_utils/data_converters';

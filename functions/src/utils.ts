@@ -4,9 +4,9 @@ export function enumerateEnumValues<EnumClass>(enumClass: any) : EnumClass[] {
         .map((v) => enumClass[v as string]);
 }
 
-export function getNonNull<T>(value: T | null | undefined) : T {
+export function getNonNull<T>(value: T | null | undefined, errorMsg?: string) : T {
     if (value === null || value === undefined) {
-        throw new Error(`Expected nonNull value, but receieved ${value}`);
+        throw new Error((errorMsg === undefined) ? `Expected nonNull value, but receieved ${value}` : errorMsg);
     }
     return value!;
 }

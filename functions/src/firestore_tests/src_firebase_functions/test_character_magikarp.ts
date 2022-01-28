@@ -193,4 +193,8 @@ export const magikarp : CharacterData = {
     weapons: [flail],
     abilities: [splash],
 
+    internalMetadata: {
+        profileId: 'Magikarp',
+        abilitiesInUse: [],
+    }
 };
