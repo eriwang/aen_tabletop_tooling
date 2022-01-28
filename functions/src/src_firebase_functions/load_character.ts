@@ -89,11 +89,19 @@ async function createCharacter(profileName: string) : Promise<string> {
         }
     };
 
-    const characterId = await admin.firestore().collection('Characters').add(characterData);
+    let characterId = profile.getCharacterId();
 
-    profile.setCharacterId(characterId.id);
+    if (!characterId) {
+        characterId = (await admin.firestore().collection('Characters').add(characterData)).id;
+        profile.setCharacterId(characterId);
+        await admin.firestore().collection('Profiles').doc(profileName).
+            withConverter(profileDataConverter).set(profile);
+    }
+    else {
+        await admin.firestore().collection('Characters').doc(characterId).set(characterData);
+    }
 
-    await admin.firestore().collection('Profiles').doc(profileName).withConverter(profileDataConverter).set(profile);
+    return characterId;
 
-    return characterId.id;
+
 }

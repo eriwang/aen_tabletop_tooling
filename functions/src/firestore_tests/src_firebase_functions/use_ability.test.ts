@@ -8,7 +8,7 @@ import { initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules
 import { AbilityData } from 'ability';
 import { AbilityCategory, AttackType, Attribute, DamageType } from 'base_game_enums';
 import { Character, CharacterData } from 'character';
-import { flail, water, fish, pokemon, karp, magikarp } from './test_character_magikarp';
+import { flail, water, fish, pokemon, karp, magikarpLvl1 } from './test_character_magikarp';
 import { getCharacterRepr } from 'tests/test_data';
 import { characterClassLoader } from 'firestore_utils/data_loaders';
 import { WeaponData } from 'weapon';
@@ -54,7 +54,7 @@ describe('Validation', () => {
 describe('Abilities', () => {
     describe('Ursine Form', () => {
         function getCharacterReprWithUrsineForm() : CharacterData {
-            const char = deepcopy(magikarp);
+            const char = deepcopy(magikarpLvl1);
             char.currentHp = char.maxHp - 10;
             char.currentFp = char.maxFp - 15;
             char.abilities = [ursineForm];
@@ -123,7 +123,7 @@ describe('Abilities', () => {
 
             await admin.firestore().collection('Classes').doc(karp.class).set(pokemon);
             await admin.firestore().collection('Races').doc(karp.race).set(fish);
-            await admin.firestore().collection('Profiles').doc(magikarp.name).set(karp);
+            await admin.firestore().collection('Profiles').doc(magikarpLvl1.name).set(karp);
         });
 
         test('Change to Ursine Form', async () => {

@@ -1,7 +1,6 @@
 import * as admin from 'firebase-admin';
 import { initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules-unit-testing';
-
-import { flail, splash, water, fish, pokemon, karp, magikarp}
+import { flail, splash, water, fish, pokemon, karp, magikarpLvl100, magikarpLvl1}
     from 'firestore_tests/src_firebase_functions/test_character_magikarp';
 import loadCharacter from 'src_firebase_functions/load_character';
 import { getNonNull } from 'utils';
@@ -55,6 +54,26 @@ test('Create character Magikarp', async () => {
     const profData = getNonNull(getNonNull(await profilesCollection.doc('Magikarp').
         withConverter(profileDataConverter).get()).data());
 
-    expect(charData.data).toStrictEqual(magikarp);
+    expect(charData.data).toStrictEqual(magikarpLvl1);
     expect(result['characterId']).toStrictEqual(profData.data.characterId);
+});
+
+test('Magikarp was fed 99 rare candies', async () => {
+
+    karp.level = 100;
+
+    await profilesCollection.doc('Magikarp').set(karp);
+
+    let testdata = {profile: 'Magikarp'};
+    const result = await wrapped(testdata);
+
+    const charData = getNonNull(getNonNull(await charactersCollection.doc(result['characterId']).
+        withConverter(characterDataConverter).get()).data());
+
+    const profData = getNonNull(getNonNull(await profilesCollection.doc('Magikarp').
+        withConverter(profileDataConverter).get()).data());
+
+    expect(charData.data).toStrictEqual(magikarpLvl100);
+    expect(result['characterId']).toStrictEqual(profData.data.characterId);
+
 });
