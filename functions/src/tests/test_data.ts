@@ -14,7 +14,7 @@ export function getWeaponsRepr() : WeaponData[] {
             toHitMultiplier: 2,
             damageMultiplier: 3,
             hitDC: 4,
-            range: 0,
+            range: 10,
         },
         {
             name: 'weapon2',
