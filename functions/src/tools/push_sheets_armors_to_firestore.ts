@@ -9,12 +9,6 @@ function rowToDoc(row: any) : ArmorData {
     const resistanceToPercentStat: any = {};
     for (const dt of enumerateEnumValues<DamageType>(DamageType)) {
         const dtStr = DamageType[dt];
-        if (dtStr === DamageType.Psychic) {
-            resistanceToFlatStat[dtStr] = 0;
-            resistanceToPercentStat[dtStr] = 0;
-            continue;
-        }
-
         resistanceToFlatStat[dtStr] = row[dtStr];
         resistanceToPercentStat[dtStr] = 0;
     }
