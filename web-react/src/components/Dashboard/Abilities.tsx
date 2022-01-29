@@ -1,6 +1,7 @@
 import { ChangeEvent, Component, FormEvent } from "react";
 import { AttackCalculator } from ".";
 import Firebase, { withFirebase } from "../Firebase";
+import LoadingIndicator from "../Loading";
 
 interface AbilitiesProps {
     abilityList: any[];
@@ -12,6 +13,7 @@ interface AbilitiesState {
     abilityMap: {[key: string]: any};
     currentAbility: string;
     showCalculator: boolean;
+    loading: boolean;
 }
 
 class AbilitiesBase extends Component<AbilitiesProps, AbilitiesState> {
@@ -23,9 +25,9 @@ class AbilitiesBase extends Component<AbilitiesProps, AbilitiesState> {
             this.props.abilityList.forEach(ability => {
                 abilityMap[ability.name] = ability;
             });
-            this.state = {abilityMap: abilityMap, currentAbility: this.props.abilityList[0].name, showCalculator: false};
+            this.state = {abilityMap: abilityMap, currentAbility: this.props.abilityList[0].name, showCalculator: false, loading: false};
         } else {
-            this.state = {abilityMap: abilityMap, currentAbility: "", showCalculator: false};
+            this.state = {abilityMap: abilityMap, currentAbility: "", showCalculator: false, loading: false};
         }
     }
 
@@ -39,10 +41,17 @@ class AbilitiesBase extends Component<AbilitiesProps, AbilitiesState> {
         if(this.state.abilityMap[this.state.currentAbility].isAttack) {
             this.setState({showCalculator: true});
         } else {
+            this.setState({loading: true});
             // TODO: Make this extensible beyond Ursine Form - perhaps we need an AbilityCalculator component?
             this.props.firebase.useAbility(this.props.characterId, this.state.currentAbility)
-                .then(result => {console.log(`Successfully used ${this.state.currentAbility}`, result)})
-                .catch(error => console.error(error));
+                .then(result => {
+                    console.log(`Successfully used ${this.state.currentAbility}`, result);
+                    this.setState({loading: false});
+                })
+                .catch(error => {
+                    console.error(error);
+                    this.setState({loading: false});
+                });
         }
 
         event.preventDefault();
@@ -53,7 +62,7 @@ class AbilitiesBase extends Component<AbilitiesProps, AbilitiesState> {
     }
 
     render() {
-        const {currentAbility, showCalculator, abilityMap} = this.state
+        const {currentAbility, showCalculator, abilityMap, loading} = this.state
 
         let abilityOptions = this.props.abilityList ? this.props.abilityList
             .map((ability, index) => (
@@ -129,6 +138,7 @@ class AbilitiesBase extends Component<AbilitiesProps, AbilitiesState> {
                         attackName={currentAbility}
                         onClose={this.closeCalculator} />
                 }
+                <LoadingIndicator showSpinner={loading} />
             </div>
         )
     }

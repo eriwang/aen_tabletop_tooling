@@ -185,7 +185,7 @@ class Firebase {
     buildCharacter = (profileId: string) => {
         return new Promise<any>((resolve, reject) => {
             httpsCallable(this.fn, 'loadCharacter')({
-                profileName: profileId
+                profile: profileId
             })
                 .then(result => {
                     resolve(result.data);
