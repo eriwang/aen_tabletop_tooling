@@ -4,11 +4,10 @@ import { AttackCalculator } from ".";
 interface AbilitiesProps {
     abilityList: any[];
     characterId: string;
-    charactersList: Map<string, string>;
 }
 
 interface AbilitiesState {
-    abilityMap: Map<string, any>;
+    abilityMap: {[key: string]: any};
     currentAbility: string;
     showCalculator: boolean;
 }
@@ -17,12 +16,10 @@ class Abilities extends Component<AbilitiesProps, AbilitiesState> {
     constructor(props: any) {
         super(props);
 
-        console.log(this.props.charactersList);
-
-        const abilityMap: Map<string, any> = new Map();
+        const abilityMap: {[key: string]: any} = {};
         if(this.props.abilityList) {
             this.props.abilityList.forEach(ability => {
-                abilityMap.set(ability.name, ability);
+                abilityMap[ability.name] = ability;
             });
             this.state = {abilityMap: abilityMap, currentAbility: this.props.abilityList[0].name, showCalculator: false};
         } else {
@@ -37,7 +34,7 @@ class Abilities extends Component<AbilitiesProps, AbilitiesState> {
     }
 
     onSubmit = (event: FormEvent) => {
-        if(this.state.abilityMap.get(this.state.currentAbility).isAttack) {
+        if(this.state.abilityMap[this.state.currentAbility].isAttack) {
             this.setState({showCalculator: true});
         } else {
             // Do something else here for buffs like "Ursine Form"
@@ -81,39 +78,39 @@ class Abilities extends Component<AbilitiesProps, AbilitiesState> {
                                 </form>
                                 </div>
                             </td>
-                            <td colSpan={2} className="small">{abilityMap.get(currentAbility).category}: <i>{abilityMap.get(currentAbility).description}</i></td>
+                            <td colSpan={2} className="small">{abilityMap[currentAbility].category}: <i>{abilityMap[currentAbility].description}</i></td>
                         </tr>
                         <tr>
                             <td>Cooldown</td>
-                            <td>{abilityMap.get(currentAbility).cooldown} turn(s)</td>
+                            <td>{abilityMap[currentAbility].cooldown} turn(s)</td>
                         </tr>
                         <tr>
                             <td>Cost</td>
-                            <td>{abilityMap.get(currentAbility).fpCost} FP</td>
+                            <td>{abilityMap[currentAbility].fpCost} FP</td>
                         </tr>
                         <tr>
                             <td>Range</td>
-                            <td>{abilityMap.get(currentAbility).range}</td>
+                            <td>{abilityMap[currentAbility].range}</td>
                         </tr>
                         <tr>
                             <td>Primary Attribute</td>
-                            <td>{abilityMap.get(currentAbility).attribute}</td>
+                            <td>{abilityMap[currentAbility].attribute}</td>
                         </tr>
                         <tr className="blue">
                             <td>Attack Type</td>
-                            <td>{abilityMap.get(currentAbility).attackType}</td>
+                            <td>{abilityMap[currentAbility].attackType}</td>
                         </tr>
                         <tr className="blue">
                             <td>To Hit <span className="subtext">(+ Roll, vs Defenses)</span></td>
-                            <td>ceiling({abilityMap.get(currentAbility).attribute} * {abilityMap.get(currentAbility).toHitMultiplier}) - {abilityMap.get(currentAbility).hitDC}</td>
+                            <td>ceiling({abilityMap[currentAbility].attribute} * {abilityMap[currentAbility].toHitMultiplier}) - {abilityMap[currentAbility].hitDC}</td>
                         </tr>
                         <tr className="orange">
                             <td>Damage <span className="subtext">(- Resistances)</span></td>
-                            <td>ceiling({abilityMap.get(currentAbility).attribute} * {abilityMap.get(currentAbility).damageMultiplier}) + {abilityMap.get(currentAbility).baseDamage}</td>
+                            <td>ceiling({abilityMap[currentAbility].attribute} * {abilityMap[currentAbility].damageMultiplier}) + {abilityMap[currentAbility].baseDamage}</td>
                         </tr>
                         <tr className="orange">
                             <td>Damage Type</td>
-                            <td>{abilityMap.get(currentAbility).damageType}</td>
+                            <td>{abilityMap[currentAbility].damageType}</td>
                         </tr>
                         </tbody>
                         )
@@ -124,8 +121,7 @@ class Abilities extends Component<AbilitiesProps, AbilitiesState> {
                     showCalculator && 
                     <AttackCalculator 
                         attackerId={this.props.characterId} 
-                        attackName={currentAbility} 
-                        charactersList={this.props.charactersList}
+                        attackName={currentAbility}
                         onClose={this.closeCalculator} />
                 }
             </div>
