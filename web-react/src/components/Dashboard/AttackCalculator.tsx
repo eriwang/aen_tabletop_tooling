@@ -67,7 +67,8 @@ class AttackCalculatorBase extends Component<AttackCalculatorProps, AttackCalcul
 
     onChange = (event: ChangeEvent) => {
         const target = event.target as HTMLTextAreaElement;
-        const newState = { [target.name]: target.value } as any as Pick<AttackCalculatorState, keyof AttackCalculatorState>;
+        const value = isNaN(parseInt(target.value)) ? target.value : parseInt(target.value);
+        const newState = { [target.name]: value } as any as Pick<AttackCalculatorState, keyof AttackCalculatorState>;
         this.setState(newState);
     }
 

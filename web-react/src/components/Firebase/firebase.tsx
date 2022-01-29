@@ -156,7 +156,7 @@ class Firebase {
                 attackerId: attackerId,
                 defenderId: defenderId,
                 attackName: weaponName,
-                roll: roll
+                roll: parseInt(roll + "")
             })
                 .then(result => {
                     resolve(result.data);

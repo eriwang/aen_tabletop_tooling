@@ -1,7 +1,7 @@
 import { User } from "firebase/auth";
 import { DocumentData, DocumentSnapshot, Unsubscribe } from "firebase/firestore";
 import React, { Component, Fragment } from "react";
-import { Abilities, EditableField, EditableStat, Weapons } from ".";
+import { Abilities, Armors, Attributes, Defenses, EditableField, EditableStat, Weapons } from ".";
 import Firebase, { withFirebase } from "../Firebase";
 import { ProfileManagement } from "../Profiles";
 import { withUser } from "../Session";
@@ -112,12 +112,19 @@ class GameMasterSheetBase extends Component<GameMasterSheetProps, GameMasterShee
                     <tr>
                         <td colSpan={6}>
                             <div className="charSheet">
+                                <Attributes 
+                                    attributes={character.attributes} />
                                 <Weapons
                                     weaponList={character.weapons}
                                     characterId={id} />
                                 <Abilities
                                     abilityList={character.abilities}
                                     characterId={id} />
+                                <Armors
+                                    armorName={character.armor}
+                                    resistances={character.resistanceToFlat} />
+                                <Defenses
+                                    attributes={character.attributes} />
                             </div>
                         </td>
                     </tr>
