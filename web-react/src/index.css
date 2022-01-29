@@ -43,6 +43,10 @@ code {
   height: 16px;
 }
 
+.error {
+  color: darkred;
+}
+
 /** Font Classes **/
 
 .subtext {

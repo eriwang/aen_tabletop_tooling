@@ -138,6 +138,16 @@ class Firebase {
 
     profile = (id: string) => doc(collection(this.db, 'Profiles'), id);
 
+    addProfilesListener = (callbacks: { [key: string]: (doc: DocumentSnapshot<DocumentData>) => any }) => {
+        return onSnapshot(this.profiles(), snapshot => {
+            snapshot.docChanges().forEach(change => {
+                if(callbacks[change.type]) {
+                    callbacks[change.type](change.doc);
+                }
+            })
+        })
+    }
+
     // *** Cloud Functions API *** //
 
     calculateAttack = (attackerId: string, defenderId: string, weaponName: string, roll: number) => {
@@ -162,6 +172,20 @@ class Firebase {
             httpsCallable(this.fn, 'useAbility')({
                 characterId: attackerId,
                 abilityName: abilityName
+            })
+                .then(result => {
+                    resolve(result.data);
+                })
+                .catch(error => {
+                    reject(error);
+                })
+        })
+    }
+
+    buildCharacter = (profileId: string) => {
+        return new Promise<any>((resolve, reject) => {
+            httpsCallable(this.fn, 'loadCharacter')({
+                profileName: profileId
             })
                 .then(result => {
                     resolve(result.data);

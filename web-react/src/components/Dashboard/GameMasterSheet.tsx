@@ -3,6 +3,7 @@ import { DocumentData, DocumentSnapshot, Unsubscribe } from "firebase/firestore"
 import React, { Component, Fragment } from "react";
 import { Abilities, EditableField, EditableStat, Weapons } from ".";
 import Firebase, { withFirebase } from "../Firebase";
+import { ProfileManagement } from "../Profiles";
 import { withUser } from "../Session";
 
 interface GameMasterSheetProps {
@@ -143,6 +144,8 @@ class GameMasterSheetBase extends Component<GameMasterSheetProps, GameMasterShee
                         {characterRows}
                     </tbody>
                 </table>
+                <h2>Profile management</h2>
+                <ProfileManagement />
             </div>
         )
     }
