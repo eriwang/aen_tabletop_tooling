@@ -160,6 +160,21 @@ class Firebase {
                 })
         });
     }
+
+    useAbility = (attackerId: string, abilityName: string) => {
+        return new Promise<any>((resolve, reject) => {
+            httpsCallable(this.fn, 'useAbility')({
+                characterId: attackerId,
+                abilityName: abilityName
+            })
+                .then(result => {
+                    resolve(result.data);
+                })
+                .catch(error => {
+                    reject(error);
+                })
+        })
+    }
 }
 
 export default Firebase;

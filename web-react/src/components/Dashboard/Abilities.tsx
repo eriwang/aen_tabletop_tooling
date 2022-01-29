@@ -1,9 +1,11 @@
 import { ChangeEvent, Component, FormEvent } from "react";
 import { AttackCalculator } from ".";
+import Firebase, { withFirebase } from "../Firebase";
 
 interface AbilitiesProps {
     abilityList: any[];
     characterId: string;
+    firebase: Firebase;
 }
 
 interface AbilitiesState {
@@ -12,7 +14,7 @@ interface AbilitiesState {
     showCalculator: boolean;
 }
 
-class Abilities extends Component<AbilitiesProps, AbilitiesState> {
+class AbilitiesBase extends Component<AbilitiesProps, AbilitiesState> {
     constructor(props: any) {
         super(props);
 
@@ -37,7 +39,10 @@ class Abilities extends Component<AbilitiesProps, AbilitiesState> {
         if(this.state.abilityMap[this.state.currentAbility].isAttack) {
             this.setState({showCalculator: true});
         } else {
-            // Do something else here for buffs like "Ursine Form"
+            // TODO: Make this extensible beyond Ursine Form - perhaps we need an AbilityCalculator component?
+            this.props.firebase.useAbility(this.props.characterId, this.state.currentAbility)
+                .then(result => {console.log(`Successfully used ${this.state.currentAbility}`, result)})
+                .catch(error => console.error(error));
         }
 
         event.preventDefault();
@@ -128,5 +133,7 @@ class Abilities extends Component<AbilitiesProps, AbilitiesState> {
         )
     }
 }
+
+const Abilities = withFirebase(AbilitiesBase);
 
 export default Abilities;
