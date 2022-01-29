@@ -132,15 +132,11 @@ class Firebase {
         })
     }
 
-    // units = () => collection(this.db, 'Units');
+    // *** Profiles API *** //
 
-    // units = () => {
-    //     return new Promise<QuerySnapshot<DocumentData>>((resolve, reject) => {
-    //         getDocs(collection(this.db, 'Units'))
-    //             .then(snapshot => resolve(snapshot))
-    //             .catch(error => reject(error))
-    //     })
-    // }
+    profiles = () => collection(this.db, 'Profiles');
+
+    profile = (id: string) => doc(collection(this.db, 'Profiles'), id);
 
     // *** Cloud Functions API *** //
 
