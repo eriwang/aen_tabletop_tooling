@@ -58,7 +58,7 @@ class ProfileManagementBase extends Component<ProfileManagementProps, ProfileMan
         // console.log(profileId);
         this.props.firebase.buildCharacter(profileId)
             .then(result => {
-                this.setState({result: `Successfully generated character with ID ${result}`});
+                this.setState({result: `Successfully generated character with ID ${result.characterId}`});
                 console.log(result);
             })
             .catch(error => {
