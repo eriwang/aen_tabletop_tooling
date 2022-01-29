@@ -1,7 +1,7 @@
 import { User } from "firebase/auth";
 import { DocumentData, DocumentSnapshot, Unsubscribe } from "firebase/firestore";
-import React, { Component } from "react";
-import { EditableField, EditableStat } from ".";
+import React, { Component, Fragment } from "react";
+import { Abilities, EditableField, EditableStat, Weapons } from ".";
 import Firebase, { withFirebase } from "../Firebase";
 import { withUser } from "../Session";
 
@@ -26,6 +26,7 @@ class GameMasterSheetBase extends Component<GameMasterSheetProps, GameMasterShee
             added: (doc: DocumentSnapshot<DocumentData>) => {
                 let {characters} = this.state;
                 characters[doc.id] = doc.data();
+                characters[doc.id].showMoreDetails = false;
                 this.setState({characters: characters});
             },
             removed: (doc: DocumentSnapshot<DocumentData>) => {
@@ -35,7 +36,9 @@ class GameMasterSheetBase extends Component<GameMasterSheetProps, GameMasterShee
             },
             modified: (doc: DocumentSnapshot<DocumentData>) => {
                 let {characters} = this.state;
+                const showMoreDetails = characters[doc.id].showMoreDetails;
                 characters[doc.id] = doc.data();
+                characters[doc.id].showMoreDetails = showMoreDetails;
                 this.setState({characters: characters});
             }
         }
@@ -53,6 +56,12 @@ class GameMasterSheetBase extends Component<GameMasterSheetProps, GameMasterShee
         }
     }
 
+    toggleRow = (characterId: string) => () => {
+        const {characters} = this.state;
+        characters[characterId].showMoreDetails = !characters[characterId].showMoreDetails;
+        this.setState({characters: characters});
+    }
+
     componentWillUnmount() {
         this.characterListListener();
     }
@@ -63,8 +72,9 @@ class GameMasterSheetBase extends Component<GameMasterSheetProps, GameMasterShee
                 return char2[1].initiative - char1[1].initiative;
             })
             .map(([id, character], index) => (
-                <tr key={id}>
-                    <td>{character.name}</td>
+                <Fragment key={id}>
+                <tr>
+                    <td rowSpan={character.showMoreDetails ? 2 : 1}>{character.name}</td>
                     <td><EditableStat initialValue={character.initiative} onSubmit={this.updateValue(id, "initiative")} /></td>
                     <td>
                         Total HP: {character.maxHp}
@@ -92,7 +102,26 @@ class GameMasterSheetBase extends Component<GameMasterSheetProps, GameMasterShee
                             initialValue={character.cooldowns}
                             onSubmit={this.updateValue(id, "cooldowns")} />
                     </td>
+                    <td>
+                        <button onClick={this.toggleRow(id)}>Show {character.showMoreDetails ? "less" : "more"}</button>
+                    </td>
                 </tr>
+                {
+                    character.showMoreDetails &&
+                    <tr>
+                        <td colSpan={6}>
+                            <div className="charSheet">
+                                <Weapons
+                                    weaponList={character.weapons}
+                                    characterId={id} />
+                                <Abilities
+                                    abilityList={character.abilities}
+                                    characterId={id} />
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </Fragment>
             ));
 
         return (
@@ -107,6 +136,7 @@ class GameMasterSheetBase extends Component<GameMasterSheetProps, GameMasterShee
                             <th>FP</th>
                             <th>Statuses</th>
                             <th>Cooldowns</th>
+                            <th>More</th>
                         </tr>
                     </thead>
                     <tbody>

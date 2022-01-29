@@ -18,7 +18,7 @@ class EditableField extends Component<EditableFieldProps, EditableFieldState> {
     }
 
     componentDidUpdate = (prevProps: EditableFieldProps, prevState: EditableFieldState) => {
-        if(this.state.value !== this.props.initialValue) {
+        if(prevProps.initialValue !== this.props.initialValue) {
             this.setState({value: this.props.initialValue});
         }
     }
@@ -30,18 +30,26 @@ class EditableField extends Component<EditableFieldProps, EditableFieldState> {
 
     onChange = (event: ChangeEvent) => {
         const target = event.target as HTMLTextAreaElement;
-        const newState = { [target.name]: target.value } as Pick<EditableFieldState, "value">
-        this.setState(newState);
+        console.log(target.value);
+        this.setState({"value": target.value});
     }
 
     render() {
         const {value} = this.state;
+        const hasNotChanged = this.props.initialValue === this.state.value;
 
         return (
             <div>
                 <form onSubmit={this.onSubmit}>
-                    <textarea name="value" value={value} rows={8} onChange={this.onChange} />
-                    <button type="submit">Update</button>
+                    <textarea 
+                        name="value" 
+                        value={value} 
+                        rows={8} 
+                        onChange={this.onChange} 
+                        onKeyPress={event => {if(event.key === "Enter"){event.stopPropagation()}}}
+                        />
+                    <br />
+                    <button type="submit" disabled={hasNotChanged}>Update</button>
                 </form>
             </div>
         )
