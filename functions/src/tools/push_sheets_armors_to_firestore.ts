@@ -9,8 +9,14 @@ function rowToDoc(row: any) : ArmorData {
     const resistanceToPercentStat: any = {};
     for (const dt of enumerateEnumValues<DamageType>(DamageType)) {
         const dtStr = DamageType[dt];
-        resistanceToFlatStat[dtStr] = row[`${dtStr} Flat`];
-        resistanceToPercentStat[dtStr] = row[`${dtStr}%`];
+        if (dtStr === DamageType.Psychic) {
+            resistanceToFlatStat[dtStr] = 0;
+            resistanceToPercentStat[dtStr] = 0;
+            continue;
+        }
+
+        resistanceToFlatStat[dtStr] = row[dtStr];
+        resistanceToPercentStat[dtStr] = 0;
     }
 
     const doc: ArmorData = {
@@ -22,5 +28,5 @@ function rowToDoc(row: any) : ArmorData {
 }
 
 run(async () => {
-    await pushCsvToFirestore('armors.csv', 'Armors', rowToDoc);
+    await pushCsvToFirestore('Armors - Player Armors.csv', 'Armors', rowToDoc);
 });
