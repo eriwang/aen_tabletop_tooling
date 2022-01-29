@@ -9,6 +9,8 @@ export const attributesSchema = yup.object().shape({
     CHAR: yup.number().required(),
 });
 
+export interface AttributesData extends yup.InferType<typeof attributesSchema> {}
+
 export const resistancesSchema = yup.object().shape({
     Slashing: yup.number().required(),
     Bludgeoning: yup.number().required(),
@@ -43,3 +45,5 @@ export const skillsSchema = yup.object().shape({
     Stealth: yup.number().required(),
     Survival: yup.number().required(),
 });
+
+export interface SkillsData extends yup.InferType<typeof skillsSchema> {}

@@ -13,6 +13,7 @@ export const profileSchema = yup.object().shape({
     race: yup.string().required(),
     class: yup.string().required(),
     weapons: yup.array(yup.string().required()).required(),
+    characterId: yup.string().optional(),
 });
 
 export interface ProfileData extends yup.InferType<typeof profileSchema> {}
@@ -22,6 +23,21 @@ export class Profile {
 
     constructor(data: ProfileData) {
         this.data = data;
+    }
+
+    getCharacterId() : string {
+
+        if (this.data.characterId) {
+            return this.data.characterId;
+        }
+        else {
+            return '';
+        }
+
+    }
+
+    setCharacterId(characterId : string) {
+        this.data.characterId = characterId;
     }
 
     getAttributeTotal(attr: Attribute) : number {

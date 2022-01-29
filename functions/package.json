@@ -4,26 +4,36 @@
     "node": "14"
   },
   "scripts": {
+    "build": "yarn webpack",
     "run-tool": "yarn ts-node -r tsconfig-paths/register"
   },
   "main": "dist/index.js",
   "dependencies": {
+    "@babel/runtime": "^7.16.7",
     "@types/module-alias": "^2.0.1",
     "@types/readline-sync": "^1.4.4",
     "csv-parse": "^5.0.4",
     "csv-parser": "^3.0.0",
+    "deepcopy": "^2.1.0",
     "firebase-admin": "^10.0.1",
     "firebase-functions": "^3.16.0",
-    "module-alias": "^2.2.2",
     "readline-sync": "^1.4.10",
     "yup": "1.0.0-beta.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.16.8",
+    "@babel/core": "^7.16.7",
+    "@babel/plugin-transform-runtime": "^7.16.8",
+    "@babel/preset-env": "^7.16.8",
+    "@babel/preset-typescript": "^7.16.7",
     "@types/jest": "^27.0.3",
     "@types/jest-when": "^2.7.3",
+    "babel-loader": "^8.2.3",
     "firebase-functions-test": "^0.3.3",
     "ts-node": "^10.4.0",
-    "tsconfig-paths": "^3.12.0"
+    "tsconfig-paths": "^3.12.0",
+    "webpack": "^5.66.0",
+    "webpack-cli": "^4.9.1"
   },
   "private": true
 }
