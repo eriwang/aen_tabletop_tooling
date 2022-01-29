@@ -22,5 +22,6 @@ function rowToDoc(row: any) : ArmorData {
 }
 
 run(async () => {
-    await pushCsvToFirestore('Armors - Player Armors.csv', 'Armors', rowToDoc);
+    await pushCsvToFirestore('Armors - Player Armors.csv', 'Armors', rowToDoc,
+        /* isRealRun */ false, /* useNameAsId */ true);
 });
