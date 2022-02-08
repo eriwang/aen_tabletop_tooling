@@ -10,10 +10,17 @@ Tooling for "DND" AEN.
 ## Set Up Dev Environment
 
 - `yarn install`
+
+Make sure you run this command in both `root` and `functions`
+
 - `yarn firebase login`
 - Hopefully that's it!
 
 See `package.json` for some useful commands (e.g. `yarn lint`, `yarn test`, `yarn build`, `yarn deploy`.....)
+
+To commit changes, first make a local branch with your changes (this can be named anything) and push to `origin $your_new_branch_name`
+Then, in the github web UI, click the `pull request` button next to your pending change and follow the instructions to merge with main
+Note: finishing the pull request with `squash and merge` will delete your newly made branch on remote. This is usually desireable, but double check that it is the behavior you want.
 
 ## Testing
 
