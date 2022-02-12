@@ -1,5 +1,6 @@
 import { User } from "firebase/auth";
-import React, { ChangeEvent, Component, FormEvent } from "react";
+import React, { Component } from "react";
+import CharacterSelector from "../CharacterSelector";
 import Firebase, { withFirebase } from "../Firebase";
 import { withUser } from "../Session";
 
@@ -11,13 +12,14 @@ const AccountPage = () => (
 )
 
 interface AccountDetailsProps {
-    firebase: Firebase | null;
-    currentUser: User | null;
+    firebase: Firebase;
+    currentUser: User;
 }
 
 interface AccountDetailsState {
-    username: string | null;
-    character: string | null;
+    username: string;
+    character: string;
+    characterList: { [key: string]: string };
 }
 
 class AccountDetailsBase extends Component<AccountDetailsProps, AccountDetailsState> {
@@ -25,7 +27,7 @@ class AccountDetailsBase extends Component<AccountDetailsProps, AccountDetailsSt
     constructor(props: any) {
         super(props);
 
-        this.state = {username: null, character: null}
+        this.state = {username: "", character: "", characterList: {}}
         //this.currentUser = this.props.userContext(AuthUserContext);
     }
 
@@ -33,15 +35,28 @@ class AccountDetailsBase extends Component<AccountDetailsProps, AccountDetailsSt
         this.findUserDetails();
     }
 
+    componentDidUpdate = (prevProps: AccountDetailsProps) => {
+        if(this.props.currentUser !== prevProps.currentUser) {
+            this.findUserDetails();
+        }
+    }
+
+    updateUserDetail = (property: string) => (newValue: any) => {
+        this.props.firebase.updateUserData(this.props.currentUser.uid, {[property]: newValue})
+            .then(() => {
+                console.log("Updated character " + property + " to ", newValue);
+            })
+            .catch(error => {
+                console.error(error);
+            })
+    }
+
     findUserDetails = () => {
-        // TODO: There is some issue here where the currentUser is initially read as null and later gets updated
-        // with the proper value, but this component doesn't get re-rendered. The "Try Again" button is a temp
-        // solution to get it working until I figure out a fix.
         if(!this.props.currentUser) {
-            console.log("User is null")
+            //console.log("User is null")
             return;
         }
-        console.log("User is not null");
+        //console.log("User is not null");
         this.props.firebase!.getUserData(this.props.currentUser.uid)
             .then(userDetails => {
                 if (userDetails) {
@@ -55,121 +70,25 @@ class AccountDetailsBase extends Component<AccountDetailsProps, AccountDetailsSt
         if(!this.props.currentUser) {
             return <p>Not signed in.</p>
         }
-        if (this.state.username) {
-            return (
-                <div>
-                    <p><strong>Email:</strong> {this.props.currentUser.email}</p>
-                    <p><strong>Username:</strong> {this.state.username}</p>
-                    <CharacterSelection chosenCharacter={this.state.character} />
-                </div>
-            )
-        } else {
-            return (
-                <div>
-                    <p>Missing some user details. Please try again or delete and re-create your account.</p>
-                    <button onClick={this.findUserDetails}>Try again</button>
-                </div>
-            )
-        }
-    }
-}
-
-interface CharacterSelectionProps {
-    firebase: Firebase | null;
-    currentUser: User | null;
-    chosenCharacter: string | null;
-}
-
-interface CharacterSelectionState {
-    character: string;
-    error: any;
-    characterList: { [key: string]: string };
-}
-
-class CharacterSelectionBase extends Component<CharacterSelectionProps, CharacterSelectionState> {
-    constructor(props: any) {
-        super(props);
-
-        this.state = {
-            character: this.props.chosenCharacter ? this.props.chosenCharacter : "",
-            characterList: {},
-            error: null
-        }
-
-        this.getCharacterList();
-    }
-
-    getCharacterList = () => {
-        this.props.firebase!.getCharactersData()
-            .then(snapshot => {
-                let characterList: { [key: string]: string } = {};
-                snapshot?.forEach((doc) => {
-                    const data = doc.data();
-                    characterList[doc.id] = data['name'];
-                });
-                this.setState({ characterList: characterList });
-            })
-            .catch(error => {
-                this.setState({ error: error });
-            });
-    }
-
-    onChange = (event: ChangeEvent) => {
-        const target = event.target as HTMLSelectElement;
-        const newState = { [target.name]: target.value } as any as Pick<CharacterSelectionState, keyof CharacterSelectionState>;
-        this.setState(newState);
-    }
-
-    onSubmit = (event: FormEvent) => {
-        const { character } = this.state;
-
-        this.props.firebase?.updateUserData(this.props.currentUser?.uid, {character: character})
-            .then(() => {
-                console.log("Set character successfully");
-            })
-            .catch(error => {
-                this.setState({error: error})
-            })
-        //console.log("Selected " + this.state.character)
-
-        event.preventDefault();
-    };
-
-    render() {
-        const {character, error} = this.state;
-
-        let characterOptions = Object.entries(this.state.characterList)
-            .map(([id, name]) => <option value={id} key={id}>{name}</option>);
-
-        return(
+        return (
             <div>
-                <p><strong>Character:</strong></p>
-                <form onSubmit={this.onSubmit}>
-                    <select name="character" value={character} placeholder="Character" onChange={this.onChange}>
-                        <option value={""} key="Not selected">Select a Character</option>
-                        {characterOptions}
-                    </select>
-                    <button type="submit">Select</button>
+                <p><strong>Email:</strong> {this.props.currentUser.email}</p>
+                <p><strong>Username:</strong></p>
+                <form onSubmit={event => {this.updateUserDetail("username")(this.state.username); event.preventDefault();}}>
+                    <input name="username" value={this.state.username} onChange={event => this.setState({username: event.target.value})} type="text" />
+                    <button type="submit">Update</button>
                 </form>
-                {error && <p>{error.message}</p>}
+                <p><strong>Character:</strong></p>
+                <CharacterSelector 
+                    initialValue={this.state.character}
+                    onChange={this.updateUserDetail("character")} />
             </div>
         )
     }
 }
 
-const CharacterSelection = withUser(withFirebase(CharacterSelectionBase))
-
-// const AccountDetails = () => (
-//     <div>
-//         <AuthUserContext.Consumer>
-//             {currentUser => <FirebaseContext.Consumer>
-//                 {firebase => <AccountDetailsBase currentUser={currentUser} firebase={firebase}/>}
-//             </FirebaseContext.Consumer>}
-//         </AuthUserContext.Consumer>
-//     </div>
-// ) 
 const AccountDetails = withUser(withFirebase(AccountDetailsBase))
 
 export default AccountPage;
 
-export { AccountDetails, CharacterSelection }
+export { AccountDetails }

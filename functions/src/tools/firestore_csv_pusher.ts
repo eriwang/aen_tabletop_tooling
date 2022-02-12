@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 
 import { parse } from 'csv-parse';
-import { collection, getFirestore, addDoc } from 'firebase/firestore';
+import { collection, getFirestore, addDoc, setDoc, doc } from 'firebase/firestore';
 
 async function readFromCSV(filename: string) {
     return new Promise<any>((resolve) => {
@@ -12,11 +12,11 @@ async function readFromCSV(filename: string) {
 }
 
 export async function pushCsvToFirestore(filename: string, collectionName: string, rowToDoc: (row: any) => any,
-    dryRun?: boolean) {
+    isRealRun?: boolean, useNameAsId?: boolean) {
     const csvData = await readFromCSV(filename);
     const firestoreData = csvData.map((d: any) => rowToDoc(d));
 
-    if (dryRun) {
+    if (!isRealRun) {
         console.log('Dry run mode, no data will be pushed.');
         console.log(firestoreData);
         return;
@@ -24,5 +24,7 @@ export async function pushCsvToFirestore(filename: string, collectionName: strin
 
     const db = getFirestore();
     const targetCollection = collection(db, collectionName);
-    return Promise.all(firestoreData.map((d: any) => addDoc(targetCollection, d)));
+    return Promise.all(firestoreData.map((d: any) =>
+        (useNameAsId) ? setDoc(doc(db, collectionName, d.name), d) : addDoc(targetCollection, d)
+    ));
 }

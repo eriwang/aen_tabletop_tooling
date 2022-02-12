@@ -5,6 +5,8 @@
 .yarn*
 dist/
 node_modules/
+.yarnrc.yml
+.yarn/
 
 # Other
 *.log

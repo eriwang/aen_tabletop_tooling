@@ -50,7 +50,7 @@ class SignUpFormBase extends Component<SignUpProps, SignUpState> {
           .doCreateUserWithEmailAndPassword(email, passwordOne)
           .then(authUser => {
               this.setState({...INITIAL_STATE})
-              this.props.firebase.setUserData(authUser.user?.uid, {username: username, email: email});
+              this.props.firebase.setUserData(authUser.user?.uid, {username: username, email: email, character:""});
               this.props.navigate(ROUTES.HOME)
           })
           .catch((error: any) => {

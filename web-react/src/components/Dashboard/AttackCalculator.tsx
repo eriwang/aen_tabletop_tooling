@@ -1,11 +1,12 @@
 import { ChangeEvent, Component, FormEvent } from "react";
+import CharacterSelector from "../CharacterSelector";
 import Firebase, { withFirebase } from "../Firebase";
+import LoadingIndicator from "../Loading";
 
 interface AttackCalculatorProps {
     firebase: Firebase;
     attackerId: string;
     attackName: string;
-    charactersList: Map<string, string>;
     onClose: () => any;
 }
 
@@ -73,35 +74,32 @@ class AttackCalculatorBase extends Component<AttackCalculatorProps, AttackCalcul
     render() {
         const {defenderId, roll, loading, result, error} = this.state;
 
-        let characterOptions = Array.from(this.props.charactersList.keys())
-            .map(id => <option value={id} key={id}>{this.props.charactersList.get(id)}</option>);
-
-            return (
-                <div className="cover"><div className="modal">
-                    <h2>Calculate Attack</h2>
-                    <p>Using {this.props.attackName} to attack.</p>
-                    <form onSubmit={this.onSubmit}>
-                    <select name="defenderId" value={defenderId} placeholder="Opponent" onChange={this.onChange}>
-                        <option value={""} key="Not selected"></option>
-                        {characterOptions}
-                    </select>
-                    <input name="roll" value={roll} onChange={this.onChange} type="number" min="0" placeholder="Dice Roll"/>
-                    <button type="submit">Attack</button>
-                    </form>
-                    {loading && <p>Loading...</p>}
-                    {
-                        result && 
-                        <div>
-                            <p><strong>Result: </strong></p>
-                            <p>{result.doesAttackHit ? "Hit!" : "Miss..."}</p>
-                            <p>{result.doesAttackHit ? result.damage : 0} damage dealt</p>
-                            <p>Attacker's To-hit was {result.attackerToHit} versus Defender's Evasion of {result.defenderEvade}</p>
-                        </div>
-                    }
-                    {error && <p>{error.message}</p>}
-                    <button onClick={this.props.onClose}>Back</button>
-                </div></div>
-            )
+        return (
+            <div className="cover"><div className="modal">
+                <button onClick={this.props.onClose}>Back</button>
+                <h2>Calculate Attack</h2>
+                <p>Using {this.props.attackName} to attack.</p>
+                <form onSubmit={this.onSubmit}>
+                <label htmlFor="defenderSelector">Defender: </label>
+                <CharacterSelector initialValue={defenderId} onChange={(charId: string) => this.setState({defenderId: charId})} />
+                <br />
+                <label htmlFor="rollEntry">Roll: </label>
+                <input name="roll" value={roll} onChange={this.onChange} type="number" min="0" placeholder="Dice Roll" id="rollEntry" />
+                <button type="submit">Attack</button>
+                </form>
+                {<LoadingIndicator showSpinner={loading}/>}
+                {
+                    result && 
+                    <div>
+                        <p><strong>Result: </strong></p>
+                        <p>{result.doesAttackHit ? "Hit!" : "Miss..."}</p>
+                        <p>{result.doesAttackHit ? result.damage : 0} damage dealt</p>
+                        <p>Attacker's To-hit was {result.attackerToHit} versus Defender's Evasion of {result.defenderEvade}</p>
+                    </div>
+                }
+                {error && <p>{error.message}</p>}
+            </div></div>
+        )
     }
 }
 

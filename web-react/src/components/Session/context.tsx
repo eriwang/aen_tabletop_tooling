@@ -28,9 +28,10 @@ export const withAuthentication = (Component: React.ComponentType<any>) => {
         componentDidMount() {
             this.listener = this.props.firebase.onAuthStateChanged(
                 authUser => {
-                    authUser ? this.setState({ currentUser: authUser })
+                    authUser 
+                    ? this.setState({ currentUser: authUser })
                     : this.setState({ currentUser: null });
-                    console.log(authUser)
+                    //console.log(authUser)
                 }
             )
         }
@@ -53,12 +54,10 @@ export const withAuthentication = (Component: React.ComponentType<any>) => {
 
 export const withUser = (Component: React.ComponentType<any>) => (props: any) => (
     <AuthUserContext.Consumer>
-        {currentUser => {console.log(currentUser); return <Component {...props} currentUser={currentUser} />}}
+        {currentUser => {
+            return <Component {...props} currentUser={currentUser} />}
+        }
     </AuthUserContext.Consumer>
 )
-
-// export const withUserContext = (Component: React.ComponentType<any>) => (props: any) => (
-//     <Component {...props} userContext={useContext(AuthUserContext)} />
-// )
 
 export default AuthUserContext;

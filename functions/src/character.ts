@@ -26,6 +26,11 @@ export const characterSchema = yup.object().shape({
     movement: yup.number().required(),
     weapons: yup.array(weaponSchema).required(),
     abilities: yup.array(abilitySchema).required(),
+
+    internalMetadata: yup.object().shape({
+        profileId: yup.string().required(),
+        abilitiesInUse: yup.array(yup.string()).required(),
+    })
 });
 
 export interface CharacterData extends yup.InferType<typeof characterSchema> {}
