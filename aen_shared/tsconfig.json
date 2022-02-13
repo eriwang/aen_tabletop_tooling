@@ -19,10 +19,5 @@
         "strictNullChecks": true,
         "strictFunctionTypes": false,
         "skipLibCheck": true
-    },
-    "references": [
-        {
-            "path": "../aen_shared"
-        }
-    ]
+    }
 }

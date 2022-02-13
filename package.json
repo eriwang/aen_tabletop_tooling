@@ -9,19 +9,23 @@
     "test:unit": "yarn jest --selectProjects functions-unit",
     "test:unit-fast": "yarn test:unit --globals '{\"ts-jest\": { \"isolatedModules\": true } }'",
     "test:firestore": "yarn firebase emulators:exec --only firestore 'yarn jest --runInBand --selectProjects functions-firestore'",
-    "build": "yarn --cwd functions/ webpack",
+    "build": "yarn workspace functions webpack && yarn workspace web-react build",
     "serve-dev": "yarn build && yarn firebase emulators:start",
     "shell": "yarn build && yarn firebase functions:shell",
     "start": "yarn shell",
     "deploy": "yarn firebase deploy --only functions",
     "logs": "yarn firebase functions:log",
-    "web-deploy": "yarn --cwd web-react build && firebase deploy --only hosting",
-    "web-test": "yarn --cwd web-react start"
+    "web-deploy": "yarn workspace web-react build && firebase deploy --only hosting",
+    "web-test": "yarn workspace web-react start"
+  },
+  "dependencies": {
+    "firebase": "^9.6.1",
+    "ts-jest": "^27.1.1"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^2.0.1",
-    "@typescript-eslint/eslint-plugin": "^5.6.0",
-    "@typescript-eslint/parser": "^5.6.0",
+    "@typescript-eslint/eslint-plugin": "^5.11.0",
+    "@typescript-eslint/parser": "^5.11.0",
     "eslint": "7.6.0",
     "eslint-config-react-app": "^7.0.0",
     "eslint-plugin-import": "^2.25.3",
@@ -30,9 +34,11 @@
     "jest-when": "^3.4.2",
     "typescript": "^4.5.3"
   },
-  "dependencies": {
-    "firebase": "^9.6.1",
-    "ts-jest": "^27.1.1",
-    "yarn": "^1.22.17"
-  }
+  "workspaces": [
+    "functions",
+    "web-react",
+    "aen_shared"
+  ],
+  "packageManager": "yarn@3.1.1",
+  "private": true
 }

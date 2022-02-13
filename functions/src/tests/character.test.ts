@@ -2,7 +2,12 @@ import { Attribute, DamageType } from 'base_game_enums';
 import { Character } from 'character';
 import { getCharacterRepr } from 'tests/test_data';
 
+import { hello } from 'aen_shared';
+
 test('getAttributeStat', () => {
+
+    hello();
+
     expect(new Character(getCharacterRepr()).getAttributeStat(Attribute.DEX)).toBe(3);
 });
 
