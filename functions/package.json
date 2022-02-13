@@ -10,14 +10,20 @@
   "main": "dist/index.js",
   "dependencies": {
     "@babel/runtime": "^7.16.7",
+    "@firebase/rules-unit-testing": "^2.0.2",
     "@types/module-alias": "^2.0.1",
     "@types/readline-sync": "^1.4.4",
+    "@typescript-eslint/eslint-plugin": "^5.11.0",
+    "@typescript-eslint/parser": "^5.11.0",
+    "aen_shared": "workspace:^",
     "csv-parse": "^5.0.4",
     "csv-parser": "^3.0.0",
     "deepcopy": "^2.1.0",
     "firebase-admin": "^10.0.1",
     "firebase-functions": "^3.16.0",
+    "jest-when": "^3.5.1",
     "readline-sync": "^1.4.10",
+    "ts-jest": "^27.1.3",
     "yup": "1.0.0-beta.1"
   },
   "devDependencies": {

@@ -6,6 +6,10 @@ import './index.css';
 import App from './components/App';
 import Firebase, { FirebaseContext } from './components/Firebase';
 
+import { hello } from 'aen_shared';
+
+hello();
+
 ReactDOM.render(
   <FirebaseContext.Provider value={new Firebase()}>
     <App />

@@ -2,7 +2,7 @@
   "functions": {
     "predeploy": [
       "yarn lint",
-      "yarn --cwd functions build"
+      "yarn workspace functions build"
     ],
     "source": "functions/dist"
   },
