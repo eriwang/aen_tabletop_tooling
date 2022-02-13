@@ -132,15 +132,21 @@ class Firebase {
         })
     }
 
-    // units = () => collection(this.db, 'Units');
+    // *** Profiles API *** //
 
-    // units = () => {
-    //     return new Promise<QuerySnapshot<DocumentData>>((resolve, reject) => {
-    //         getDocs(collection(this.db, 'Units'))
-    //             .then(snapshot => resolve(snapshot))
-    //             .catch(error => reject(error))
-    //     })
-    // }
+    profiles = () => collection(this.db, 'Profiles');
+
+    profile = (id: string) => doc(collection(this.db, 'Profiles'), id);
+
+    addProfilesListener = (callbacks: { [key: string]: (doc: DocumentSnapshot<DocumentData>) => any }) => {
+        return onSnapshot(this.profiles(), snapshot => {
+            snapshot.docChanges().forEach(change => {
+                if(callbacks[change.type]) {
+                    callbacks[change.type](change.doc);
+                }
+            })
+        })
+    }
 
     // *** Cloud Functions API *** //
 
@@ -150,7 +156,7 @@ class Firebase {
                 attackerId: attackerId,
                 defenderId: defenderId,
                 attackName: weaponName,
-                roll: roll
+                roll: parseInt(roll + "")
             })
                 .then(result => {
                     resolve(result.data);
@@ -159,6 +165,35 @@ class Firebase {
                     reject(error)
                 })
         });
+    }
+
+    useAbility = (attackerId: string, abilityName: string) => {
+        return new Promise<any>((resolve, reject) => {
+            httpsCallable(this.fn, 'useAbility')({
+                characterId: attackerId,
+                abilityName: abilityName
+            })
+                .then(result => {
+                    resolve(result.data);
+                })
+                .catch(error => {
+                    reject(error);
+                })
+        })
+    }
+
+    buildCharacter = (profileId: string) => {
+        return new Promise<any>((resolve, reject) => {
+            httpsCallable(this.fn, 'loadCharacter')({
+                profile: profileId
+            })
+                .then(result => {
+                    resolve(result.data);
+                })
+                .catch(error => {
+                    reject(error);
+                })
+        })
     }
 }
 

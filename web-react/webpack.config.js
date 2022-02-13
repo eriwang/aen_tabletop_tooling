@@ -8,6 +8,7 @@ module.exports = {
     mode: 'development',
     target: 'web',
     entry: './src/index.tsx',
+    devtool: 'eval-source-map',
     devServer: {
         historyApiFallback: true,  // plays nicer with react routing
         client: {
