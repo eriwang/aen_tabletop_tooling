@@ -2,6 +2,8 @@ import { AbilityData } from 'ability';
 import { Character } from 'character';
 import { WeaponData } from 'weapon';
 
+import { hello } from 'aen_shared';
+
 interface ToHitResults {
     doesAttackHit: boolean;
     attackerToHit: number;
@@ -17,6 +19,7 @@ Not yet implemented for toHit:
  */
 export function calculateToHit(roll: number, attacker: Character, defender: Character, attack: WeaponData | AbilityData)
     : ToHitResults {
+    hello();
     const attackerToHitScalingFactor = Math.ceil(
         attacker.getAttributeStat(attack.attribute) *
         attack.toHitMultiplier
