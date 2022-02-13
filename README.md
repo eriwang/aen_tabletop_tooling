@@ -5,14 +5,13 @@ Tooling for "DND" AEN.
 ## Dependencies
 
 - NodeJS (Must be 14.x, that's what Cloud Functions supports)
-- Yarn
 
 ## Set Up Dev Environment
 
-- `yarn install`
+This repo contains the actual minified `yarn` script in `.yarn/releases/yarn-3.1.1.cjs`, this makes it easier to keep
+the `yarn` version consistent across developers.
 
-Make sure you run this command in both `root` and `functions`
-
+- Install repo-wide dependencies: `yarn install`
 - `yarn firebase login`
 - Hopefully that's it!
 
