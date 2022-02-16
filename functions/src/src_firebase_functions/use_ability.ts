@@ -5,7 +5,7 @@ import { Character, CharacterData } from 'character';
 import { abilityDataLoader, armorDataLoader, characterClassLoader, classDataLoader, profileClassLoader, raceDataLoader,
     weaponDataLoader }
     from 'firestore_utils/data_loaders';
-import { AbilityData } from 'ability';
+import { AbilityData } from 'aen_shared/src/game_data/ability';
 import { getNonNull } from 'utils';
 import { Attribute } from 'base_game_enums';
 import { calculateAttributes, calculateSkills } from './load_character';

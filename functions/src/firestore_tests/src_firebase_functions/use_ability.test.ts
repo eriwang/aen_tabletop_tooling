@@ -5,7 +5,7 @@ import * as admin from 'firebase-admin';
 import fftest from 'firebase-functions-test';
 import { initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules-unit-testing';
 
-import { AbilityData } from 'ability';
+import { AbilityData } from 'aen_shared/src/game_data/ability';
 import { AbilityCategory, AttackType, Attribute, DamageType } from 'base_game_enums';
 import { Character, CharacterData } from 'character';
 import { flail, water, fish, pokemon, karp, magikarpLvl1 } from './test_character_magikarp';

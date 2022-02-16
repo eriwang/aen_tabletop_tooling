@@ -1,4 +1,4 @@
-import { AbilityData } from 'ability';
+import { AbilityData } from 'aen_shared/src/game_data/ability';
 import { Character } from 'character';
 import { WeaponData } from 'weapon';
 

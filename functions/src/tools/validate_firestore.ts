@@ -1,7 +1,7 @@
 import { collection, getDocs, getFirestore } from 'firebase/firestore';
 import { Schema } from 'yup';
 
-import { abilitySchema } from 'ability';
+import { abilitySchema } from 'aen_shared/src/game_data/ability';
 import { armorSchema } from 'armor';
 import { characterSchema } from 'character';
 import { classSchema } from 'class';

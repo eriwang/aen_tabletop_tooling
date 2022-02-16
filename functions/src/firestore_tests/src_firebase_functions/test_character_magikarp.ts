@@ -1,4 +1,4 @@
-import { AbilityData } from 'ability';
+import { AbilityData } from 'aen_shared/src/game_data/ability';
 import { ArmorData } from 'armor';
 import { AttackType, Attribute, DamageType } from 'base_game_enums';
 import { ClassData } from 'class';

@@ -2,7 +2,7 @@ import * as yup from 'yup';
 
 import { AttackType, Attribute, DamageType } from 'base_game_enums';
 import { weaponSchema } from 'weapon';
-import { abilitySchema } from 'ability';
+import { abilitySchema } from 'aen_shared';
 import { ResistanceStat } from 'armor';
 import { attributesSchema, resistancesSchema, skillsSchema } from 'schemas';
 

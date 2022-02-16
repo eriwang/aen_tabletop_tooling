@@ -9,7 +9,7 @@
     "test:unit": "yarn jest --selectProjects functions-unit",
     "test:unit-fast": "yarn test:unit --globals '{\"ts-jest\": { \"isolatedModules\": true } }'",
     "test:firestore": "yarn firebase emulators:exec --only firestore 'yarn jest --runInBand --selectProjects functions-firestore'",
-    "build": "yarn workspace functions webpack && yarn workspace web-react build",
+    "build": "yarn workspace aen_shared build && yarn workspace functions webpack && yarn workspace web-react build",
     "serve-dev": "yarn build && yarn firebase emulators:start",
     "shell": "yarn build && yarn firebase functions:shell",
     "start": "yarn shell",

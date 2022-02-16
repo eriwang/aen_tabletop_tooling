@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 import * as yup from 'yup';
 
-import { abilitySchema } from 'ability';
+import { abilitySchema } from 'aen_shared';
 import { armorSchema } from 'armor';
 import { classSchema } from 'class';
 import { Character, characterSchema } from 'character';

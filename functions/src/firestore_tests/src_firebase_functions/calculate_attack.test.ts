@@ -8,7 +8,8 @@ import * as attackCalculator from 'attack_calculator';
 import { getCharacterRepr } from 'tests/test_data';
 import { Character } from 'character';
 import { WeaponData } from 'weapon';
-import { AbilityData } from 'ability';
+
+import { AbilityData } from 'aen_shared/src/game_data/ability';
 
 let testCollection: admin.firestore.CollectionReference;
 let testEnv: RulesTestEnvironment;
