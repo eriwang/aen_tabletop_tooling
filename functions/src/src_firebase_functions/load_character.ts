@@ -8,7 +8,6 @@ import { enumerateEnumValues } from 'utils';
 import { AttributesData, SkillsData } from 'schemas';
 import { abilityDataLoader, armorDataLoader, classDataLoader, profileClassLoader, raceDataLoader, weaponDataLoader }
     from 'firestore_utils/data_loaders';
-import { profileDataConverter } from 'firestore_utils/data_converters';
 
 export function calculateAttributes(profile: Profile) : AttributesData {
     const attributes: any = {};
@@ -94,8 +93,7 @@ async function createCharacter(profileName: string) : Promise<string> {
     if (!characterId) {
         characterId = (await admin.firestore().collection('Characters').add(characterData)).id;
         profile.setCharacterId(characterId);
-        await admin.firestore().collection('Profiles').doc(profileName).
-            withConverter(profileDataConverter).set(profile);
+        await admin.firestore().collection('Profiles').doc(profileName).set(profile.data);
     }
     else {
         await admin.firestore().collection('Characters').doc(characterId).set(characterData);
