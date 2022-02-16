@@ -1,0 +1,8 @@
+{
+  "name": "tools",
+  "scripts": {
+    "run-tool": "yarn ts-node -r tsconfig-paths/register"
+  },
+  "main": "dist/index.js",
+  "private": true
+}
